@@ -11,8 +11,7 @@ COPY . .
 RUN npm run build
 
 FROM nginx:stable-alpine as production-stage
-RUN rm -rf /etc/nginx/nginx.conf
-COPY ./.nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./.nginx/nginx.conf /etc/nginx/nginx.conf
 
 
 
