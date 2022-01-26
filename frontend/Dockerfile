@@ -15,4 +15,4 @@ COPY . .
 RUN npm run build
 
 EXPOSE 5000
-CMD ["nginx", "-g", "daemon off"]
+CMD ["npx", "serve", "-s", "build"]
