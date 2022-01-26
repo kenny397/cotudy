@@ -1,4 +1,4 @@
-FROM java:11
+FROM openjdk:11-jdk
 VOLUME /tmp
 EXPOSE 8080
 ARG JAR_FILE=build/libs/ssafy-web-project-1.0-SNAPSHOT.jar
