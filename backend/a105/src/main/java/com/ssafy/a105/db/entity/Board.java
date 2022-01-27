@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Collection;
 
 @Entity
 @Getter
@@ -15,14 +16,15 @@ public class Board extends BaseEntity{
     String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "writer_id")
     User writer;
 
     String content;
     LocalDateTime createdDate;
-    @Column(columnDefinition = "INT UNSIGNED")
     int views;
 
     @ManyToOne(fetch = FetchType.LAZY)
     BoardClass boardClass;
+
+    @OneToMany(cascade=CascadeType.ALL, mappedBy = "board")
+    Collection<Comment> comment;
 }

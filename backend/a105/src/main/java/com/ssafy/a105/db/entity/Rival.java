@@ -16,6 +16,5 @@ public class Rival extends BaseEntity{
     User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rival_id")
     User rival;
 }
