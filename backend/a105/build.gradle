@@ -14,7 +14,6 @@ buildscript{
 		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVer}"
 		classpath "io.spring.gradle:dependency-management-plugin:${springDependencyMgmtVer}.RELEASE"
 		classpath "org.springframework:springloaded:${springLoadedVer}.RELEASE"
-
 		classpath "com.github.node-gradle:gradle-node-plugin:3.1.0"
 	}
 }
@@ -23,7 +22,7 @@ plugins {
 	id 'org.springframework.boot' version "${springBootVer}"
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
-	//--------------------------add query
+	//--------------------------add query ------------------
 	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
@@ -35,7 +34,6 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
-	
 }
 
 repositories {
@@ -46,15 +44,14 @@ dependencies {
 	//--------------------------add code(220126) start---------------------
 	implementation("org.springframework.boot:spring-boot-starter-websocket")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation 'org.jetbrains:annotations:20.1.0'
+
 	annotationProcessor("org.springframework.boot:spring-boot-starter-data-jpa")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
 	implementation('commons-io:commons-io:2.6')
 	implementation("org.apache.commons:commons-collections4:4.4")
 	implementation("org.apache.commons:commons-lang3:3.9")
-
-	implementation("com.querydsl:querydsl-jpa:${querydslVer}")
-	implementation("com.querydsl:querydsl-apt:${querydslVer}")
 
 	//STOMP 웹소캣 서버 사이드 테스트를 위한 의존성 추가
 	implementation("org.springframework.boot:spring-boot-starter-mustache")
@@ -67,7 +64,7 @@ dependencies {
 	implementation('org.webjars.bower:webrtc-adapter:7.4.0')
 
 	//IntelliJ에서는 하기 annotationProcessor를 쓰면 별도의 querydsl 플러그인 및 플러그인 설정이 불필요.
-	annotationProcessor("com.querydsl:querydsl-apt:${querydslVer}:jpa")
+	//annotationProcessor("com.querydsl:querydsl-apt:${querydslVer}:jpa")
 
 	implementation("com.squareup.retrofit2:retrofit:2.7.1")
 	implementation("com.squareup.retrofit2:converter-jackson:2.7.1")
@@ -88,6 +85,9 @@ dependencies {
 
 	implementation("javax.annotation:javax.annotation-api:1.2")
 	//---------------------------------end---------------------------------
+	//add querydsl
+	implementation 'com.querydsl:querydsl-jpa'
+
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -99,30 +99,25 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
-tasks.named('test') {
+test {
 	useJUnitPlatform()
 }
-//--------------querydsl 추가 시작(220126)-----------------------
-def querydslDir = "$buildDir/generated/querydsl"
 
-querydsl {
+def querydslDir = "$buildDir/generated/querydsl" // (3)
+
+querydsl { // (4)
 	jpa = true
 	querydslSourcesDir = querydslDir
 }
 
-sourceSets{
+sourceSets { // (5)
 	main.java.srcDir querydslDir
 }
 
-
-compileQuerydsl {
-	options.annotationProcessorPath = configurations.querydsl
-}
-
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+configurations { // (6)
 	querydsl.extendsFrom compileClasspath
 }
-// querydsl 추가 끝
+
+compileQuerydsl { // (7)
+	options.annotationProcessorPath = configurations.querydsl
+}
