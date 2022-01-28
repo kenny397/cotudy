@@ -8,7 +8,8 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,24 +34,24 @@ public class User extends BaseEntity{
     Department department;
 
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "user")
-    Collection<UserRoom> userRoom;
+    List<UserRoom> userRoom = new ArrayList<>();
 
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "owner") // 한명의 유저가 여러방의 방장 가능...?
-    Collection<Room> room;
+    List<Room> room = new ArrayList<>();
 
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "writer")
-    Collection<Board> board;
+    List<Board> board = new ArrayList<>();
 
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "writer")
-    Collection<Comment> comment;
+    List<Comment> comment = new ArrayList<>();
 
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "user") // 한명의 유저가 여러명의 유저...?
-    Collection<Rival> user;
+    List<Rival> user = new ArrayList<>();
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "rival")
-    Collection<Rival> rival;
+    List<Rival> rival = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    Collection<StudyTime> studyTime;
+    List<StudyTime> studyTime = new ArrayList<>();
 
 
 

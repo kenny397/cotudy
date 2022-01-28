@@ -6,7 +6,8 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,5 +27,5 @@ public class Board extends BaseEntity{
     BoardClass boardClass;
 
     @OneToMany(cascade=CascadeType.ALL, mappedBy = "board")
-    Collection<Comment> comment;
+    List<Comment> comment = new ArrayList<>();
 }

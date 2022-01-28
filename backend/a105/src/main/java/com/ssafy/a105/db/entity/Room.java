@@ -9,7 +9,9 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Getter
@@ -37,5 +39,5 @@ public class Room extends BaseEntity{
     StudyClass studyClass;
 
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "room")
-    Collection<UserRoom> userRoom;
+    List<UserRoom> userRoom = new ArrayList<>();
 }
