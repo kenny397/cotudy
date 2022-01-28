@@ -19,25 +19,25 @@ import java.util.List;
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Room extends BaseEntity{
-    String title;
-    LocalDateTime createdDate;
+    private String title;
+    private LocalDateTime createdDate;
 
     @ToString.Exclude
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    String password;
+    private String password;
 
-    String description;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    User owner;
-
-    String thumbnail;
-    int maxUser;
+    private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    StudyClass studyClass;
+    private User owner;
+
+    private String thumbnail;
+    private int maxUser;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private StudyClass studyClass;
 
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "room")
-    List<UserRoom> userRoom = new ArrayList<>();
+    private List<UserRoom> userRoom = new ArrayList<>();
 }

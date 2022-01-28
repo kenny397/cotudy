@@ -17,12 +17,12 @@ import java.time.LocalDateTime;
 public class StudyTime extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
-    User user;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    StudyClass studyClass;
+    private StudyClass studyClass;
 
-    String time;
-    LocalDateTime createdDate;
+    private String time;
+    private LocalDateTime createdDate;
 
 }

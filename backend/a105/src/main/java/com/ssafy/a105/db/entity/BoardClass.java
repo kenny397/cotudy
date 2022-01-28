@@ -2,6 +2,7 @@ package com.ssafy.a105.db.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -12,9 +13,10 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@ToString
 public class BoardClass extends BaseEntity{
-    String name;
+    private String name;
 
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "boardClass")
-    List<Board> board = new ArrayList<>();
+    private List<Board> board = new ArrayList<>();
 }

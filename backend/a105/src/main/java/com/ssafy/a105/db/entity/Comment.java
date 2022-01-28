@@ -16,11 +16,11 @@ import java.time.LocalDateTime;
 @ToString
 public class Comment extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
-    Board board;
+    private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    User writer;
+    private User writer;
 
-    String content;
-    LocalDateTime createdDate;
+    private String content;
+    private LocalDateTime createdDate;
 }

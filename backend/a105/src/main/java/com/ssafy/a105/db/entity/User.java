@@ -16,42 +16,42 @@ import java.util.List;
 @Setter
 @ToString
 public class User extends BaseEntity{
-    String userId;
-    String nickname;
-    String goalTime;
-    String goal;
-    String thumbnail;
-    LocalDateTime createdDate;
+    private String userId;
+    private String nickname;
+    private String goalTime;
+    private String goal;
+    private String thumbnail;
+    private LocalDateTime createdDate;
     @Column(columnDefinition = "INT UNSIGNED")
-    int state;
+    private int state;
 
     @ToString.Exclude
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    String password;
+    private String password;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    Department department;
+    private Department department;
 
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "user")
-    List<UserRoom> userRoom = new ArrayList<>();
+    private List<UserRoom> userRoom = new ArrayList<>();
 
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "owner") // 한명의 유저가 여러방의 방장 가능...?
-    List<Room> room = new ArrayList<>();
+    private List<Room> room = new ArrayList<>();
 
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "writer")
-    List<Board> board = new ArrayList<>();
+    private List<Board> board = new ArrayList<>();
 
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "writer")
-    List<Comment> comment = new ArrayList<>();
+    private List<Comment> comment = new ArrayList<>();
 
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "user") // 한명의 유저가 여러명의 유저...?
-    List<Rival> user = new ArrayList<>();
+    private List<Rival> user = new ArrayList<>();
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "rival")
-    List<Rival> rival = new ArrayList<>();
+    private List<Rival> rival = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    List<StudyTime> studyTime = new ArrayList<>();
+    private List<StudyTime> studyTime = new ArrayList<>();
 
 
 

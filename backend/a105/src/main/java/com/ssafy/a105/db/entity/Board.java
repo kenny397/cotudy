@@ -14,18 +14,18 @@ import java.util.List;
 @Setter
 @ToString
 public class Board extends BaseEntity{
-    String title;
+    private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    User writer;
+    private User writer;
 
-    String content;
-    LocalDateTime createdDate;
-    int views;
+    private String content;
+    private LocalDateTime createdDate;
+    private int views;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    BoardClass boardClass;
+    private BoardClass boardClass;
 
     @OneToMany(cascade=CascadeType.ALL, mappedBy = "board")
-    List<Comment> comment = new ArrayList<>();
+    private List<Comment> comment = new ArrayList<>();
 }
