@@ -7,7 +7,7 @@ services:
     ports: 
       - 3000:80
     networks:
-      - square4us
+      - a105
     restart: unless-stopped
     depends_on:
       - backend
@@ -18,7 +18,7 @@ services:
     ports: 
       - 8080:8080
     networks:
-      - square4us
+      - a105
     restart: unless-stopped
 networks: 
-  square4us:
+  a105:
