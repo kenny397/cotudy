@@ -3,7 +3,7 @@
 		<div id="join" v-if="!session">
 			<div id="img-div"><img src="resources/images/openvidu_grey_bg_transp_cropped.png" /></div>
 			<div id="join-dialog" class="jumbotron vertical-center">
-				<h1>Join a video session</h1>
+				<h1>Join a video cicdsession</h1>
 				<video autoplay/>
 				<div class="form-group">
 					<p>
