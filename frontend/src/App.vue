@@ -41,7 +41,7 @@ import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import UserVideo from './components/UserVideo';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
-const OPENVIDU_SERVER_URL = "https://http://i6b105.p.ssafy.io/";
+const OPENVIDU_SERVER_URL = "https:i6b105.p.ssafy.io";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 export default {
 	name: 'App',
