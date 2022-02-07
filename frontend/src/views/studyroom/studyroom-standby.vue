@@ -71,7 +71,6 @@ import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 
 // 티쳐블머신
-import * as tf from '@tensorflow/tfjs';
 import * as tmPose from '@teachablemachine/pose';
 
 export default {
@@ -152,7 +151,7 @@ export default {
       state.maxPredictions = undefined;
     }
 
-    async function loop(timestamp) {
+    async function loop() {
       state.webcam.update(); // update the webcam frame
       await predict();
       window.requestAnimationFrame(loop);
@@ -171,7 +170,7 @@ export default {
       }
       for (let i = 0; i < state.maxPredictions; i++) {
         const classPrediction =
-          prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+          prediction[i].className + ': ' + prediction[i].probability.toFixed(2);
           state.labelContainer.childNodes[i].innerHTML = classPrediction;
       }
 

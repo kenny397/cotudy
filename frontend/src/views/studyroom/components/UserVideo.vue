@@ -6,7 +6,7 @@
 
 <script>
 import OvVideo from './OvVideo';
-import { computed, onMounted,  watch, onBeforeMount } from "vue";
+import { computed, onBeforeMount } from 'vue';
 
 export default {
 	name: 'UserVideo',
@@ -20,7 +20,7 @@ export default {
 		session: Object,
 	},
 
-	setup (props, { emit }) {
+	setup (props) {
 		const state = {
 
       clientData : computed(() => getConnectionData())

@@ -61,76 +61,76 @@
 </div>
 </template>
 
-<script>
+<script lang="ts" setup>
 
 // export default {
 //   name: 'ranking',
 // }
 
-import { ref } from 'vue'
+// import { ref } from 'vue'
 //왜 안되지...
 //import { Search } from '@element-plus/icons-vue'
-const day = ref('')
-const group = ref('')
-const search = ref('')
-const days = [
-  {
-    value: '1',
-    label: '1일',
-  },
-  {
-    value: '2',
-    label: '7일',
-  },
-  {
-    value: '3',
-    label: '한달',
-  },
-]
+// const day = ref('')
+// const group = ref('')
+// const search = ref('')
+// const days = [
+//   {
+//     value: '1',
+//     label: '1일',
+//   },
+//   {
+//     value: '2',
+//     label: '7일',
+//   },
+//   {
+//     value: '3',
+//     label: '한달',
+//   },
+// ]
 
-const groups = [
-  {
-    value: '1',
-    label: '전체',
-  },
-  {
-    value: '2',
-    label: '내 소속',
-  },
-  {
-    value: '3',
-    label: '친구',
-  },
-]
+// const groups = [
+//   {
+//     value: '1',
+//     label: '전체',
+//   },
+//   {
+//     value: '2',
+//     label: '내 소속',
+//   },
+//   {
+//     value: '3',
+//     label: '친구',
+//   },
+// ]
 
 
-const tableData = [
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-08',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-06',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-07',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-]
+// const tableData = [
+//   {
+//     date: '2016-05-04',
+//     name: 'Tom',
+//     address: 'No. 189, Grove St, Los Angeles',
+//   },
+//   {
+//     date: '2016-05-01',
+//     name: 'Tom',
+//     address: 'No. 189, Grove St, Los Angeles',
+//   },
+//   {
+//     date: '2016-05-08',
+//     name: 'Tom',
+//     address: 'No. 189, Grove St, Los Angeles',
+//   },
+//   {
+//     date: '2016-05-06',
+//     name: 'Tom',
+//     address: 'No. 189, Grove St, Los Angeles',
+//   },
+//   {
+//     date: '2016-05-07',
+//     name: 'Tom',
+//     address: 'No. 189, Grove St, Los Angeles',
+//   },
+// ]
 </script>
 
 <style>

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { onMounted, ref } from 'vue';
 export default {
 
 	name: 'OvVideo',
@@ -15,7 +15,7 @@ export default {
     const el = ref(null)
 
     onMounted (()=> {
-	    props.streamManager.addVideoElement(el.value);
+      props.streamManager.addVideoElement(el.value);
     })
     return {
       el,

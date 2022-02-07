@@ -17,7 +17,7 @@
         <user-video
           :stream-manager="state.publisher"
           :session="state.session"
-          @click.native="updateMainVideoStreamManager(state.publisher)"
+          @click="updateMainVideoStreamManager(state.publisher)"
         />
         <div>내 공부 시간 : {{state.newStudyTime}}</div>
       </div>
@@ -35,7 +35,7 @@
         <user-video
           :session="state.session"
           :stream-manager="sub"
-          @click.native="updateMainVideoStreamManager(sub)"
+          @click="updateMainVideoStreamManager(sub)"
         />
         <div :id="sub.stream.connection.connectionId"></div>
       </div>
@@ -110,16 +110,16 @@ import { OpenVidu } from 'openvidu-browser';
 import UserVideo from './components/UserVideo.vue';
 import { reactive, onMounted, onUnmounted, onBeforeMount, computed } from 'vue'
 import { useStore } from 'vuex'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, } from 'vue-router'
 
 // 티쳐블머신
-import * as tf from '@tensorflow/tfjs';
+
 import * as tmPose from '@teachablemachine/pose';
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
-const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":8443";
-const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+const OPENVIDU_SERVER_URL = 'https://' + location.hostname + ':4443';
+const OPENVIDU_SERVER_SECRET = 'MY_SECRET';
 
 export default {
 	name: 'StudyRoomInside',
@@ -150,7 +150,7 @@ export default {
         const date = new Date(null);
         date.setSeconds(state.myStudyTime / 1000);
         const utc = date.toUTCString();
-        return utc.substr(utc.indexOf(":") - 2, 8);
+        return utc.substr(utc.indexOf(':') - 2, 8);
       }),
       timer: undefined,
       isStartStopWatch : 1,
@@ -401,7 +401,7 @@ export default {
       }
     }
 
-    async function loop(timestamp) {
+    async function loop() {
       state.webcam.update(); // update the webcam frame
       await predict();
       window.requestAnimationFrame(loop);
@@ -425,7 +425,7 @@ export default {
       }
       for (let i = 0; i < state.maxPredictions; i++) {
         const classPrediction =
-          prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+          prediction[i].className + ': ' + prediction[i].probability.toFixed(2);
           state.labelContainer.childNodes[i].innerHTML = classPrediction;
       }
 
