@@ -4,10 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,7 +19,12 @@ public class StudyTime extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     private StudyClass studyClass;
 
-    private String time;
+    private int time;
     private LocalDateTime createdDate;
+
+    @PrePersist
+    public void createdAt(){
+        this.createdDate = LocalDateTime.now();
+    }
 
 }

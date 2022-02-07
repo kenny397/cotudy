@@ -1,6 +1,7 @@
 package com.ssafy.a105.db.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class StudyClass extends BaseEntity {
     private String name;
 
