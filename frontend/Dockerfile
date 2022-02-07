@@ -1,8 +1,7 @@
 FROM node:12 AS build
 WORKDIR /app
 COPY package* ./
-RUN npm install --production
-RUN npm install @vue/cli-service
+RUN npm install 
 COPY public ./public 
 COPY src ./src
 RUN npm run build
