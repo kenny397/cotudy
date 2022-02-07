@@ -1,0 +1,11 @@
+/* 공통으로 적용되어야할 css */
+/* html, body {
+  height: 100vh;
+} */
+
+
+body {
+  margin: 0;
+  font-family: SpoqaHanSansNeo;
+  font-weight: 400;
+}
