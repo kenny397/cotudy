@@ -61,7 +61,7 @@
 </div>
 </template>
 
-<script lang="ts" setup>
+<script>
 
 // export default {
 //   name: 'ranking',
