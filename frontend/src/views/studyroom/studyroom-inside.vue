@@ -118,7 +118,7 @@ import * as tmPose from '@teachablemachine/pose';
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
-const OPENVIDU_SERVER_URL = 'https://' + location.hostname + ':8443';
+const OPENVIDU_SERVER_URL = 'https://' + location.hostname + ':6443';
 const OPENVIDU_SERVER_SECRET = 'MY_SECRET';
 
 export default {
