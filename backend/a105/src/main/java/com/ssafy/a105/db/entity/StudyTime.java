@@ -19,7 +19,11 @@ public class StudyTime extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     private StudyClass studyClass;
 
+<<<<<<< HEAD
     private int time;
+=======
+    private Long time;
+>>>>>>> 846046aa71dbca15014fd925ac877abe4c5fc72f
     private LocalDateTime createdDate;
 
     @PrePersist

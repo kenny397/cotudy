@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class RoomExitPostReq {
     String userId;
+    String roomId;
     Long StudyTime;
 
 }

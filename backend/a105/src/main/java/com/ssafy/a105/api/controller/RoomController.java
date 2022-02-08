@@ -34,10 +34,11 @@ public class RoomController {
     })
     public ResponseEntity<List<RoomInfoRes>> getRooms(){
         List<Room> rooms =roomService.getRooms();
-        if(rooms.isEmpty())return ResponseEntity.status(500).body(null);
+        System.out.println(rooms);
+       // if(rooms.isEmpty())return ResponseEntity.status(500).body(null);
         List<RoomInfoRes> roomsInfo =new ArrayList<>();
         for(int i=0; i<rooms.size(); i++){
-            roomsInfo.add(RoomInfoRes.of(roomService.getRoomHeadCount(rooms.get(i).getId()),rooms.get(i)));
+            roomsInfo.add(RoomInfoRes.of(/*roomService.getRoomHeadCount(rooms.get(i).getId())*/1,rooms.get(i)));
         }
         return ResponseEntity.status(200).body(roomsInfo);
     }
@@ -48,7 +49,7 @@ public class RoomController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<RoomInfoRes> getRoom(@PathVariable("room_id") int roomId){
+    public ResponseEntity<RoomInfoRes> getRoom(@PathVariable("room_id") long roomId){
         Room room = roomService.getRoom(roomId);
         long count = roomService.getRoomHeadCount(roomId);
         return ResponseEntity.status(200).body(RoomInfoRes.of(count,room));
