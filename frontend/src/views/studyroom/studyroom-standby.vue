@@ -1,58 +1,82 @@
 <template>
   <div class="bg-clr">
     <div class="main-container">
-      <h2 style="margin-top: 100px;">스터디룸 입장준비</h2>
-      <p>{{ $route.params.studyroomId + '번 방 상세 보기 페이지' }}</p>
+      <h2 class="tw" style="margin-bottom:0px;">스터디룸 입장준비</h2>
+      <p class="tw">{{ $route.params.studyroomId + '번 방 상세 보기 페이지' }}</p>
       <div>
-        <canvas id="canvas" v-bind:class="{isStudying : state.isStudying}" class="isNotStudying"/>
-        <div class="white-box"></div>
+        <canvas style="width:68vh; height:auto;" id="canvas" v-bind:class="{isStudying : state.isStudying}" class="isNotStudying"/>
+        <div class="white-box" style="margin-top:-5px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <el-button @click="mute()" class="btn-stl" type="text" style="margin-left:50px;">
+              <font-awesome-icon v-if="!state.muteVar" icon="microphone"/>
+              <font-awesome-icon v-if="state.muteVar" icon="microphone-slash"/>
+              마이크
+            </el-button>
+            <el-button @click="video()" class="btn-stl" type="text">
+              <font-awesome-icon v-if="!state.videoVar" icon="video"/>
+              <font-awesome-icon v-if="state.videoVar" icon="video-slash"/>
+              비디오
+            </el-button>
+            <el-button @click="state.dialogVisible = true" class="btn-stl" type="text">모션인식 도움말</el-button>
+            <el-dialog
+              v-model="state.dialogVisible"
+              width="50%"
+            >
+              <el-carousel indicator-position="outside">
+                <el-carousel-item v-for="tutorial in state.tutorials" :key="tutorial.id">
+                  <img style="width:500px; height:300px;" :src="tutorial.imageUrl" alt="tutorial">
+                </el-carousel-item>
+              </el-carousel>
+
+              <!-- <template #footer>
+                <span class="dialog-footer">
+                  <el-button @click="state.dialogVisible = false">Cancel</el-button>
+                  <el-button type="primary" @click="state.dialogVisible = false"
+                    >Confirm</el-button
+                  >
+                </span>
+              </template> -->
+            </el-dialog>
+            <el-button
+              @click="enterRoom(state.studyroomId)"
+              plain type="success"
+              style="height:80px; width:100px; border-bottom-right-radius:20px;"
+            >입장</el-button>
+          </div>
+        </div>
       </div>
-      <div style="margin-bottom:10px" id="label-container"></div>
+      <div v-show="state.hidden" id="label-container"></div>
     </div>
   </div>
-  <div style="position:relative; top:-222px; left:27px;">
-    <el-button class="mm">마이크</el-button>
-    <el-button class="mm">비디오</el-button>
-    <el-button class="mm" style="width:120px;">모션인식 도움말</el-button>
-    <el-button
-      @click="enterRoom(state.studyroomId)"
-      plain type="success" class="mm"
-      style="border-bottom-right-radius:20px;"
-    >입장</el-button>
-  </div>
 </template>
-<style>
-  .mm {
-    height:64px;
-    width:80px;
-    margin-right: 30px;
-  }
-  .aa {
-    border-bottom-right-radius:20px;  padding-top:10px;
-  }
+<style scoped>
   .bg-clr {
     background-color: black;
     width: 100vw;
     height: 100vh;
-    color: white;
-    z-index: -2;
-  }
-  .block {
-    display: block;
   }
   .main-container {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
+  .tw {
+    color: white;
+  }
+  .btn-stl {
+    border: 0px;
+    padding: 0px;
+    color: black;
+  }
+  .btn-stl:hover {
+    color: rgba(58, 194, 88, 1);
+  }
   .white-box {
-    position: relative;
-    top: -50px;
-    z-index: -1;
-    border-radius : 20px;
+    border-bottom-right-radius:20px;
+    border-bottom-left-radius:20px;
     background-color: white;
-    height: 110px;
-    width: 510px;
+    height: 80px;
+    width: 68vh + 6;
   }
   .isNotStudying {
     border-top-left-radius : 20px;
@@ -88,7 +112,45 @@ export default {
       ctx : undefined,
       labelContainer : undefined,
       maxPredictions : undefined,
-      URL : 'https://teachablemachine.withgoogle.com/models/tCGfolhxR/'
+      URL : 'https://teachablemachine.withgoogle.com/models/tCGfolhxR/',
+      hidden: false,
+      muteVar: false,
+      videoVar: false,
+      dialogVisible: false,
+      tutorials: [
+        {
+          id: 1,
+          imageUrl: require('../../assets/images/tutorial/tuto1.png')
+        },
+        {
+          id: 2,
+          imageUrl: require('../../assets/images/tutorial/tuto2.png')
+        },
+        {
+          id: 3,
+          imageUrl: require('../../assets/images/tutorial/tuto3.png')
+        },
+        {
+          id: 4,
+          imageUrl: require('../../assets/images/tutorial/tuto4.png')
+        },
+        {
+          id: 5,
+          imageUrl: require('../../assets/images/tutorial/tuto5.png')
+        },
+        {
+          id: 6,
+          imageUrl: require('../../assets/images/tutorial/tuto6.png')
+        },
+        {
+          id: 7,
+          imageUrl: require('../../assets/images/tutorial/tuto7.png')
+        },
+        {
+          id: 8,
+          imageUrl: require('../../assets/images/tutorial/tuto8.png')
+        },
+      ]
     })
     // 페이지 진입시 불리는 훅
     onMounted(() => {
@@ -124,7 +186,7 @@ export default {
       state.maxPredictions = state.model.getTotalClasses();
 
       // Convenience function to setup a webcam
-      const size = 500;
+      const size = 700;
       const flip = true; // whether to flip the webcam
       state.webcam = new tmPose.Webcam(size, size, flip); // width, height, flip
       await state.webcam.setup(); // request access to the webcam
@@ -192,7 +254,15 @@ export default {
       }
     }
 
-    return { state, enterRoom, init }
+    const mute = function () {
+      state.muteVar = !state.muteVar
+    }
+
+    const video = function () {
+      state.videoVar = !state.videoVar
+    }
+
+    return { state, enterRoom, init, mute, video }
   },
 
 

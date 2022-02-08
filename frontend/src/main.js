@@ -11,6 +11,13 @@ import router from './common/lib/vue-router'
 
 import 'element-plus/packages/theme-chalk/src/base.scss'
 
+// font awesome
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { far } from '@fortawesome/free-regular-svg-icons'
+import { fab } from '@fortawesome/free-brands-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
 // Element UI Components [시작]
 import {
   ElAlert,
@@ -192,6 +199,9 @@ const plugins = [
 ]
 // Element UI Components [끝]
 
+library.add(fab, far, fas) // font awesome
+
+
 const app = createApp({
   render: ()=>h(App)
 })
@@ -203,6 +213,7 @@ app.use(router)
 
 components.forEach(component => {
   app.component(component.name, component)
+  app.component('font-awesome-icon', FontAwesomeIcon) // font awesome
 })
 
 plugins.forEach(plugin => {

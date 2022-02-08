@@ -1,18 +1,23 @@
 <template>
-  <el-container class="main-wrapper">
-    <main-header
-      @openLoginDialog="onOpenLoginDialog"
-      v-if="$route.name != 'studyroom-standby'"
-    />
-    <hr v-if="$route.name != 'studyroom-standby'">
+  <el-container
+    class="main-wrapper"
+    v-if="!isFullpages.includes($route.name)"
+  >
+    <main-header @openLoginDialog="onOpenLoginDialog" />
+    <hr>
     <el-container class="main-container">
-      <el-main v-if="$route.name != 'studyroom-standby'">
+      <el-main>
         <router-view></router-view>
       </el-main>
-      <router-view v-if="$route.name ==='studyroom-standby'"></router-view>
     </el-container>
-    <hr v-if="$route.name!='studyroom-standby'">
-    <main-footer v-if="$route.name != 'studyroom-standby'"/>
+    <hr>
+    <main-footer />
+  </el-container>
+  <el-container
+    class="main-wrapper"
+    v-if="isFullpages.includes($route.name)"
+  >
+    <router-view></router-view>
   </el-container>
   <login-dialog
     :open="loginDialogOpen"
@@ -40,7 +45,11 @@ export default {
   },
   data () {
     return {
-      loginDialogOpen: false
+      loginDialogOpen: false,
+      isFullpages: [
+        'studyroom-standby',
+        'studyroom-inside'
+      ]
     }
   },
   methods: {
@@ -50,6 +59,9 @@ export default {
     onCloseLoginDialog () {
       this.loginDialogOpen = false
     }
+  },
+  created() {
+    console.log(this.isFullpage)
   }
 }
 </script>
