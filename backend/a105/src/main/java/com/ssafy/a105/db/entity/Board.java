@@ -28,4 +28,9 @@ public class Board extends BaseEntity{
 
     @OneToMany(cascade=CascadeType.ALL, mappedBy = "board")
     private List<Comment> comment = new ArrayList<>();
+    // @PrePersist -> insert 연산시 같이 실행되게하는 annotation
+    @PrePersist
+    public void createdAt(){
+        this.createdDate = LocalDateTime.now();
+    }
 }
