@@ -13,7 +13,6 @@
     <hr>
     <main-footer />
   </el-container>
-
   <el-container
     class="main-wrapper"
     v-if="isFullpages.includes($route.name)"
