@@ -6,7 +6,7 @@ import com.ssafy.a105.api.request.RoomInfoPostReq;
 import com.ssafy.a105.api.response.RoomInfoRes;
 import com.ssafy.a105.api.service.RoomService;
 import com.ssafy.a105.api.service.RoomServiceImpl;
-import com.ssafy.a105.common.BaseResponseBody;
+import com.ssafy.a105.common.model.response.BaseResponseBody;
 import com.ssafy.a105.db.entity.Room;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
