@@ -1,4 +1,4 @@
 package com.ssafy.a105.db.repository;
 
-public interface RoomRepository {
+public interface UserRoomRepository {
 }

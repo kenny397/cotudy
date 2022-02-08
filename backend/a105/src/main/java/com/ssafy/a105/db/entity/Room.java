@@ -40,4 +40,9 @@ public class Room extends BaseEntity{
 
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "room")
     private List<UserRoom> userRoom = new ArrayList<>();
+
+    @PrePersist
+    public void createdAt(){
+        this.createdDate = LocalDateTime.now();
+    }
 }

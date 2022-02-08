@@ -53,6 +53,11 @@ public class User extends BaseEntity{
     @OneToMany(mappedBy = "user")
     private List<StudyTime> studyTime = new ArrayList<>();
 
+    @PrePersist
+    public void createdAt(){
+        this.createdDate = LocalDateTime.now();
+    }
+
 
 
 }
