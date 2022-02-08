@@ -11,3 +11,7 @@ export function getActiveMenuIndex (state) {
 	const keys = Object.keys(state.menus)
 	return keys.findIndex(item => item === state.activeMenu)
 }
+// 스터디룸 inside, standby에서 사용
+export function getIsFullPage (state) {
+  return state.isFullPage
+}
