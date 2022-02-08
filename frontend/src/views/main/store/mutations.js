@@ -11,3 +11,7 @@ export function setMenuActive (state, index) {
 export function setMenuActiveMenuName (state, menuName) {
 	state.activeMenu = menuName
 }
+
+export function setIsFullPage(state, boolVal) {
+  state.isFullPage = boolVal
+}

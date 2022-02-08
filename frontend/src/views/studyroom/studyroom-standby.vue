@@ -21,7 +21,7 @@
     >입장</el-button>
   </div>
 </template>
-<style>
+<style scoped>
   .mm {
     height:64px;
     width:80px;

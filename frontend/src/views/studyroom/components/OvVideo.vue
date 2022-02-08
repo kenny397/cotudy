@@ -1,5 +1,5 @@
 <template>
-	<video ref="el" style="width: 400px; border-radius: 10px 10px 0px 0px" autoplay/>
+	<video ref="el" style="width: 35vw; height: auto; border-radius: 10px 10px 0px 0px" autoplay/>
 </template>
 
 <script>

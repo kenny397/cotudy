@@ -1,75 +1,63 @@
 <template>
-  <div>스터디룸 내부화면</div>
-  <div>{{ state.mySessionId + '번 방 스터디룸 내부화면' }}</div>
-  <div id="session-header">
-    <h1 id="session-title">{{ state.mySessionId }}</h1>
+  <el-container>
+    <el-main>
+      <div id="session-header">
+        <!-- <h1 id="session-title">{{ state.mySessionId + '번 방 스터디룸 내부화면' }}</h1> -->
+
+      </div>
+
+      <el-row
+        :gutter="5"
+      >
+        <el-col
+
+          :xs="24" :sm="24" :md="12" :lg="12" :xl="12"
+        >
+          <div
+            class="grid-content bg-purple video-sub-container isNotStudying"
+            v-bind:class="{isStudying : state.isStudying}"
+          >
+            <user-video
+              :stream-manager="state.publisher"
+              :session="state.session"
+              @click="updateMainVideoStreamManager(state.publisher)"
+
+            />
+            <div>내 공부 시간 : {{state.newStudyTime}}</div>
+          </div>
+        </el-col>
+
+        <el-col
+
+          :xs="24" :sm="24" :md="12" :lg="12" :xl="12"
+          v-for="sub in state.subscribers"
+          :key="sub.stream.connection.connectionId"
+        >
+          <div
+            class="grid-content bg-purple video-sub-container isNotStudying"
+            v-bind:class="{isStudying : state.isStudying}"
+          >
+            <user-video
+              :session="state.session"
+              :stream-manager="sub"
+              @click="updateMainVideoStreamManager(sub)"
+            />
+            <div :id="sub.stream.connection.connectionId"></div>
+          </div>
+        </el-col>
+
+      </el-row>
+    </el-main>
+
+  </el-container>
+  <div class="studyroom-footer" style="background:white; height: 5vh">
     <input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession" value="Leave session">
   </div>
-  <el-row :gutter="5">
-    <el-col
-      :span="6"
-      :xs="24" :sm="12" :md="8" :xl="6"
-    >
-      <div
-        class="grid-content bg-purple video-sub-container isNotStudying"
-        v-bind:class="{isStudying : state.isStudying}"
-      >
-        <user-video
-          :stream-manager="state.publisher"
-          :session="state.session"
-          @click="updateMainVideoStreamManager(state.publisher)"
-        />
-        <div>내 공부 시간 : {{state.newStudyTime}}</div>
-      </div>
-    </el-col>
-    <el-col
-      :span="6"
-      :xs="24" :sm="12" :md="8" :xl="6"
-      v-for="sub in state.subscribers"
-      :key="sub.stream.connection.connectionId"
-    >
-      <div
-        class="grid-content bg-purple video-sub-container isNotStudying"
-        v-bind:class="{isStudying : state.isStudying}"
-      >
-        <user-video
-          :session="state.session"
-          :stream-manager="sub"
-          @click="updateMainVideoStreamManager(sub)"
-        />
-        <div :id="sub.stream.connection.connectionId"></div>
-      </div>
-    </el-col>
-  </el-row>
-
-  <!-- <div id="video-full-container" class="col-md-6">
-    <div class="video-sub-container">
-      <user-video
-        :stream-manager="state.publisher"
-        :session="state.session"
-        v-bind:class="{isStudying : state.isStudying}"
-        class="isNotStudying"
-        @click.native="updateMainVideoStreamManager(state.publisher)"
-      />
-      <div>내 공부 시간 : {{state.newStudyTime}}</div>
-    </div>
-    <div
-      v-for="sub in state.subscribers"
-      :key="sub.stream.connection.connectionId"
-      class="video-sub-container"
-    >
-      <user-video
-        :session="state.session"
-        :stream-manager="sub"
-        @click.native="updateMainVideoStreamManager(sub)"
-      />
-      <div :id="sub.stream.connection.connectionId"></div>
-    </div>
-  </div> -->
-  <div id="label-container1"></div>
 </template>
 
-<style>
+<style scoped>
+
+
   .isNotStudying {
     border-radius : 20px;
     border : 3px solid red;
@@ -80,26 +68,35 @@
   }
   .video-sub-container {
     display: inline-block;
+    width:35vw;
+    height:auto;
+  }
+  .el-container {
+    background: rgb(155, 155, 155);
+    height: 95vh;
+    align-items: center;
+  }
+  .el-main {
+    background:black;
+    width: 100vw;
+    height: 95vh;
+    margin: 0px 8vw 0px 8vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .el-row {
-  margin-bottom: 20px;
+    justify-content: space-around;
   }
   .el-row:last-child {
     margin-bottom: 0;
   }
   .el-col {
-    border-radius: 5px;
-  }
-  .bg-purple {
-    background: #d3dce6;
+    border-radius: 4px;
+    margin-bottom: 10px;
   }
   .grid-content {
-    border-radius: 10px;
-    min-height: 36px;
-  }
-  .row-bg {
-    padding: 10px 0;
-    background-color: #f9fafc;
+    border-radius: 4px;
   }
 </style>
 
@@ -118,7 +115,7 @@ import * as tmPose from '@teachablemachine/pose';
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
-const OPENVIDU_SERVER_URL = 'https://' + location.hostname + ':8443';
+const OPENVIDU_SERVER_URL = 'https://' + 'i6b105.p.ssafy.io' + ':6443';
 const OPENVIDU_SERVER_SECRET = 'MY_SECRET';
 
 export default {
@@ -163,9 +160,6 @@ export default {
       ctx : undefined,
       maxPredictions : undefined,
       URL : 'https://teachablemachine.withgoogle.com/models/tCGfolhxR/',
-      labelContainer : undefined,
-
-
 
     })
 
@@ -177,6 +171,7 @@ export default {
     onUnmounted(() => {
       leaveSession()
     })
+
 
     onBeforeMount(() => {
       state.mySessionId = route.params.studyroomId
@@ -218,7 +213,7 @@ export default {
       state.isLeaveSession = setInterval(sendMessage, 1000)
     }
 
-    const sendedMessage = function() {
+    const listenMessage = function() {
 
 			state.session.on('signal:my-chat', (event) => {
         if (event.from.connectionId !== state.publisher.stream.connection.connectionId){
@@ -259,7 +254,7 @@ export default {
 			});
 
 			// message send 위치
-      sendedMessage()
+      listenMessage()
 
 			// --- Connect to the session with a valid user token ---
 
@@ -276,7 +271,7 @@ export default {
 							videoSource: undefined, // The source of video. If undefined default webcam
 							publishAudio: true,  	// Whether you want to start publishing with your audio unmuted or not
 							publishVideo: true,  	// Whether you want to start publishing with your video enabled or not
-							resolution: '640x480',  // The resolution of your video
+							resolution: '1280x720',  // The resolution of your video
 							frameRate: 30,			// The frame rate of your video
 							insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
 							mirror: false       	// Whether to mirror your local video or not
@@ -314,7 +309,6 @@ export default {
       state.model = undefined;
       state.webcam = undefined;
       state.ctx = undefined;
-      state.labelContainer = undefined;
       state.maxPredictions = undefined;
 
 			window.removeEventListener('beforeunload', leaveSession);
@@ -395,10 +389,7 @@ export default {
       const canvas = state.webcam.canvas;
       canvas.width = size; canvas.height = size;
       state.ctx = canvas.getContext('2d');
-      state.labelContainer = document.getElementById('label-container1');
-      for (let i = 0; i < state.maxPredictions; i++) { // and class labels
-          state.labelContainer.appendChild(document.createElement('div'));
-      }
+
     }
 
     async function loop() {
@@ -422,11 +413,6 @@ export default {
       } else {
         state.isStudying = false
         timerStop()
-      }
-      for (let i = 0; i < state.maxPredictions; i++) {
-        const classPrediction =
-          prediction[i].className + ': ' + prediction[i].probability.toFixed(2);
-          state.labelContainer.childNodes[i].innerHTML = classPrediction;
       }
 
       // finally draw the poses
