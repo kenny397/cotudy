@@ -1,8 +1,7 @@
 package com.ssafy.a105.api.service;
 
-import com.ssafy.a105.api.request.RankingListGetReq;
 import com.ssafy.a105.api.response.RankingListGetRes;
-import com.ssafy.a105.db.repository.StudyTimeRepository;
+import com.ssafy.a105.db.repository.RankingListRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,14 +14,20 @@ import javax.persistence.PersistenceContext;
 @RequiredArgsConstructor
 public class RankingServiceImpl implements RankingService{
 
-    final StudyTimeRepository studyTimeRepository;
+    private final RankingListRepository rankingListRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
 
+//    @Override
+//    public List<RankingListGetRes> listRanking() {
+//        List<RankingListGetRes> rankings = rankingListRepository.getTotalStudyTimeByUserPaging();
+//        return rankings;
+//    }
+
     @Override
-    public Page<RankingListGetRes> listRanking(RankingListGetReq rankingInfo, Pageable pageable) {
-        //Page<RankingListGetRes> rankings = studyTimeRepository.findAll(pageable);
-        return null;
+    public Page<RankingListGetRes> listRanking(Pageable pageable) {
+        Page<RankingListGetRes> rankings = rankingListRepository.getTotalStudyTimeByUserPaging(pageable);
+        return rankings;
     }
 }
