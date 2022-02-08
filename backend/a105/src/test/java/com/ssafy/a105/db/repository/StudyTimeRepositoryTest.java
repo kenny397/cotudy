@@ -2,22 +2,17 @@ package com.ssafy.a105.db.repository;
 
 import com.ssafy.a105.db.entity.StudyTime;
 import com.ssafy.a105.db.entity.User;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @ExtendWith(SpringExtension.class)
@@ -40,10 +35,10 @@ class StudyTimeRepositoryTest {
         entityManager.persist(user);
         StudyTime studyTime= new StudyTime();
         studyTime.setUser(user);
-        studyTime.setTime("123");
+        studyTime.setTime(123L);
 
 
-        StudyTime s=studyTimeRepository.save(studyTime);
+        StudyTime s = studyTimeRepository.save(studyTime);
 
         List<StudyTime> getStudyTime= studyTimeRepository.findByUser(user);
 

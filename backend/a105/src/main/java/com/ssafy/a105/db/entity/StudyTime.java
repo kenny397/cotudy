@@ -19,7 +19,6 @@ public class StudyTime extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     private StudyClass studyClass;
 
-
     private Long time;
 
     private LocalDateTime createdDate;
