@@ -1,6 +1,7 @@
 package com.ssafy.a105.api.service;
 
 import com.ssafy.a105.api.response.RankingListGetRes;
+import com.ssafy.a105.db.dto.RankingListDto;
 import com.ssafy.a105.db.repository.RankingListRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,12 @@ public class RankingServiceImpl implements RankingService{
 //        List<RankingListGetRes> rankings = rankingListRepository.getTotalStudyTimeByUserPaging();
 //        return rankings;
 //    }
+
+    @Override
+    public Page<RankingListGetRes> listRanking(RankingListDto rankingInfo, Pageable pageable) {
+        Page<RankingListGetRes> rankings = rankingListRepository.getTotalStudyTimeByUserPaging(rankingInfo, pageable);
+        return rankings;
+    }
 
     @Override
     public Page<RankingListGetRes> listRanking(Pageable pageable) {
