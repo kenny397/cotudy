@@ -17,13 +17,10 @@ import java.util.List;
 @Repository
 public class RankingListRepository extends QuerydslRepositorySupport {
     private final JPAQueryFactory jpaQueryFactory;
-  //  private final EntityManager entityManager;
 
-    //, EntityManager entityManager
     public RankingListRepository(JPAQueryFactory jpaQueryFactory) {
         super(StudyTime.class);
         this.jpaQueryFactory = jpaQueryFactory;
-       // this.entityManager = entityManager;
     }
 
     public PageImpl<RankingListGetRes> getTotalStudyTimeByUserPaging(Pageable pageable) {
@@ -31,7 +28,7 @@ public class RankingListRepository extends QuerydslRepositorySupport {
 
         JPQLQuery<RankingListGetRes> query = jpaQueryFactory.select(new QRankingListGetRes(qStudyTime.user.nickname, qStudyTime.user.department.name, qStudyTime.time.sum()))
                 .from(qStudyTime)
-                .groupBy(qStudyTime.user);
+                .groupBy(qStudyTime.user).orderBy(qStudyTime.time.sum().desc());
 
         long totalCount = query.fetchCount(); // 2)
         List<RankingListGetRes> results = getQuerydsl().applyPagination(pageable, query).fetch();  // 3)

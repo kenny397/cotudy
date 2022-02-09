@@ -36,7 +36,6 @@ public class RankingController {
     })
     public ResponseEntity<Page<RankingListGetRes>> list(@ApiParam(value = "페이지 정보.", required = true) @PageableDefault(size = 5) Pageable pageable){
 
-        //List<RankingListGetRes> rankingList = rankingService.listRanking();
         Page<RankingListGetRes> rankingList = rankingService.listRanking(pageable);
 
         return ResponseEntity.status(200).body(rankingList);
