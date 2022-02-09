@@ -4,6 +4,7 @@ import com.ssafy.a105.api.request.RoomEnterPostReq;
 import com.ssafy.a105.api.request.RoomExitPostReq;
 import com.ssafy.a105.api.request.RoomInfoPostReq;
 import com.ssafy.a105.api.response.RoomInfoRes;
+import com.ssafy.a105.api.response.RoomRegisterRes;
 import com.ssafy.a105.api.service.RoomService;
 import com.ssafy.a105.api.service.RoomServiceImpl;
 import com.ssafy.a105.common.model.response.BaseResponseBody;
@@ -72,10 +73,11 @@ public class RoomController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> createRoom(@RequestBody RoomInfoPostReq roomInfo){
+    public ResponseEntity<RoomRegisterRes> createRoom(@RequestBody RoomInfoPostReq roomInfo){
         System.out.println(roomInfo);
         Room room = roomService.createRoom(roomInfo);
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200,"방이 생성되었습니다."));
+
+        return ResponseEntity.status(200).body(RoomRegisterRes.of(room.getId()));
     }
 
     @PostMapping("/exit")
