@@ -34,11 +34,11 @@ public class RoomController {
     })
     public ResponseEntity<List<RoomInfoRes>> getRooms(){
         List<Room> rooms =roomService.getRooms();
-        System.out.println(rooms);
-       // if(rooms.isEmpty())return ResponseEntity.status(500).body(null);
+
+        if(rooms.isEmpty())return ResponseEntity.status(500).body(null);
         List<RoomInfoRes> roomsInfo =new ArrayList<>();
         for(int i=0; i<rooms.size(); i++){
-            roomsInfo.add(RoomInfoRes.of(/*roomService.getRoomHeadCount(rooms.get(i).getId())*/1,rooms.get(i)));
+            roomsInfo.add(RoomInfoRes.of(roomService.getRoomHeadCount(rooms.get(i).getId()),rooms.get(i)));
         }
         return ResponseEntity.status(200).body(roomsInfo);
     }
@@ -96,6 +96,8 @@ public class RoomController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends  BaseResponseBody> enterRoom(@RequestBody RoomEnterPostReq roomInfo){
+        System.out.println(roomInfo.getRoomId());
+        System.out.println(roomInfo.getUserId());
         roomService.enterRoom(roomInfo);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200,"방 정보가 저장되었습니다."));
     }

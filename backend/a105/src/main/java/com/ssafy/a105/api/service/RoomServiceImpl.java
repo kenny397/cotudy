@@ -52,9 +52,10 @@ public class RoomServiceImpl implements RoomService{
         //룸만들기
         return roomRepository.save(room);
     }
-
+    @Transactional
     public void exitRoom(RoomExitPostReq studyInfo) {
         //user_room 데이터 까기
+
         Room room = roomRepository.getById(Long.parseLong(studyInfo.getRoomId()));
         User user = userRepository.getById(Long.parseLong(studyInfo.getUserId()));
         UserRoom userRoom = new UserRoom();
@@ -63,12 +64,13 @@ public class RoomServiceImpl implements RoomService{
         userRoomRepository.delete(userRoom);
         StudyTime studyTime = new StudyTime();
         studyTime.setTime(studyInfo.getStudyTime());
+
         studyTime.setCreatedDate(LocalDateTime.now());
         studyTime.setUser(user);
         studyTimeRepository.save(studyTime);
         //study_time 테이블 주기
     }
-
+    @Transactional
     public void enterRoom(RoomEnterPostReq roomInfo) {
         UserRoom userRoom = new UserRoom();
         User user = userRepository.getById(Long.parseLong(roomInfo.getUserId()));
@@ -76,6 +78,7 @@ public class RoomServiceImpl implements RoomService{
         userRoom.setRoom(room);
         userRoom.setUser(user);
         userRoomRepository.save(userRoom);
+        getRoomHeadCount(room.getId());
     }
 
     public Long getRoomHeadCount(long roomId) {

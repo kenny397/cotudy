@@ -8,6 +8,6 @@ import lombok.Setter;
 public class RoomExitPostReq {
     String userId;
     String roomId;
-    Long StudyTime;
+    Long studyTime;
 
 }
