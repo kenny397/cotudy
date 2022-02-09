@@ -34,6 +34,5 @@ export default {
   isDesktopPlatform: IsDesktop,
   activeMenu: 'home',
   menus: menuData,
-  isFullPage: false,
-
+  studyroomListLength: 0,
 }

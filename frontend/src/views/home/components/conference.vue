@@ -52,6 +52,10 @@
 
 </style>
 <script>
+// import { reactive, onBeforeMount } from 'vue'
+// import { useStore } from 'vuex'
+// import axios from 'axios'
+
 export default {
   name: 'Home',
 
@@ -66,6 +70,10 @@ export default {
     }
   },
 
-  setup () {}
+
+
+  setup () {
+
+  }
 }
 </script>
