@@ -10,18 +10,29 @@
             <el-button @click="mute()" class="btn-stl" type="text" style="margin-left:50px;">
               <font-awesome-icon v-if="!state.muteVar" icon="microphone"/>
               <font-awesome-icon v-if="state.muteVar" icon="microphone-slash"/>
-              마이크
+              <p style="margin-left:5px;">마이크</p>
             </el-button>
             <el-button @click="video()" class="btn-stl" type="text">
               <font-awesome-icon v-if="!state.videoVar" icon="video"/>
               <font-awesome-icon v-if="state.videoVar" icon="video-slash"/>
-              비디오
+              <p style="margin-left:5px;">비디오</p>
             </el-button>
             <el-button @click="state.dialogVisible = true" class="btn-stl" type="text">모션인식 도움말</el-button>
             <el-dialog
               v-model="state.dialogVisible"
               width="50%"
             >
+              <!-- <swiper
+                :slides-per-view="3"
+                :space-between="50"
+                @swiper="onSwiper"
+                @slideChange="onSlideChange"
+              >
+                <swiper-slide>Slide 1</swiper-slide>
+                <swiper-slide>Slide 2</swiper-slide>
+                <swiper-slide>Slide 3</swiper-slide>
+                ...
+              </swiper> -->
               <el-carousel indicator-position="outside">
                 <el-carousel-item v-for="tutorial in state.tutorials" :key="tutorial.id">
                   <img style="width:500px; height:300px;" :src="tutorial.imageUrl" alt="tutorial">
@@ -94,11 +105,19 @@ import { reactive, onMounted, onUnmounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 
+//swiper
+// import { Swiper, SwiperSlide } from 'swiper/vue';
+// import 'swiper/css'; // swiper styles
+
 // 티쳐블머신
 import * as tmPose from '@teachablemachine/pose';
 
 export default {
   name: 'studyroom-detail',
+  // components: {
+  //   Swiper,
+  //   SwiperSlide,
+  // },
 
   setup () {
     const route = useRoute()
@@ -145,10 +164,6 @@ export default {
         {
           id: 7,
           imageUrl: require('../../assets/images/tutorial/tuto7.png')
-        },
-        {
-          id: 8,
-          imageUrl: require('../../assets/images/tutorial/tuto8.png')
         },
       ]
     })
@@ -262,7 +277,23 @@ export default {
       state.videoVar = !state.videoVar
     }
 
-    return { state, enterRoom, init, mute, video }
+    // const onSwiper = (swiper) => {
+    //     console.log(swiper);
+    // }
+
+    // const onSlideChange = () => {
+    //   console.log('slide change');
+    // }
+
+    return {
+      state,
+      enterRoom,
+      init,
+      mute,
+      video,
+      // onSwiper,
+      // onSlideChange
+    }
   },
 
 
