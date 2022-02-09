@@ -5,6 +5,7 @@ import StudyroomStandby from '@/views/studyroom/studyroom-standby'
 import StudyroomInside from '@/views/studyroom/studyroom-inside'
 import Ranking from '@/views/ranking/ranking'
 
+// eslint-disable-next-line no-undef
 const fullMenu = require('@/views/main/menu.json')
 
 function makeRoutesFromMenu () {

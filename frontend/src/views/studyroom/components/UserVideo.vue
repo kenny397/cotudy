@@ -1,6 +1,10 @@
 <template>
 <div v-if="streamManager">
-	<ov-video :stream-manager="streamManager"/>
+	<ov-video
+    :stream-manager="streamManager"
+    :head-count="headCount"
+    v-bind:class="{isStudying : state.isStudying}"
+  />
 </div>
 </template>
 
@@ -18,6 +22,7 @@ export default {
 	props: {
 		streamManager: Object,
 		session: Object,
+    headCount: Number,
 	},
 
 	setup (props) {
