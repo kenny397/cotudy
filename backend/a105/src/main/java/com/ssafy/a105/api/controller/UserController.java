@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -50,11 +51,10 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserRes> getUserInfo(@PathVariable("userId")long userId){
-
+    public ResponseEntity<UserRes> getUserInfo(@PathVariable("userId") long userId){
         User user = userService.getUserInfo(userId);
-        return ResponseEntity.status(200).body(UserRes.of(user));
 
+        return ResponseEntity.status(200).body(UserRes.of(user));
     }
 
     @GetMapping("/check/id/{userId}")
