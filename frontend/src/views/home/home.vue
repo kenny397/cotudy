@@ -118,6 +118,7 @@
 <script>
 import Conference from './components/conference'
 import { reactive } from 'vue'
+import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
 export default {
@@ -129,9 +130,9 @@ export default {
 
   setup () {
     const router = useRouter()
-
+    const store = useStore()
     const state = reactive({
-      count: 20,
+      count: store.state.root.studyroomListLength,
       options: [
         {
         value: 'linguistic',
@@ -198,8 +199,14 @@ export default {
       createStudyDialogVisible: false
     })
 
+    // onUpdated(() => {
+    //   mm()
+    // })
+
     const load = function () {
-      state.count += 10
+      if (state.count <= store.state.root.studyroomListLength) {
+        state.count += 10
+      }
     }
 
     const clickConference = function (id) {
@@ -210,6 +217,12 @@ export default {
         }
       })
     }
+
+    // const mm = function () {
+    //   console.log('--------------')
+    //   console.log(store.state.root.studyroomListLength)
+    //   console.log('--------------')
+    // }
 
     return { state, load, clickConference }
   }

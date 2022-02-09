@@ -7,7 +7,7 @@ module.exports = {
     open: true,
     proxy: {
       '/api/v1': {
-        target: 'http://localhost:8080/'
+        target: 'https://i6b105.p.ssafy.io/'
       }
     },
     historyApiFallback: true,
