@@ -3,49 +3,59 @@
     <el-main>
       <div id="session-header">
         <!-- <h1 id="session-title">{{ state.mySessionId + '번 방 스터디룸 내부화면' }}</h1> -->
-
       </div>
-
       <el-row
         :gutter="5"
       >
         <el-col
-
-          :xs="24" :sm="24" :md="12" :lg="12" :xl="12"
+          :xs="24" :sm="24" v-bind:md="state.headCountForGrid"
         >
           <div
-            class="grid-content bg-purple video-sub-container isNotStudying"
+            class="grid-content video-sub-container isNotStudying"
             v-bind:class="{isStudying : state.isStudying}"
+            :style="state.headCountForVideoWidth"
           >
             <user-video
+              :head-count="state.headCountForVideoWidth"
               :stream-manager="state.publisher"
               :session="state.session"
               @click="updateMainVideoStreamManager(state.publisher)"
-
             />
-            <div>내 공부 시간 : {{state.newStudyTime}}</div>
+            <div
+              class="info-container"
+              :style="state.headCountForInfoContainer"
+            >
+              <div class="nickname-area">{{state.myUserName}}</div>
+              <div class="studytime-area">{{state.newStudyTime}}</div>
+            </div>
           </div>
         </el-col>
-
         <el-col
-
-          :xs="24" :sm="24" :md="12" :lg="12" :xl="12"
+          :xs="24" :sm="24" v-bind:md="state.headCountForGrid"
           v-for="sub in state.subscribers"
           :key="sub.stream.connection.connectionId"
         >
           <div
-            class="grid-content bg-purple video-sub-container isNotStudying"
-            v-bind:class="{isStudying : state.isStudying}"
+            class="grid-content video-sub-container isNotStudying"
           >
             <user-video
+              :head-count="state.headCountForVideoWidth"
               :session="state.session"
               :stream-manager="sub"
               @click="updateMainVideoStreamManager(sub)"
             />
-            <div :id="sub.stream.connection.connectionId"></div>
+            <div
+              class="info-container"
+              :style="state.headCountForInfoContainer"
+            >
+              <div class="nickname-area">{{(sub.stream.connection.data).slice(15).slice(0, -2)}}</div>
+              <div
+                class="studytime-area"
+                :id="sub.stream.connection.connectionId"
+              ></div>
+            </div>
           </div>
         </el-col>
-
       </el-row>
     </el-main>
 
@@ -66,7 +76,9 @@
   }
   .video-sub-container {
     display: inline-block;
-    width:35vw;
+    /* width:70vw; */
+    /* width:41vw; */
+    /* width:27vw; */
     height:auto;
   }
   .el-container {
@@ -74,7 +86,7 @@
     height: 95vh;
     align-items: center;
   }
-  .el-main {
+  .el-container .el-main {
     background:black;
     width: 100vw;
     height: 95vh;
@@ -82,19 +94,55 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    --el-main-padding: 0px;
   }
-  .el-row {
-    justify-content: space-around;
+  .el-container .el-main .el-row {
+    justify-content: center;
   }
-  .el-row:last-child {
+  .el-container .el-main .el-row:last-child {
     margin-bottom: 0;
   }
-  .el-col {
-    border-radius: 4px;
+  .el-container .el-main .el-row .el-col {
+    /* width:71vw; */
+    /* width:42vw; */
+    /* width:28vw; */
+    height:auto;
     margin-bottom: 10px;
   }
-  .grid-content {
-    border-radius: 4px;
+
+  .el-container .el-main .el-row .el-col .grid-content video {
+    height: auto;
+    border-radius: 20px
+  }
+
+  .el-container .el-main .el-row .el-col .grid-content .info-container {
+    /* height: 37.3vw; */
+    /* margin-top: -37.3vw; */
+    /* height: 22.3vw;
+    margin-top: -22.3vw; */
+    /* height: 14.8vw;
+    margin-top: -14.8vw; */
+    z-index: 100;
+    position: relative;
+    color:white;
+    border-radius: 20px 20px 20px 20px;
+  }
+
+  .el-container .el-main .el-row .el-col .grid-content .info-container div {
+    position: absolute;
+    height: 2vw;
+    line-height: 2vw;
+    background : rgba(0, 0, 0, 0.651);
+    border-radius: 10px;
+    padding: 0 0.5vw 0 0.5vw;
+  }
+  .el-container .el-main .el-row .el-col .grid-content .info-container .studytime-area {
+    right:0.5vw;
+    bottom: 0.5vw;
+  }
+  .el-container .el-main .el-row .el-col .grid-content .info-container .nickname-area {
+    left: 0.5vw;
+    top: 0.5vw;
   }
 </style>
 
@@ -103,7 +151,7 @@
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import UserVideo from './components/UserVideo.vue';
-import { reactive, onMounted, onUnmounted, onBeforeMount, computed } from 'vue'
+import { reactive, onMounted, onUnmounted, onBeforeMount, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, } from 'vue-router'
 
@@ -127,6 +175,34 @@ export default {
     const route = useRoute()
     const store = useStore()
     const state = reactive({
+
+      headCountForGrid: computed(() => {
+        const headCount = state.subscribers.length
+        if(headCount == 0){
+          return 24
+        } else if(headCount > 3) {
+          return 8
+        } else {
+          return 12
+        }
+      }),
+      headCountForVideoWidth: computed(() => {
+        if (state.subscribers.length == 0){
+          return 70
+        } else if(state.subscribers.length > 3){
+          return 27
+        } else {
+          return 41
+        }
+      }),
+
+      headCountForInfoContainer: computed(() => {
+        return {
+          'height': state.headCountForVideoWidth * 0.540 + 'vw',
+          'margin-top': state.headCountForVideoWidth * -0.540 + 'vw'
+        }
+        //
+      }),
       // openvidu
       OV: undefined,
 			session: undefined,
@@ -187,6 +263,10 @@ export default {
     const timerStop = function() {
       clearInterval(state.timer);
     }
+
+    watch(() => state.subscribers, () => {
+
+    })
 
     // openvidu methods
     const sendMessage = function () {
@@ -269,7 +349,7 @@ export default {
 							videoSource: undefined, // The source of video. If undefined default webcam
 							publishAudio: true,  	// Whether you want to start publishing with your audio unmuted or not
 							publishVideo: true,  	// Whether you want to start publishing with your video enabled or not
-							resolution: '1280x720',  // The resolution of your video
+							resolution: '800x425',  // The resolution of your video
 							frameRate: 30,			// The frame rate of your video
 							insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
 							mirror: false       	// Whether to mirror your local video or not
