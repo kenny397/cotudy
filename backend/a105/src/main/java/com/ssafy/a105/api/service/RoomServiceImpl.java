@@ -58,13 +58,10 @@ public class RoomServiceImpl implements RoomService{
 
         Room room = roomRepository.getById(Long.parseLong(studyInfo.getRoomId()));
         User user = userRepository.getById(Long.parseLong(studyInfo.getUserId()));
-        UserRoom userRoom = new UserRoom();
-        userRoom.setRoom(room);
-        userRoom.setUser(user);
+        UserRoom userRoom = userRoomRepository.findByRoomIdAndUserId(Long.parseLong(studyInfo.getRoomId()),Long.parseLong(studyInfo.getUserId()));
         userRoomRepository.delete(userRoom);
         StudyTime studyTime = new StudyTime();
         studyTime.setTime(studyInfo.getStudyTime());
-
         studyTime.setCreatedDate(LocalDateTime.now());
         studyTime.setUser(user);
         studyTimeRepository.save(studyTime);
@@ -75,6 +72,7 @@ public class RoomServiceImpl implements RoomService{
         UserRoom userRoom = new UserRoom();
         User user = userRepository.getById(Long.parseLong(roomInfo.getUserId()));
         Room room = roomRepository.getById(Long.parseLong(roomInfo.getRoomId()));
+
         userRoom.setRoom(room);
         userRoom.setUser(user);
         userRoomRepository.save(userRoom);
