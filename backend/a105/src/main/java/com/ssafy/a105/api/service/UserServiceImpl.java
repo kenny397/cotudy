@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 
 
 @Service
@@ -18,39 +19,45 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
+    @Transactional
     public User createUser(UserRegisterPostReq registerInfo) {
         User user =new User();
         user.setUserId(registerInfo.getEmail());
         user.setNickname(registerInfo.getNickName());
-        user.setPassword(registerInfo.getEmail());
+        user.setPassword(registerInfo.getPassword());
 
         return userRepository.save(user);
     }
 
     @Override
+    @Transactional
     public void deleteUser(long userId) {
         User user = userRepository.getById(userId);
         userRepository.delete(user);
     }
 
     @Override
+    @Transactional
     public User modifyUser(UserRegisterPostReq registerInfo) {
         return null;
     }
 
     @Override
     public User getUserInfo(long userId) {
-        return null;
+        return userRepository.findById(userId);
     }
 
     @Override
     public long getCheckEmail(String email) {
-
-        return 0;
+        Optional<User> user = userRepository.findByUserId(email);
+        if(!user.isPresent())return 0;
+        return 1;
     }
 
     @Override
     public long getCheckNickName(String nickName) {
-        return 0;
+        Optional<User> user = userRepository.findByNickname(nickName);
+        if(!user.isPresent())return 0;
+        return 1;
     }
 }

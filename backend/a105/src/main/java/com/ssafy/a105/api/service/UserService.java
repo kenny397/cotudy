@@ -3,6 +3,8 @@ package com.ssafy.a105.api.service;
 import com.ssafy.a105.api.request.UserRegisterPostReq;
 import com.ssafy.a105.db.entity.User;
 
+import java.util.Optional;
+
 public interface UserService {
     User createUser(UserRegisterPostReq registerInfo);
 
