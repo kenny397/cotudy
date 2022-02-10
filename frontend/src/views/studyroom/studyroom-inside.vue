@@ -11,8 +11,7 @@
           :xs="24" :sm="24" v-bind:md="state.headCountForGrid"
         >
           <div
-            class="grid-content video-sub-container isNotStudying"
-            v-bind:class="{isStudying : state.isStudying}"
+            class="grid-content video-sub-container"
             :style="state.headCountForVideoWidth"
           >
             <user-video
@@ -36,7 +35,7 @@
           :key="sub.stream.connection.connectionId"
         >
           <div
-            class="grid-content video-sub-container isNotStudying"
+            class="grid-content video-sub-container"
           >
             <user-video
               :head-count="state.headCountForVideoWidth"
@@ -60,36 +59,128 @@
     </el-main>
 
   </el-container>
-  <div class="studyroom-footer" style="background:white; height: 5vh">
-    <input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession" value="Leave session">
+  <div class="studyroom-footer">
+    <div class="time-area">
+      <span>학습 시간 {{state.newStudyTime}}</span>
+    </div>
+    <div class="button-area">
+
+      <el-button
+        round
+        class="gray-btn"
+        @click="audioBtnClick()"
+        v-bind:class="{'red-btn' : state.isAudioMuted}"
+      >
+        <font-awesome-icon v-if="!state.isAudioMuted" icon="microphone"/>
+        <font-awesome-icon v-if="state.isAudioMuted" icon="microphone-slash"/>
+        <span class="btn-desc">마이크</span>
+      </el-button>
+      <el-button
+        round
+        class="gray-btn"
+        @click="videoBtnClick()"
+        v-bind:class="{'red-btn' : state.isVideoMuted}"
+      >
+        <font-awesome-icon v-if="!state.isVideoMuted" icon="video"/>
+        <font-awesome-icon v-if="state.isVideoMuted" icon="video-slash"/>
+        <span class="btn-desc">비디오</span>
+      </el-button>
+      <el-button
+        round
+        class="gray-btn"
+        @click="restBtnClick()"
+        v-bind:class="{'red-btn' : state.isResting}">
+        <font-awesome-icon v-if="!state.isResting" icon="moon" />
+        <font-awesome-icon v-if="state.isResting" icon="pen"/>
+        <span v-if="!state.isResting" class="btn-desc">휴식</span>
+        <span v-if="state.isResting" class="btn-desc">복귀</span>
+      </el-button>
+      <el-button @click="leaveSession" round class="red-btn">
+        <font-awesome-icon icon="phone-slash"/>
+      </el-button>
+      <el-button
+        style="position: absolute; right:40px; bottom:15px;"
+        round
+        class="green-btn is-study-area"
+        v-bind:class="{'red-btn' : !state.isStudying}">
+        <font-awesome-icon v-if="state.isStudying" icon="pen"/>
+        <font-awesome-icon v-if="!state.isStudying" icon="bed"/>
+        <span v-if="state.isStudying" class="btn-desc">학습중</span>
+        <span v-if="!state.isStudying" class="btn-desc">학습정지</span>
+      </el-button>
+    </div>
   </div>
 </template>
 
 <style scoped>
-  .isNotStudying {
-    border-radius : 20px;
-    border : 3px solid red;
-  }
-  .isStudying {
-    border-radius : 20px;
-    border : 3px solid green;
-  }
-  .video-sub-container {
-    display: inline-block;
-    /* width:70vw; */
-    /* width:41vw; */
-    /* width:27vw; */
-    height:auto;
-  }
   .el-container {
-    background: rgb(155, 155, 155);
-    height: 95vh;
+    /* background: #202124; */
+    background:black;
+    height: 92.5vh;
     align-items: center;
   }
+  .studyroom-footer {
+    background: rgb(5, 5, 5);
+    height: 7.5vh
+  }
+  .studyroom-footer .button-area {
+    text-align: center;
+    line-height: 7.5vh;
+  }
+  @media (max-width: 850px) {
+    .studyroom-footer .time-area {
+      display: none;
+    }
+    .is-study-area {
+      display: none;
+    }
+  }
+  .studyroom-footer .time-area {
+    position: absolute;
+    line-height: 7.5vh;
+    left: 10px;
+    float:left;
+    color:white;
+  }
+  .studyroom-footer .button-area button{
+    height:40px;
+    font-weight: 500;
+    font-size: 17px;
+    padding: 10px 25px 10px 25px;
+  }
+
+  .studyroom-footer .button-area button .btn-desc{
+    margin-left : 10px;
+  }
+
+  .studyroom-footer .button-area .gray-btn{
+    background: #5f6368;
+    color:white;
+    border: none;
+  }
+  .studyroom-footer .button-area .green-btn{
+    background: #3AC258;
+    color:white;
+    border: none;
+  }
+  .studyroom-footer .button-area .gray-btn:hover {
+    background: #7e8085;
+  }
+  .studyroom-footer .button-area .red-btn{
+    background: #d81411;
+    color:white;
+    border: none;
+  }
+  .studyroom-footer .button-area .red-btn:hover {
+    background: #ce5250;
+    color:white;
+    border: none;
+  }
   .el-container .el-main {
-    background:black;
+    /* background:#202124; */
+    background: rgb(20, 20, 20);
     width: 100vw;
-    height: 95vh;
+    height: 92.5vh;
     margin: 0px 8vw 0px 8vw;
     display: flex;
     align-items: center;
@@ -109,10 +200,16 @@
     height:auto;
     margin-bottom: 10px;
   }
-
+  .el-container .el-main .el-row .el-col .video-sub-container {
+    display: inline-block;
+    /* width:70vw; */
+    /* width:41vw; */
+    /* width:27vw; */
+    height:auto;
+  }
   .el-container .el-main .el-row .el-col .grid-content video {
     height: auto;
-    border-radius: 20px
+    border-radius: 10px
   }
 
   .el-container .el-main .el-row .el-col .grid-content .info-container {
@@ -144,6 +241,7 @@
     left: 0.5vw;
     top: 0.5vw;
   }
+
 </style>
 
 
@@ -151,9 +249,9 @@
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import UserVideo from './components/UserVideo.vue';
-import { reactive, onMounted, onUnmounted, onBeforeMount, computed, watch } from 'vue'
+import { reactive, onMounted, onUnmounted, onBeforeMount, computed } from 'vue'
 import { useStore } from 'vuex'
-import { useRoute, } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 // 티쳐블머신
 
@@ -174,6 +272,7 @@ export default {
   setup () {
     const route = useRoute()
     const store = useStore()
+    const router = useRouter()
     const state = reactive({
 
       headCountForGrid: computed(() => {
@@ -211,6 +310,8 @@ export default {
 			subscribers: [],
 			mySessionId: '',
 			myUserName: 'Participant' + Math.floor(Math.random() * 100),
+      isAudioMuted: false,
+      isVideoMuted: false,
 
       // 세션 종료시 clearInterval 용도
       isLeaveSession : undefined,
@@ -224,11 +325,13 @@ export default {
         return utc.substr(utc.indexOf(':') - 2, 8);
       }),
       timer: undefined,
-      isStartStopWatch : 1,
+      isTimerWorking: false,
+      isResting: false,
+      isStudying: false,
 
 
       // teachable machine
-      isStudying : false,
+      isMotionTracking : false,
       model : undefined,
       webcam : undefined,
       ctx : undefined,
@@ -264,9 +367,35 @@ export default {
       clearInterval(state.timer);
     }
 
-    watch(() => state.subscribers, () => {
+    const audioBtnClick = function() {
+      if(state.isAudioMuted){
+        state.publisher.publishAudio(true)
+        state.isAudioMuted = false
+      } else {
+        state.publisher.publishAudio(false)
+        state.isAudioMuted = true
 
-    })
+      }
+    }
+
+    const videoBtnClick = function () {
+      if(state.isVideoMuted) {
+        state.publisher.publishVideo(true)
+        state.isVideoMuted = false
+      } else {
+        state.publisher.publishVideo(false)
+        state.isVideoMuted = true
+        timerStop()
+      }
+    }
+
+    const restBtnClick = function() {
+      if(state.isResting) {
+        state.isResting = false
+      } else {
+        state.isResting = true
+      }
+    }
 
     // openvidu methods
     const sendMessage = function () {
@@ -383,13 +512,16 @@ export default {
 			state.publisher = undefined;
 			state.subscribers = [];
 			state.OV = undefined;
-      state.isStudying = false;
+      state.isMotionTracking = false;
       state.model = undefined;
       state.webcam = undefined;
       state.ctx = undefined;
       state.maxPredictions = undefined;
 
 			window.removeEventListener('beforeunload', leaveSession);
+      router.push({
+        name: 'home',
+      })
 		}
 
 		const updateMainVideoStreamManager = function(stream) {
@@ -483,13 +615,20 @@ export default {
       // Prediction 2: run input through teachable machine classification model
       const prediction = await state.model.predict(posenetOutput);
       if ( prediction[0].probability.toFixed(2) > 0.5) {
-        if(!state.isStudying) {
-          state.isStudying = true
+        state.isMotionTracking = true
+      } else {
+        state.isMotionTracking = false
+      }
+
+      if (state.isMotionTracking && !state.isVideoMuted && !state.isResting) {
+        state.isStudying = true
+        if(!state.isTimerWorking){
           timerStart()
-          state.isStartStopWatch -= 1
+          state.isTimerWorking = true
         }
       } else {
         state.isStudying = false
+        state.isTimerWorking = false
         timerStop()
       }
 
@@ -509,7 +648,7 @@ export default {
       }
     }
 
-    return {state, updateMainVideoStreamManager, leaveSession, joinSession, timerStart, timerStop}
+    return {state, updateMainVideoStreamManager, leaveSession, joinSession, timerStart, timerStop, audioBtnClick, videoBtnClick, restBtnClick}
   }
 
 }
