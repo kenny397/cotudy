@@ -1,5 +1,5 @@
 <template>
-	<video :style="state.widthSize" style="height: auto; border-radius: 20px" class="user-video" ref="el" autoplay/>
+	<video :style="state.widthSize" style="height: auto; border-radius: 10px;" class="user-video" ref="el" autoplay/>
 </template>
 
 
@@ -19,7 +19,6 @@ export default {
       widthSize : computed(()=> {
         return { width: props.headCount+'vw' }
       }),
-
     })
 
     onMounted (()=> {
