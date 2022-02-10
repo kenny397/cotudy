@@ -3,6 +3,7 @@ package com.ssafy.a105.api.service;
 import com.ssafy.a105.api.response.RankingListGetRes;
 import com.ssafy.a105.db.dto.RankingListDto;
 import com.ssafy.a105.db.repository.RankingListRepository;
+import com.ssafy.a105.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,7 @@ import javax.persistence.PersistenceContext;
 public class RankingServiceImpl implements RankingService{
 
     private final RankingListRepository rankingListRepository;
+    private final UserRepository userRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -32,9 +34,16 @@ public class RankingServiceImpl implements RankingService{
         return rankings;
     }
 
-    @Override
-    public Page<RankingListGetRes> listRanking(Pageable pageable) {
-        Page<RankingListGetRes> rankings = rankingListRepository.getTotalStudyTimeByUserPaging(pageable);
-        return rankings;
-    }
+//    @Override
+//    public Page<RankingListGetRes2> listRanking(Pageable pageable) {
+//        Page<RankingListGetRes2> rankings = rankingListRepository.getTotalStudyTimeByUserPaging2(pageable);
+//
+//        return rankings;
+//    }
+
+//    @Override
+//    public Page<RankingListGetRes> listRanking(Pageable pageable) {
+//        Page<RankingListGetRes> rankings = rankingListRepository.getTotalStudyTimeByUserPaging(pageable);
+//        return rankings;
+//    }
 }

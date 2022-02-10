@@ -36,10 +36,11 @@ public class RankingController {
                                                         @ApiParam(value = "기간(1일,1주,1달)", required = true)@RequestParam(value = "term", defaultValue="all") String period,
                                                         @ApiParam(value = "카테고리", required = true)@RequestParam(value = "category", defaultValue="all") String category,
                                                         @ApiParam(value = "유저 닉네임 ", required = true)@RequestParam(value = "user_nickname", defaultValue="") String nickname,
+                                                        @ApiParam(value = "유저 닉네임 ", required = true)@RequestParam(value = "userId", defaultValue="0L") long userPid,
                                                         @ApiParam(value = "페이지 정보.", required = true) @PageableDefault(size = 5) Pageable pageable){
 
-        RankingListDto requestBody = RankingListDto.of(department,period,category,nickname);
-        //Page<RankingListGetRes> rankingList = rankingService.listRanking(pageable);
+        RankingListDto requestBody = RankingListDto.of(department,period,category,nickname,userPid);
+        //Page<RankingListGetRes2> rankingList = rankingService.listRanking(pageable);
         Page<RankingListGetRes> rankingList = rankingService.listRanking(requestBody, pageable);
         return ResponseEntity.status(200).body(rankingList);
     }

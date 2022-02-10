@@ -10,6 +10,7 @@ public interface RankingService {
 
     //public List<RankingListGetRes> listRanking(RankingListGetReq rankingInfo);
     public Page<RankingListGetRes> listRanking(RankingListDto rankingInfo, Pageable pageable);
-    public Page<RankingListGetRes> listRanking(Pageable pageable);
+    //public Page<RankingListGetRes2> listRanking( Pageable pageable);
+    //public Page<RankingListGetRes> listRanking(Pageable pageable);
     //public List<RankingListGetRes> listRanking();
 }
