@@ -3,14 +3,8 @@ package com.ssafy.a105.api.service;
 import com.ssafy.a105.api.request.RoomEnterPostReq;
 import com.ssafy.a105.api.request.RoomExitPostReq;
 import com.ssafy.a105.api.request.RoomInfoPostReq;
-import com.ssafy.a105.db.entity.Room;
-import com.ssafy.a105.db.entity.StudyTime;
-import com.ssafy.a105.db.entity.User;
-import com.ssafy.a105.db.entity.UserRoom;
-import com.ssafy.a105.db.repository.RoomRepository;
-import com.ssafy.a105.db.repository.StudyTimeRepository;
-import com.ssafy.a105.db.repository.UserRepository;
-import com.ssafy.a105.db.repository.UserRoomRepository;
+import com.ssafy.a105.db.entity.*;
+import com.ssafy.a105.db.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +20,7 @@ public class RoomServiceImpl implements RoomService{
     private final UserRepository userRepository;
     private final StudyTimeRepository studyTimeRepository;
     private final UserRoomRepository userRoomRepository;
+    private final StudyClassRepository studyClassRepository;
     public List<Room> getRooms() {
         return roomRepository.findAll();
     }
@@ -47,6 +42,8 @@ public class RoomServiceImpl implements RoomService{
         room.setMaxUser(roomInfo.getRoomMaxPeople());
         room.setDescription(roomInfo.getRoomDescription());
         room.setThumbnail(roomInfo.getRoomThumbnail());
+        StudyClass studyClass=studyClassRepository.getById(Long.parseLong(roomInfo.getRoomCategory()));
+        room.setStudyClass(studyClass);
 
         //카테고리 어떻게 할지 못정함
         //룸만들기
