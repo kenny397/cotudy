@@ -4,12 +4,15 @@
     <p @click="goHome" style="cursor:pointer">Home</p>
     <p @click="goRank" style="cursor:pointer">Rank</p>
     <!-- <p @click="goCommunity" style="cursor:pointer">Community</p> -->
-    <el-input
+    <el-autocomplete
+      v-model="state.search"
+      :fetch-suggestions="querySearch()"
+      maxlength="20"
       placeholder="검색"
+      show-word-limit
       prefix-icon="el-icon-search"
-      v-model="state.searchValue"
       style="width:500px; --el-input-bg-color:rgba(243, 243, 245, 1);"
-    ></el-input>
+    />
     <el-button round plain type="success" @click="clickLogin">Signup/Login</el-button>
   </div>
 </template>
@@ -46,9 +49,10 @@
 </style>
 
 <script>
-import { reactive, computed } from 'vue'
+import { reactive, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import axios from 'axios'
 
 export default {
   name: 'main-header',
@@ -65,7 +69,8 @@ export default {
     const router = useRouter()
 
     const state = reactive({
-      searchValue: null,
+      searchValue: [],
+      search: '',
       isCollapse: true,
       menuItems: computed(() => {
         const MenuItems = store.getters['root/getMenus']
@@ -105,6 +110,9 @@ export default {
         name: keys[0]
       })
     }
+    onMounted(() => {
+      searchData()
+    })
 
     const clickLogin = () => {
       emit('openLoginDialog')
@@ -122,6 +130,7 @@ export default {
         name: keys[0]
       })
     }
+
     // 이것도 됨!
     // const goHome = function () {
     //   router.push({
@@ -134,7 +143,33 @@ export default {
       })
     }
 
-    return { state, menuSelect, clickLogo, clickLogin, changeCollapse, goHome, goRank }
+    const searchData = function () {
+      axios.get('rooms')
+        .then(res => {
+          for (let i in res.data) {
+            state.searchValue.push(res.data[i].roomTitle)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+
+    const querySearch = function () {
+      state.searchValue.filter
+    }
+
+    return {
+      state,
+      menuSelect,
+      clickLogo,
+      clickLogin,
+      changeCollapse,
+      goHome,
+      goRank,
+      searchData,
+      querySearch
+    }
   }
 }
 </script>
