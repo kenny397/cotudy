@@ -98,8 +98,6 @@ public class RoomController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends  BaseResponseBody> enterRoom(@RequestBody RoomEnterPostReq roomInfo){
-        System.out.println(roomInfo.getRoomId());
-        System.out.println(roomInfo.getUserId());
         roomService.enterRoom(roomInfo);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200,"방 정보가 저장되었습니다."));
     }

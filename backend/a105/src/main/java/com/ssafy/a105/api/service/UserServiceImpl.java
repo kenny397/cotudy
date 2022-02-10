@@ -1,12 +1,16 @@
 package com.ssafy.a105.api.service;
 
+import com.ssafy.a105.api.request.RivalPostReq;
 import com.ssafy.a105.api.request.UserRegisterPostReq;
+import com.ssafy.a105.db.entity.Rival;
 import com.ssafy.a105.db.entity.User;
+import com.ssafy.a105.db.repository.RivalRepository;
 import com.ssafy.a105.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -16,7 +20,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
-
+    private final RivalRepository rivalRepository;
 
     @Override
     @Transactional
@@ -59,5 +63,34 @@ public class UserServiceImpl implements UserService{
         Optional<User> user = userRepository.findByNickname(nickName);
         if(!user.isPresent())return 0;
         return 1;
+    }
+
+    @Override
+    public List<Rival> getRivals(long id) {
+        List<Rival> rival= rivalRepository.findByUserId(id);
+        if(rival.isEmpty())System.out.println("rival 비어있음");
+        else System.out.println("rival" +rival.size());
+
+        return rival;
+    }
+
+    @Override
+    @Transactional
+    public void registerRival(RivalPostReq rivalPostReq) {
+        Rival rival = new Rival();
+        User userMain = userRepository.getById(rivalPostReq.getUserId());
+        User userTarget=userRepository.getById(rivalPostReq.getRivalId());
+        rival.setUser(userMain);
+        rival.setRival(userTarget);
+        rivalRepository.save(rival);
+    }
+
+    @Override
+    @Transactional
+    public void deleteRival(RivalPostReq rivalPostReq) {
+        User userMain = userRepository.getById(rivalPostReq.getUserId());
+        User userTarget=userRepository.getById(rivalPostReq.getRivalId());
+        Rival rival = rivalRepository.findByUserIdAndRivalId(userMain.getId(),userTarget.getId());
+        rivalRepository.delete(rival);
     }
 }

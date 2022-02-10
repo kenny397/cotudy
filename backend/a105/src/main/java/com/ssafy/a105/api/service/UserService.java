@@ -1,9 +1,11 @@
 package com.ssafy.a105.api.service;
 
+import com.ssafy.a105.api.request.RivalPostReq;
 import com.ssafy.a105.api.request.UserRegisterPostReq;
+import com.ssafy.a105.db.entity.Rival;
 import com.ssafy.a105.db.entity.User;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface UserService {
     User createUser(UserRegisterPostReq registerInfo);
@@ -17,4 +19,10 @@ public interface UserService {
     long getCheckEmail(String email);
 
     long getCheckNickName(String nickName);
+
+    List<Rival> getRivals(long id);
+
+    void registerRival(RivalPostReq rivalPostReq);
+
+    void deleteRival(RivalPostReq rivalPostReq);
 }
