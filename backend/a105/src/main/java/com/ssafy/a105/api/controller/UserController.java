@@ -1,11 +1,14 @@
 package com.ssafy.a105.api.controller;
 
+import com.ssafy.a105.api.request.RivalPostReq;
 import com.ssafy.a105.api.request.UserRegisterPostReq;
 import com.ssafy.a105.api.response.CheckRes;
+import com.ssafy.a105.api.response.RivalRes;
 import com.ssafy.a105.api.response.RoomInfoRes;
 import com.ssafy.a105.api.response.UserRes;
 import com.ssafy.a105.api.service.UserService;
 import com.ssafy.a105.common.model.response.BaseResponseBody;
+import com.ssafy.a105.db.entity.Rival;
 import com.ssafy.a105.db.entity.Room;
 import com.ssafy.a105.db.entity.User;
 import io.swagger.annotations.ApiOperation;
@@ -69,8 +72,27 @@ public class UserController {
         return ResponseEntity.status(200).body(CheckRes.of(count));
     }
 
-    //@GetMapping("/rival/{userId}")
+    @GetMapping("/rival/{userId}")
+    public ResponseEntity<List<RivalRes>> getRivals(@PathVariable("userId") long id){
+        List<Rival> rivals = userService.getRivals(id);
+        if(rivals.isEmpty())return ResponseEntity.status(500).body(null);
+        List<RivalRes> rivalResList=new ArrayList<>();
+        for(int i=0; i<rivals.size(); i++){
+            rivalResList.add(RivalRes.of(rivals.get(i).getRival()));
+        }
+        return ResponseEntity.status(200).body(rivalResList);
 
+    }
+    @PostMapping("/rival")
+    public ResponseEntity<? extends BaseResponseBody> registerRival(@RequestBody RivalPostReq rivalPostReq) {
+        userService.registerRival(rivalPostReq);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200,"라이벌 등록 완료."));
+    }
+    @DeleteMapping("/rival")
+    public ResponseEntity<? extends BaseResponseBody> deleteRival(@RequestBody RivalPostReq rivalPostReq) {
+        userService.deleteRival(rivalPostReq);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200,"라이벌 삭제 완료."));
+    }
     //@GetMapping("/time/today/{userId}")
 
     //@GetMapping("/time/entire/{userId}")
