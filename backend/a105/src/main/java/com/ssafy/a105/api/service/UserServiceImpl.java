@@ -2,9 +2,11 @@ package com.ssafy.a105.api.service;
 
 import com.ssafy.a105.api.request.RivalPostReq;
 import com.ssafy.a105.api.request.UserRegisterPostReq;
+import com.ssafy.a105.api.response.StudyTimeRes;
 import com.ssafy.a105.db.entity.Rival;
 import com.ssafy.a105.db.entity.User;
 import com.ssafy.a105.db.repository.RivalRepository;
+import com.ssafy.a105.db.repository.UserCustomRepository;
 import com.ssafy.a105.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,7 @@ public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
     private final RivalRepository rivalRepository;
-
+    private final UserCustomRepository userCustomRepository;
     @Override
     @Transactional
     public User createUser(UserRegisterPostReq registerInfo) {
@@ -92,5 +94,16 @@ public class UserServiceImpl implements UserService{
         User userTarget=userRepository.getById(rivalPostReq.getRivalId());
         Rival rival = rivalRepository.findByUserIdAndRivalId(userMain.getId(),userTarget.getId());
         rivalRepository.delete(rival);
+    }
+
+    @Override
+    public StudyTimeRes getDayStudyTime(long id){
+
+        return userCustomRepository.getDayStudyTimeByUser(id);
+    }
+
+    @Override
+    public StudyTimeRes getTotalStudyTime(long id) {
+        return userCustomRepository.getTotalStudyTimeByUser(id);
     }
 }
