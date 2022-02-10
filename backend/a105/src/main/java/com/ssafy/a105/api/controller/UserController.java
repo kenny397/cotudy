@@ -2,10 +2,7 @@ package com.ssafy.a105.api.controller;
 
 import com.ssafy.a105.api.request.RivalPostReq;
 import com.ssafy.a105.api.request.UserRegisterPostReq;
-import com.ssafy.a105.api.response.CheckRes;
-import com.ssafy.a105.api.response.RivalRes;
-import com.ssafy.a105.api.response.RoomInfoRes;
-import com.ssafy.a105.api.response.UserRes;
+import com.ssafy.a105.api.response.*;
 import com.ssafy.a105.api.service.UserService;
 import com.ssafy.a105.common.model.response.BaseResponseBody;
 import com.ssafy.a105.db.entity.Rival;
@@ -93,10 +90,17 @@ public class UserController {
         userService.deleteRival(rivalPostReq);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200,"라이벌 삭제 완료."));
     }
-    //@GetMapping("/time/today/{userId}")
+    @GetMapping("/time/entire/{userId}")
+    public ResponseEntity<StudyTimeRes> getTotalStudyTime(@PathVariable("userId") long id){
+        StudyTimeRes studyTimeRes= userService.getTotalStudyTime(id);
+        return ResponseEntity.status(200).body(studyTimeRes);
+    }
 
-    //@GetMapping("/time/entire/{userId}")
-
+    @GetMapping("/time/today/{userId}")
+    public ResponseEntity<StudyTimeRes> getDayStudyTime(@PathVariable("userId") long id){
+       StudyTimeRes studyTimeRes= userService.getDayStudyTime(id);
+        return ResponseEntity.status(200).body(studyTimeRes);
+    }
 
 
 

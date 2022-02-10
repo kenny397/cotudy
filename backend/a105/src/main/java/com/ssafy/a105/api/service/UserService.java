@@ -2,6 +2,7 @@ package com.ssafy.a105.api.service;
 
 import com.ssafy.a105.api.request.RivalPostReq;
 import com.ssafy.a105.api.request.UserRegisterPostReq;
+import com.ssafy.a105.api.response.StudyTimeRes;
 import com.ssafy.a105.db.entity.Rival;
 import com.ssafy.a105.db.entity.User;
 
@@ -25,4 +26,8 @@ public interface UserService {
     void registerRival(RivalPostReq rivalPostReq);
 
     void deleteRival(RivalPostReq rivalPostReq);
+
+    StudyTimeRes getDayStudyTime(long id);
+
+    StudyTimeRes getTotalStudyTime(long id);
 }
