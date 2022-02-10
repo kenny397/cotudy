@@ -35,8 +35,8 @@ public class RankingController {
     public ResponseEntity<Page<RankingListGetRes>> list(@ApiParam(value = "소속(전체,친구,내소속)", required = true)@RequestParam(value = "class", defaultValue="all") String department,
                                                         @ApiParam(value = "기간(1일,1주,1달)", required = true)@RequestParam(value = "term", defaultValue="all") String period,
                                                         @ApiParam(value = "카테고리", required = true)@RequestParam(value = "category", defaultValue="all") String category,
-                                                        @ApiParam(value = "유저 닉네임 ", required = true)@RequestParam(value = "user_nickname", defaultValue="") String nickname,
-                                                        @ApiParam(value = "유저 닉네임 ", required = true)@RequestParam(value = "userId", defaultValue="0L") long userPid,
+                                                        @ApiParam(value = "검색 닉네임명 ", required = true)@RequestParam(value = "user_nickname", defaultValue="") String nickname,
+                                                        @ApiParam(value = "유저 닉네임 아이디", required = true)@RequestParam(value = "userId", defaultValue="0") long userPid,
                                                         @ApiParam(value = "페이지 정보.", required = true) @PageableDefault(size = 5) Pageable pageable){
 
         RankingListDto requestBody = RankingListDto.of(department,period,category,nickname,userPid);
