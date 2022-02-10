@@ -19,43 +19,36 @@
             <el-input v-model="state.form.name" placeholder="방 제목을 작성해주세요"></el-input>
           </el-form-item>
           <el-form-item label="방 최대 인원" prop="number">
-            <el-select v-model="state.form.number">
-              <el-option label="1" value="1"></el-option>
-              <el-option label="2" value="2"></el-option>
-              <el-option label="3" value="3"></el-option>
-              <el-option label="4" value="4"></el-option>
-              <el-option label="5" value="5"></el-option>
-              <el-option label="6" value="6"></el-option>
-            </el-select>
+            <el-input-number v-model="state.form.number" :min="1" :max="6" />
           </el-form-item>
-          <el-form-item label="방 공개여부">
-            <el-switch v-model="state.form.delivery"></el-switch>
-          </el-form-item>
-          <el-form-item label="카테고리" prop="type">
-            <el-checkbox-group v-model="state.form.type">
-              <el-checkbox label="어학" name="type"></el-checkbox>
-              <el-checkbox label="공무원" name="type"></el-checkbox>
-              <el-checkbox label="취업" name="type"></el-checkbox>
-              <el-checkbox label="자격증" name="type"></el-checkbox>
-              <el-checkbox label="대입" name="type"></el-checkbox>
-              <el-checkbox label="자율" name="type"></el-checkbox>
-            </el-checkbox-group>
+          <el-form-item label="카테고리" prop="category">
+            <el-radio-group v-model="state.form.category">
+              <el-radio :label="1">어학</el-radio>
+              <el-radio :label="2">공무원</el-radio>
+              <el-radio :label="3">취업</el-radio>
+              <el-radio :label="4">대입</el-radio>
+              <el-radio :label="5">자격증</el-radio>
+              <el-radio :label="6">자율</el-radio>
+            </el-radio-group>
           </el-form-item>
           <el-form-item label="방 설명">
             <el-input v-model="state.form.desc" type="textarea"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button plain @click="state.createStudyDialogVisible = false">Cancel</el-button>
-            <el-button plain type="success" @click="onSubmit">Create</el-button>
+            <el-button plain type="success" @click="onSubmit()">Create</el-button>
           </el-form-item>
         </el-form>
+        <el-alert v-if="state.alertVisible" title="방 제목을 입력해주세요!" type="warning" center />
       </el-dialog>
     </div>
   </div>
   <div style="display:flex; justify-content:center; height: 50rem !important;">
     <ul class="infinite-list" v-infinite-scroll="load" style="overflow:auto">
-      <li v-for="i in state.count" @click="clickConference(i)" class="infinite-list-item" :key="i" >
-        <conference />
+      <li v-for="i in state.studyList" @click="clickConference(i.roomId)" class="infinite-list-item" :key="i.roomId" >
+        <conference
+        :title="i.roomTitle"
+        :desc="`#${i.roomDescription}`" />
       </li>
     </ul>
   </div>
@@ -117,9 +110,10 @@
 
 <script>
 import Conference from './components/conference'
-import { reactive } from 'vue'
+import { reactive, onMounted, onUpdated } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import axios from 'axios'
 
 export default {
   name: 'Home',
@@ -161,9 +155,8 @@ export default {
       ],
       form: {
         name: '',
-        number: '',
-        delivery: false,
-        type: [],
+        number: 0,
+        category: 1,
         desc: '',
       },
       rules: {
@@ -183,25 +176,26 @@ export default {
         number: [
           {
             required: true,
-            message: '방 최대 인원을 선택해 주세요',
-            trigger: 'blur',
-          },
+          }
         ],
-        type: [
+        category: [
           {
-            type: 'array',
             required: true,
-            message: '하나 이상의 카테고리를 선택해 주세요',
-            trigger: 'blur',
-          },
+          }
         ],
       },
-      createStudyDialogVisible: false
+      createStudyDialogVisible: false,
+      studyList: [],
+      alertVisible: false
     })
 
-    // onUpdated(() => {
-    //   mm()
-    // })
+    onMounted(() => {
+      studyListData()
+    })
+
+    onUpdated(() => {
+      resetDialog()
+    })
 
     const load = function () {
       if (state.count <= store.state.root.studyroomListLength) {
@@ -218,13 +212,56 @@ export default {
       })
     }
 
-    // const mm = function () {
-    //   console.log('--------------')
-    //   console.log(store.state.root.studyroomListLength)
-    //   console.log('--------------')
-    // }
+    const studyListData = function () {
+      axios.get('rooms')
+        .then(res => {
+          state.studyList = res.data
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
 
-    return { state, load, clickConference }
+    const resetDialog = function () {
+      if (!state.createStudyDialogVisible) {
+        state.form.name = ''
+        state.form.number = 0
+        state.form.category = 1
+        state.form.desc = ''
+      }
+    }
+
+    const onSubmit = function () {
+      if (!state.form.name) {
+        state.alertVisible = true
+        return
+      }
+      axios({
+        url: 'rooms',
+        method: 'post',
+        data: {
+          'roomTitle': state.form.name,
+          'roomMaxPeople': state.form.number,
+          'roomDescription': state.form.desc,
+          'roomThumbnail': `${state.form.category}`,
+          'roomCategory': state.form.category
+        }
+      })
+        .then(res => {
+          console.log('방 생성 성공')
+          router.push({
+            name: 'studyroom-detail',
+            params: {
+              studyroomId: res.data.id
+            }
+          })
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+
+    return { state, load, clickConference, studyListData, onSubmit, resetDialog }
   }
 }
 </script>

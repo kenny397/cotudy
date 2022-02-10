@@ -52,7 +52,7 @@
 
 </style>
 <script>
-// import { reactive, onBeforeMount } from 'vue'
+// import { reactive, computed } from 'vue'
 // import { useStore } from 'vuex'
 // import axios from 'axios'
 
@@ -62,15 +62,13 @@ export default {
   props: {
     title: {
       type: String,
-      default: 'Studyroom'
+      default: ''
     },
     desc: {
       type: String,
-      default: '#공부'
+      default: ''
     }
   },
-
-
 
   setup () {
 
