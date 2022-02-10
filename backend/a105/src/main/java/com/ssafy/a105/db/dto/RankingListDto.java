@@ -12,17 +12,20 @@ public class RankingListDto {
     String keyDepartment;
     String keyPeriod;
     String keyCategory;
-    String userNickname;
+    String searchUserNickname;
+    long loginUserPid;
 
     public static RankingListDto of(String keyDepartment,
                                     String keyPeriod,
                                     String keyCategory,
-                                    String userNickname){
+                                    String searchUserNickname,
+                                    long loginUserPid){
         RankingListDto body = new RankingListDto();
         body.keyDepartment = keyDepartment;
         body.keyPeriod = keyPeriod;
         body.keyCategory = keyCategory;
-        body.userNickname = userNickname;
+        body.searchUserNickname = searchUserNickname;
+        body.loginUserPid = loginUserPid;
         return body;
     }
 }

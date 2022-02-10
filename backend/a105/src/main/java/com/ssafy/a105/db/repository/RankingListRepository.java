@@ -8,7 +8,9 @@ import com.ssafy.a105.api.response.RankingListGetRes;
 import com.ssafy.a105.db.dto.RankingListDto;
 import com.ssafy.a105.db.entity.QStudyTime;
 import com.ssafy.a105.db.entity.StudyTime;
+import com.ssafy.a105.db.entity.User;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -17,10 +19,13 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 @Repository
 public class RankingListRepository extends QuerydslRepositorySupport {
     private final JPAQueryFactory jpaQueryFactory;
+    @Autowired
+    public RivalRepository rivalRepository;
+    @Autowired
+    public UserRepository userRepository;
 
     public RankingListRepository(JPAQueryFactory jpaQueryFactory) {
         super(StudyTime.class);
@@ -31,7 +36,7 @@ public class RankingListRepository extends QuerydslRepositorySupport {
         QStudyTime qStudyTime = QStudyTime.studyTime;
 
         JPQLQuery<RankingListGetRes> query = jpaQueryFactory.select(new QRankingListGetRes(qStudyTime.user.nickname, qStudyTime.user.department.name, qStudyTime.time.sum()))
-                .from(qStudyTime).where(eqCategory(rankingInfo.getKeyCategory()), eqNickName(rankingInfo.getUserNickname()), eqPeriod(rankingInfo.getKeyPeriod()))
+                .from(qStudyTime).where(eqCategory(rankingInfo.getKeyCategory()), eqNickName(rankingInfo.getSearchUserNickname()), eqPeriod(rankingInfo.getKeyPeriod()), eqDepartment(rankingInfo.getLoginUserPid(),rankingInfo.getKeyDepartment()))
                 .groupBy(qStudyTime.user).orderBy(qStudyTime.time.sum().desc());
 
         long totalCount = query.fetchCount(); // 2)
@@ -52,7 +57,20 @@ public class RankingListRepository extends QuerydslRepositorySupport {
         return new PageImpl<>(results, pageable, totalCount);  // 4)
 
     }
+/**
+    public PageImpl<RankingListGetRes2> getTotalStudyTimeByUserPaging2(Pageable pageable) {
+        QStudyTime qStudyTime = QStudyTime.studyTime;
+        QStudyTime qStudyTime2 = QStudyTime.studyTime;
+        JPQLQuery<RankingListGetRes2> query = jpaQueryFactory.select(new QRankingListGetRes2(qStudyTime.user.nickname, qStudyTime.user.department.name, qStudyTime.time.sum(), ExpressionUtils.as(JPAExpressions.select(count(qStudyTime.time.sum())).from(qStudyTime).where(qStudyTime.time.sum().gt(qStudyTime.time.sum())),"rank")))
+                .from(qStudyTime)
+                .groupBy(qStudyTime.user).orderBy(qStudyTime.time.sum().desc());
 
+        long totalCount = query.fetchCount(); // 2)
+        List<RankingListGetRes2> results = getQuerydsl().applyPagination(pageable, query).fetch();  // 3)
+        return new PageImpl<>(results, pageable, totalCount);  // 4)
+
+    }
+*/
     private BooleanExpression eqCategory(String category) {
         if (category.equals("all") || category.isEmpty()) {
             return null;
@@ -76,19 +94,35 @@ public class RankingListRepository extends QuerydslRepositorySupport {
 
     }
 
-    private BooleanExpression eqDepartment(String nickName, String department) {
-        if (nickName.equals("all") || nickName.isEmpty() || department.equals("all") || department.isEmpty()) {
+    private BooleanExpression eqDepartment(long userPid, String department) {
+        if (userPid == 0 || department.equals("all") || department.isEmpty()) {
             return null;
         }
-        //사용자의 이름을 알아야함.
-        //해당 유저의 소속을 알아내야하는데 그 방법을 모르겠음 ㅠ
-        // 그래서 parameter로 그냥 소속보내주게하기
-        // 라이벌도 어떻게 해야할지 고민좀...
-        if(department.equals("department"))
-            return QStudyTime.studyTime.user.department.name.eq(department);
+        if (department.equals("department")) {
+            User user = userRepository.findById(userPid);
+            return QStudyTime.studyTime.user.department.name.eq(user.getDepartment().getName());
+        }
+//        List<Rival> rivalList = rivalRepository.findByUserId(userPid);
+//        BooleanExpression query = eqRivalList(rivalList);
+//        for(int i = 0; i<rivalList.size(); i++){
+//
+//        }
+        return null;
+    }
+/**
+    private BooleanExpression eqRivalList(List<Rival> rivalList) {
+        if(rivalList.isEmpty())
+            return null;
+        for(int i = 0; i<rivalList.size(); i++){
+
+        }
         return null;
     }
 
+    private BooleanExpression eqRival(Long rivalId) {
+        return rivalId != null ? QStudyTime.studyTime.user.id.eq(rivalId) : null;
+    }
+*/
     private int calculateDays(String period) {
         int days = 365;
         LocalDateTime now = LocalDateTime.now();
@@ -115,7 +149,7 @@ public class RankingListRepository extends QuerydslRepositorySupport {
                 case 2:
                     if (isLeapYear)
                         return 29;
-                     else
+                    else
                         return 28;
                 default:
                     return 30;
