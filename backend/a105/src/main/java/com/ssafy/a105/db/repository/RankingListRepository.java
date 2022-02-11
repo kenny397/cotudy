@@ -1,10 +1,10 @@
 package com.ssafy.a105.db.repository;
-
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.a105.api.response.QRankingListGetRes;
 import com.ssafy.a105.api.response.RankingListGetRes;
+import com.ssafy.a105.api.response.RankingRankGetRes;
 import com.ssafy.a105.db.dto.RankingListDto;
 import com.ssafy.a105.db.entity.QStudyTime;
 import com.ssafy.a105.db.entity.Rival;
@@ -16,7 +16,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,11 +33,26 @@ public class RankingListRepository extends QuerydslRepositorySupport {
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
+    public RankingRankGetRes getUserRankInfoByUser(long userPid){
+        QStudyTime qStudyTime = QStudyTime.studyTime;
+
+        List<RankingListGetRes> userList = jpaQueryFactory.select(new QRankingListGetRes(qStudyTime.user.nickname, qStudyTime.user.department.name, qStudyTime.time.sum()))
+                .from(qStudyTime).groupBy(qStudyTime.user).orderBy(qStudyTime.time.sum().desc()).fetch();
+
+        User user = userRepository.getById(userPid);
+        for(int i = 0; i<userList.size();i++){
+            RankingListGetRes order = userList.get(i);
+            if(order.getNickName().equals(user.getNickname())){
+                return new RankingRankGetRes(order.getNickName(), order.getDepartment(), order.getTotalStudyTime(), i+1);
+            }
+        }
+        return null;
+    }
     public PageImpl<RankingListGetRes> getTotalStudyTimeByUserPaging(@NotNull RankingListDto rankingInfo, Pageable pageable) {
         QStudyTime qStudyTime = QStudyTime.studyTime;
 
         JPQLQuery<RankingListGetRes> query = jpaQueryFactory.select(new QRankingListGetRes(qStudyTime.user.nickname, qStudyTime.user.department.name, qStudyTime.time.sum()))
-                .from(qStudyTime).where(eqCategory(rankingInfo.getKeyCategory()), eqNickName(rankingInfo.getSearchUserNickname()), eqPeriod(rankingInfo.getKeyPeriod()), eqDepartment(rankingInfo.getLoginUserPid(), rankingInfo.getKeyDepartment()))
+                .from(qStudyTime).where(eqCategory(rankingInfo.getCategory()), eqNickName(rankingInfo.getUserNickname()), eqPeriod(rankingInfo.getTerm()), eqDepartment(rankingInfo.getUserId(), rankingInfo.getUserClass()))
                 .groupBy(qStudyTime.user).orderBy(qStudyTime.time.sum().desc());
 
         long totalCount = query.fetchCount(); // 2)
@@ -59,36 +73,22 @@ public class RankingListRepository extends QuerydslRepositorySupport {
 
     }
 
-    /**
-     * public PageImpl<RankingListGetRes2> getTotalStudyTimeByUserPaging2(Pageable pageable) {
-     * QStudyTime qStudyTime = QStudyTime.studyTime;
-     * QStudyTime qStudyTime2 = QStudyTime.studyTime;
-     * JPQLQuery<RankingListGetRes2> query = jpaQueryFactory.select(new QRankingListGetRes2(qStudyTime.user.nickname, qStudyTime.user.department.name, qStudyTime.time.sum(), ExpressionUtils.as(JPAExpressions.select(count(qStudyTime.time.sum())).from(qStudyTime).where(qStudyTime.time.sum().gt(qStudyTime.time.sum())),"rank")))
-     * .from(qStudyTime)
-     * .groupBy(qStudyTime.user).orderBy(qStudyTime.time.sum().desc());
-     * <p>
-     * long totalCount = query.fetchCount(); // 2)
-     * List<RankingListGetRes2> results = getQuerydsl().applyPagination(pageable, query).fetch();  // 3)
-     * return new PageImpl<>(results, pageable, totalCount);  // 4)
-     * <p>
-     * }
-     */
     private BooleanExpression eqCategory(String category) {
-        if (category.equals("all") || category.isEmpty()) {
+        if (category == null || category.isEmpty()) {
             return null;
         }
         return QStudyTime.studyTime.studyClass.name.eq(category);
     }
 
     private BooleanExpression eqNickName(String nickName) {
-        if (nickName.equals("all") || nickName.isEmpty()) {
+        if (nickName == null || nickName.isEmpty()) {
             return null;
         }
         return QStudyTime.studyTime.user.nickname.contains(nickName);
     }
 
     private BooleanExpression eqPeriod(String period) {
-        if (period.equals("all") || period.isEmpty()) {
+        if (period == null || period.isEmpty()) {
             return null;
         }
         int days = calculateDays(period);
@@ -97,7 +97,7 @@ public class RankingListRepository extends QuerydslRepositorySupport {
     }
 
     private BooleanExpression eqDepartment(long userPid, String department) {
-        if (userPid == 0 || department.equals("all") || department.isEmpty()) {
+        if (userPid == 0 || department == null || department.isEmpty()) {
             return null;
         }
         if (department.equals("department")) {
