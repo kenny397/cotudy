@@ -9,23 +9,23 @@ import lombok.ToString;
 @ToString
 public class RankingListDto {
 
-    String keyDepartment;
-    String keyPeriod;
-    String keyCategory;
-    String searchUserNickname;
-    long loginUserPid;
+    String userClass;
+    String term;
+    String category;
+    String userNickname;
+    long userId;
 
-    public static RankingListDto of(String keyDepartment,
-                                    String keyPeriod,
-                                    String keyCategory,
-                                    String searchUserNickname,
-                                    long loginUserPid){
+    public static RankingListDto of(String userClass,
+                                    String term,
+                                    String category,
+                                    String userNickname,
+                                    long userId){
         RankingListDto body = new RankingListDto();
-        body.keyDepartment = keyDepartment;
-        body.keyPeriod = keyPeriod;
-        body.keyCategory = keyCategory;
-        body.searchUserNickname = searchUserNickname;
-        body.loginUserPid = loginUserPid;
+        body.userClass = userClass;
+        body.term = term;
+        body.category = category;
+        body.userNickname = userNickname;
+        body.userId = userId;
         return body;
     }
 }
