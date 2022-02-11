@@ -1,3 +1,4 @@
+
 <template>
   <div v-if="true" style="background-color:#d0d0d0; margin:5rem; border:5px solid; padding:7rem;">
       <h2 style="text-align:center">로그인 하시면 나의 공부 정보를 볼 수 있어요!</h2>
@@ -40,36 +41,35 @@
     >
       <template #prepend>
         <el-select v-model="select" placeholder="아이디" style="width: 100px">
-          <el-option label="아이디" value="1"></el-option>
-          <el-option label="소속" value="2"></el-option>
+          <el-option label="아이디" value="uid"></el-option>
+          <el-option label="소속" value="department"></el-option>
         </el-select>
       </template>
       <template #append>
-        <el-button :icon="Search"></el-button>
+        <el-button :icon="Search" v-on:click="searchUser()"></el-button>
       </template>
     </el-input>
   </div>
 
     </el-col>
   </el-row>
-
-  <el-table :data="rank" stripe style="width: 100%; margin-top:30px" :row-class-name="tableRowClassName">
+  <el-table :data="rank" stripe style="width: 85%; margin-top:30px; left:7.5%" :row-class-name="tableRowClassName"
+  header-row-style = "background-color:rgba(58, 194, 88, 1); color:#fff" >
     <el-table-column prop="#" label="" width="50" />
-    <el-table-column prop="index+1" label="순위" width="100" />
+    <el-table-column type="index"  label="순위" width="100" />
     <el-table-column prop="nickName" label="닉네임" width="500" />
     <el-table-column prop="department" label="소속" />
     <el-table-column prop="totalStudyTime" label="공부한시간" />
   </el-table>
-
 
   </div>
 
 </template>
 
 <script>
-
 //import { Search } from '@element-plus/icons-vue'
-
+//import { setupElementPlus } from './element-plus.js'
+//setupElementPlus()
 import axios from 'axios';
 export default {
   name: 'Ranking',
@@ -80,7 +80,11 @@ export default {
 
   data(){
     return {
-      turm : '',
+      input : '',
+      term : '',
+      uid : '',
+      department : '',
+
       terms : [{
         value : 'whole',
         label : '전체'
@@ -119,22 +123,35 @@ export default {
     }
   },
 
+
   methods: {
-    fetchRank(){
-      axios.get('ranking').then((Response)=>{
+    fetchRank(url){
+      axios.get(url).then((Response)=>{
     this.rank = Response.data.content;
 
 
     }).catch((Error)=>{
     console.log(Error);
-})
     }
+    )},
+
+    searchUser(){
+
+    }
+
+
   },
 
   created(){
-    this.fetchRank();
+    this.fetchRank('ranking');
   },
 
+  watch : {
+      term : function(val){
+        const url = 'ranking?'+val;
+        this.fetchRank(url);
+      }
+  }
 
 }
 </script>
@@ -143,7 +160,8 @@ export default {
 
 <style scoped>
 .input-with-select .el-input-group__prepend {
-  background-color: #fff;
+  background-color: rgb(78, 78, 78);
 }
+
 
 </style>
