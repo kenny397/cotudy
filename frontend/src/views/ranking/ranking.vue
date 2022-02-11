@@ -65,9 +65,9 @@
   </div>
 
 </template>
-  
+
 <script>
-import { Search } from '@element-plus/icons-vue'
+// import { Search } from '@element-plus/icons-vue'
 import axios from 'axios';
 export default {
   name: 'Ranking',
