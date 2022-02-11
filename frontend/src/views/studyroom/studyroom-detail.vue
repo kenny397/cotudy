@@ -2,7 +2,7 @@
   <p style="margin-bottom:20px">{{ $route.params.studyroomId + '번 방 상세 보기 페이지' }}</p>
   <p>방 이름 : {{ state.studyroomDetailValue.roomTitle }}</p>
   <p>현재 방 인원 수({{ state.studyroomDetailValue.headCount }}) / 방 최대 인원({{ state.studyroomDetailValue.roomMaxPeople }})</p>
-  <p>방 카테고리 : {{ state.studyroomDetailValue.roomCategory }}</p>
+  <p>방 카테고리 : {{ state.category[state.studyroomDetailValue.roomCategory] }}</p>
   <p>방 설명 : {{ state.studyroomDetailValue.roomDescription }}</p>
   <p>방 썸네일 번호 : {{ state.studyroomDetailValue.roomThumbnail }}</p>
   <el-button @click="enterStandby($route.params.studyroomId)">입장하기</el-button>
@@ -31,7 +31,8 @@ export default {
         roomMaxPeople: 0,
         roomThumbnail: '',
         roomTitle: '',
-      }
+      },
+      category: [ '어학', '공무원', '취업', '자격증', '대입', '자율' ]
     })
 
     // 페이지 진입시 불리는 훅

@@ -12,34 +12,72 @@
         style="margin-end:1rem;"
       ></el-cascader>
       <el-button plain round type="success" @click="state.createStudyDialogVisible = true">Create Study</el-button>
-      <el-dialog v-model="state.createStudyDialogVisible" title="방생성" width="30%" center>
-        <hr>
-        <el-form ref="formRef" :model="state.form" :rules="state.rules" label-width="120px">
-          <el-form-item label="방제목" prop="name">
-            <el-input v-model="state.form.name" placeholder="방 제목을 작성해주세요"></el-input>
-          </el-form-item>
-          <el-form-item label="방 최대 인원" prop="number">
-            <el-input-number v-model="state.form.number" :min="1" :max="6" />
-          </el-form-item>
-          <el-form-item label="카테고리" prop="category">
-            <el-radio-group v-model="state.form.category">
-              <el-radio :label="1">어학</el-radio>
-              <el-radio :label="2">공무원</el-radio>
-              <el-radio :label="3">취업</el-radio>
-              <el-radio :label="4">대입</el-radio>
-              <el-radio :label="5">자격증</el-radio>
-              <el-radio :label="6">자율</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="방 설명">
-            <el-input v-model="state.form.desc" type="textarea"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button plain @click="state.createStudyDialogVisible = false">Cancel</el-button>
-            <el-button plain type="success" @click="onSubmit()">Create</el-button>
-          </el-form-item>
+      <el-dialog v-model="state.createStudyDialogVisible" title="방 생성" width="45%" center>
+        <hr style="margin-top:-20px;">
+        <el-form :model="state.form" :rules="state.rules" label-width="120px">
+          <div style="display:flex;">
+            <div style="margin-end:50px;">
+              <el-form-item label="방 이름" prop="name">
+                <el-input v-model="state.form.name" placeholder="방 제목을 작성해주세요"></el-input>
+              </el-form-item>
+              <el-form-item label="방 최대 인원" prop="number">
+                <el-input-number v-model="state.form.number" :min="1" :max="6" />
+              </el-form-item>
+              <div>
+                <el-form-item label="카테고리" prop="category">
+                  <el-radio-group v-model="state.form.category">
+                    <el-radio :label="1">어학</el-radio>
+                    <el-radio :label="2">공무원</el-radio>
+                    <el-radio :label="3">취업</el-radio>
+                    <el-radio :label="4">대입</el-radio>
+                    <el-radio :label="5">자격증</el-radio>
+                    <el-radio :label="6">자율</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item label="방 설명">
+                  <el-input v-model="state.form.desc" type="textarea"></el-input>
+                </el-form-item>
+              </div>
+            </div>
+            <el-image
+              style="width: 120px; height: 120px; cursor:pointer;"
+              :src="state.imgList[state.form.thumbnail].imgUrl"
+              :fit="contain"
+              @click="state.ThumbnailDialogVisible = true"
+            ></el-image>
+            <div style="text-align:center">
+              <el-dialog
+                v-model="state.ThumbnailDialogVisible"
+                title="썸네일 선택"
+                width="30%"
+              >
+                <div style="text-align:center;">
+                  <div v-for="i in state.imgList" :key="i.imgNum" class="inblk">
+                    <el-card class="box-card">
+                      <el-image
+                        style="width: 120px; height: 120px"
+                        :src="i.imgUrl"
+                        :fit="contain"
+                        @click="pickThumbnail(i.imgNum)"
+                      ></el-image>
+                    </el-card>
+                  </div>
+                </div>
+              </el-dialog>
+            </div>
+          </div>
+          <el-alert
+            v-if="state.alertVisible"
+            title="방 제목을 입력해주세요!"
+            type="warning"
+            center
+            style="margin-bottom:20px;"
+          />
+          <div style="display:flex; justify-content:end;">
+            <el-button round plain @click="state.createStudyDialogVisible = false">취소</el-button>
+            <el-button round plain type="success" @click="onSubmit()">방 생성</el-button>
+          </div>
         </el-form>
-        <el-alert v-if="state.alertVisible" title="방 제목을 입력해주세요!" type="warning" center />
       </el-dialog>
     </div>
   </div>
@@ -47,14 +85,18 @@
     <ul class="infinite-list" v-infinite-scroll="load" style="overflow:auto">
       <li v-for="i in state.studyList" @click="clickConference(i.roomId)" class="infinite-list-item" :key="i.roomId" >
         <conference
-        :title="i.roomTitle"
-        :desc="`#${i.roomDescription}`" />
+          :title="i.roomTitle"
+          :category="`#${state.options[i.roomCategory].label}`"
+          :thumbnail="i.roomThumbnail"
+          :headCount="i.headCount"
+          :maxPeople="i.roomMaxPeople"
+        />
       </li>
     </ul>
   </div>
 </template>
 
-<style>
+<style scoped>
 /* .infinite-list {
   padding-left: 0;
   max-height: calc(100% - 35px);
@@ -106,6 +148,22 @@
     --el-button-active-text-color: rgb(255, 255, 255);
     --el-button-active-border-color: rgba(58, 194, 88, 1);
 }
+.el-card {
+    --el-card-border-color: var(--el-border-color-light, #ebeef5);
+    --el-card-border-radius: 10px;
+    --el-card-padding: 10px;
+}
+.el-card:hover {
+  --el-card-bg-color: rgba(58, 194, 88, 1);
+}
+.box-card {
+  width: auto;
+  height: auto;
+  cursor: pointer;
+}
+.inblk {
+  display: inline-block;
+}
 </style>
 
 <script>
@@ -154,6 +212,7 @@ export default {
         },
       ],
       form: {
+        thumbnail: 0,
         name: '',
         number: 0,
         category: 1,
@@ -184,7 +243,46 @@ export default {
           }
         ],
       },
+      imgList: [
+        {
+          imgNum: '0',
+          imgUrl: require('../../assets/images/thumbnail/0.png')
+        },
+        {
+          imgNum: '1',
+          imgUrl: require('../../assets/images/thumbnail/1.png')
+        },
+        {
+          imgNum: '2',
+          imgUrl: require('../../assets/images/thumbnail/2.png')
+        },
+        {
+          imgNum: '3',
+          imgUrl: require('../../assets/images/thumbnail/3.png')
+        },
+        {
+          imgNum: '4',
+          imgUrl: require('../../assets/images/thumbnail/4.png')
+        },
+        {
+          imgNum: '5',
+          imgUrl: require('../../assets/images/thumbnail/5.png')
+        },
+        {
+          imgNum: '6',
+          imgUrl: require('../../assets/images/thumbnail/6.png')
+        },
+        {
+          imgNum: '7',
+          imgUrl: require('../../assets/images/thumbnail/7.png')
+        },
+        {
+          imgNum: '8',
+          imgUrl: require('../../assets/images/thumbnail/8.png')
+        }
+      ],
       createStudyDialogVisible: false,
+      ThumbnailDialogVisible: false,
       studyList: [],
       alertVisible: false
     })
@@ -224,11 +322,18 @@ export default {
 
     const resetDialog = function () {
       if (!state.createStudyDialogVisible) {
+        state.form.thumbnail = 0
         state.form.name = ''
         state.form.number = 0
         state.form.category = 1
         state.form.desc = ''
+        state.alertVisible = false
       }
+    }
+
+    const pickThumbnail = function (imgNum) {
+      state.form.thumbnail = imgNum
+      state.ThumbnailDialogVisible = false
     }
 
     const onSubmit = function () {
@@ -243,7 +348,7 @@ export default {
           'roomTitle': state.form.name,
           'roomMaxPeople': state.form.number,
           'roomDescription': state.form.desc,
-          'roomThumbnail': `${state.form.category}`,
+          'roomThumbnail': `${state.form.thumbnail}`,
           'roomCategory': state.form.category
         }
       })
@@ -261,7 +366,15 @@ export default {
         })
     }
 
-    return { state, load, clickConference, studyListData, onSubmit, resetDialog }
+    return {
+      state,
+      load,
+      clickConference,
+      studyListData,
+      resetDialog,
+      pickThumbnail,
+      onSubmit,
+    }
   }
 }
 </script>
