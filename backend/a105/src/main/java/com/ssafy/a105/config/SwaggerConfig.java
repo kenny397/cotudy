@@ -18,6 +18,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static springfox.documentation.swagger.web.OperationsSorter.METHOD;
 
 /**
  * API 문서 관련 swagger2 설정 정의.
@@ -33,8 +34,8 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.ant("/api/**"))
                 .build()
-                .securityContexts(newArrayList(securityContext()))
-                .securitySchemes(newArrayList(apiKey()))
+   //             .securityContexts(newArrayList(securityContext()))
+   //             .securitySchemes(newArrayList(apiKey()))
                 ;
     }
 
@@ -62,8 +63,8 @@ public class SwaggerConfig {
     @Bean
     UiConfiguration uiConfig() {
         return UiConfigurationBuilder.builder()
-//                .supportedSubmitMethods(newArrayList("get").toArray(new String[0])) // try it 기능 활성화 범위
-//                .operationsSorter(METHOD)
+                .supportedSubmitMethods(newArrayList("get").toArray(new String[0])) // try it 기능 활성화 범위
+                .operationsSorter(METHOD)
                 .build();
     }
 }
