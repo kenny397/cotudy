@@ -99,7 +99,6 @@
         <font-awesome-icon icon="phone-slash"/>
       </el-button>
       <el-button
-        style="position: absolute; right:40px; bottom:15px;"
         round
         class="green-btn is-study-area"
         v-bind:class="{'red-btn' : !state.isStudying}">
@@ -141,6 +140,12 @@
     left: 10px;
     float:left;
     color:white;
+  }
+
+  .studyroom-footer .is-study-area {
+    position: absolute;
+    right:40px;
+    bottom:15px;
   }
   .studyroom-footer .button-area button{
     height:40px;
@@ -253,6 +258,7 @@ import { reactive, onMounted, onUnmounted, onBeforeMount, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 
+
 // 티쳐블머신
 
 import * as tmPose from '@teachablemachine/pose';
@@ -353,6 +359,17 @@ export default {
     onBeforeMount(() => {
       state.mySessionId = route.params.studyroomId
       store.commit('root/setMenuActiveMenuName', 'home')
+      if (route.params.isVideo=='true') {
+        state.isVideoMuted = true
+      } else{
+        state.isVideoMuted= false
+      }
+
+      if (route.params.isAudio=='true') {
+        state.isAudioMuted = true
+      } else {
+        state.isAudioMuted = false
+      }
       joinSession()
     })
 
@@ -470,14 +487,13 @@ export default {
 			getToken(state.mySessionId).then(token => {
 				state.session.connect(token, { clientData: state.myUserName })
 					.then(() => {
-
 						// --- Get your own camera stream with the desired properties ---
 
 						let publisher = state.OV.initPublisher(undefined, {
 							audioSource: undefined, // The source of audio. If undefined default microphone
 							videoSource: undefined, // The source of video. If undefined default webcam
-							publishAudio: true,  	// Whether you want to start publishing with your audio unmuted or not
-							publishVideo: true,  	// Whether you want to start publishing with your video enabled or not
+							publishAudio: !state.isAudioMuted,  	// Whether you want to start publishing with your audio unmuted or not
+							publishVideo: !state.isVideoMuted,  	// Whether you want to start publishing with your video enabled or not
 							resolution: '800x425',  // The resolution of your video
 							frameRate: 30,			// The frame rate of your video
 							insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'

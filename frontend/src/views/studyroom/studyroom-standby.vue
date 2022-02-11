@@ -1,94 +1,63 @@
 <template>
   <div class="bg-clr">
     <div class="main-container">
-      <h2 class="tw" style="margin-bottom:0px;">스터디룸 입장준비</h2>
-      <p class="tw">{{ $route.params.studyroomId + '번 방 상세 보기 페이지' }}</p>
-      <div>
-        <canvas style="width:68vh; height:auto;" id="canvas" v-bind:class="{isStudying : state.isStudying}" class="isNotStudying"/>
-        <div class="white-box" style="margin-top:-5px;">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <el-button @click="mute()" class="btn-stl" type="text" style="margin-left:50px;">
-              <font-awesome-icon v-if="!state.muteVar" icon="microphone"/>
-              <font-awesome-icon v-if="state.muteVar" icon="microphone-slash"/>
-              <p style="margin-left:5px;">마이크</p>
-            </el-button>
-            <el-button @click="video()" class="btn-stl" type="text">
-              <font-awesome-icon v-if="!state.videoVar" icon="video"/>
-              <font-awesome-icon v-if="state.videoVar" icon="video-slash"/>
-              <p style="margin-left:5px;">비디오</p>
-            </el-button>
-            <el-button @click="state.dialogVisible = true" class="btn-stl" type="text">모션인식 도움말</el-button>
-            <el-dialog
-              v-model="state.dialogVisible"
-              width="50%"
-            >
-              <!-- <swiper
-                :slides-per-view="3"
-                :space-between="50"
-                @swiper="onSwiper"
-                @slideChange="onSlideChange"
-              >
-                <swiper-slide>Slide 1</swiper-slide>
-                <swiper-slide>Slide 2</swiper-slide>
-                <swiper-slide>Slide 3</swiper-slide>
-                ...
-              </swiper> -->
-              <el-carousel indicator-position="outside">
-                <el-carousel-item v-for="tutorial in state.tutorials" :key="tutorial.id">
-                  <img style="width:500px; height:300px;" :src="tutorial.imageUrl" alt="tutorial">
-                </el-carousel-item>
-              </el-carousel>
 
-              <!-- <template #footer>
-                <span class="dialog-footer">
-                  <el-button @click="state.dialogVisible = false">Cancel</el-button>
-                  <el-button type="primary" @click="state.dialogVisible = false"
-                    >Confirm</el-button
-                  >
-                </span>
-              </template> -->
-            </el-dialog>
-            <el-button
-              @click="enterRoom(state.studyroomId)"
-              plain type="success"
-              style="height:80px; width:100px; border-bottom-right-radius:20px;"
-            >입장</el-button>
-          </div>
-        </div>
+      <div class="header-area">
+        <h2 style="">스터디룸 입장준비</h2>
+        <p> {{ $route.params.studyroomId + '번 방 입장 준비 페이지' }} </p>
       </div>
-      <div v-show="state.hidden" id="label-container"></div>
+
+      <div class="body-area">
+        <div class="no-video-area" v-if="state.videoVar" style="" >
+          <img :src="state.noVideoImg" alt="" style="">
+        </div>
+        <canvas v-if="!state.videoVar" style="" id="canvas" v-bind:class="{isStudying : state.isStudying}" class="isNotStudying"/>
+      </div>
+
+      <div class="footer-button-area" style="">
+        <el-button @click="mute()" class="btn-stl" type="text" style="margin-left:50px;">
+          <font-awesome-icon v-if="!state.muteVar" icon="microphone"/>
+          <font-awesome-icon v-if="state.muteVar" icon="microphone-slash"/>
+          <p style="margin-left:5px;">마이크</p>
+        </el-button>
+        <el-button @click="video()" class="btn-stl" type="text">
+          <font-awesome-icon v-if="!state.videoVar" icon="video"/>
+          <font-awesome-icon v-if="state.videoVar" icon="video-slash"/>
+          <p style="margin-left:5px;">비디오</p>
+        </el-button>
+        <el-button
+          class="btn-stl"
+          type="text"
+          @click="state.dialogVisible = true"
+        >모션인식 도움말
+        </el-button>
+        <el-button
+          @click="enterRoom(state.studyroomId)"
+          plain type="success"
+          style="height:80px; width:100px; border-bottom-right-radius:20px;"
+        >입장</el-button>
+      </div>
+
+
+
     </div>
+    <el-dialog
+      v-model="state.dialogVisible"
+      width: 50%
+    >
+      <el-carousel
+        :interval="500000"
+        arrow="always"
+        style="height:32vw"
+      >
+        <el-carousel-item v-for="tutorial in state.tutorials" :key="tutorial.id">
+          <img style="width:35vw; height:auto; " :src="tutorial.imageUrl" alt="tutorial">
+        </el-carousel-item>
+      </el-carousel>
+    </el-dialog>
   </div>
 </template>
 <style scoped>
-  .bg-clr {
-    background-color: black;
-    width: 100vw;
-    height: 100vh;
-  }
-  .main-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .tw {
-    color: white;
-  }
-  .btn-stl {
-    border: 0px;
-    padding: 0px;
-    color: black;
-  }
-  .btn-stl:hover {
-    color: rgba(58, 194, 88, 1);
-  }
-  .white-box {
-    border-bottom-right-radius:20px;
-    border-bottom-left-radius:20px;
-    background-color: white;
-    height: 80px;
-    width: 68vh + 6;
-  }
   .isNotStudying {
     border-top-left-radius : 20px;
     border-top-right-radius: 20px;
@@ -99,25 +68,84 @@
     border-top-right-radius: 20px;
     border : 5px solid green;
   }
+  .bg-clr {
+    background-color: black;
+    width: 100vw;
+    height: 100vh;
+  }
+  .bg-clr .main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .bg-clr .main-container .header-area {
+    color: white;
+    text-align: center;
+  }
+  .bg-clr .main-container .footer-button-area {
+    border-bottom-right-radius:20px;
+    border-bottom-left-radius:20px;
+    background-color: white;
+    height: 80px;
+    width: 70.5vw;
+    margin-top:-5px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .bg-clr .main-container .header-area h2 {
+    margin-bottom:0px;
+  }
+  .bg-clr .main-container .body-area canvas {
+    width:70vw; height:34vw;
+  }
+  .bg-clr .main-container .body-area .no-video-area {
+    width:70vw; height:34vw; background:gray; text-align:center; line-height:34vw;
+  }
+  .bg-clr .main-container .body-area .no-video-area img {
+    vertical-align:middle;
+  }
+
+  .bg-clr .main-container .footer-button-area .btn-stl {
+    border: 0px;
+    padding: 0px;
+    color: black;
+  }
+  .bg-clr .main-container .footer-button-area .btn-stl:hover {
+    color: rgba(58, 194, 88, 1);
+  }
+
+  .el-carousel__item {
+    text-align: center;
+  }
+  .el-carousel__item {
+    height: auto;
+  }
+  .el-dialog__body {
+    background: black;
+  }
+  .el-dialog {
+    --el-dialog-bg-color: black !important;
+  }
+  .el-carousel__container{
+    height:33vw;
+  }
+
 </style>
+
 <script>
 import { reactive, onMounted, onUnmounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
-
-//swiper
-// import { Swiper, SwiperSlide } from 'swiper/vue';
-// import 'swiper/css'; // swiper styles
 
 // 티쳐블머신
 import * as tmPose from '@teachablemachine/pose';
 
 export default {
   name: 'studyroom-detail',
-  // components: {
-  //   Swiper,
-  //   SwiperSlide,
-  // },
+  components: {
+
+  },
 
   setup () {
     const route = useRoute()
@@ -132,10 +160,11 @@ export default {
       labelContainer : undefined,
       maxPredictions : undefined,
       URL : 'https://teachablemachine.withgoogle.com/models/tCGfolhxR/',
-      hidden: false,
       muteVar: false,
       videoVar: false,
       dialogVisible: false,
+      showModal: false,
+      noVideoImg: require('../../assets/images/novideo.png'),
       tutorials: [
         {
           id: 1,
@@ -184,9 +213,15 @@ export default {
       router.push({
         name: 'studyroom-inside',
         params: {
-          studyroomId: id
+          studyroomId: id,
+          isAudio: state.muteVar,
+          isVideo: state.videoVar,
         }
       })
+    }
+
+    const onOpen = function () {
+      state.dialogOpen = true
     }
 
     async function init() {
@@ -201,21 +236,18 @@ export default {
       state.maxPredictions = state.model.getTotalClasses();
 
       // Convenience function to setup a webcam
-      const size = 700;
-      const flip = true; // whether to flip the webcam
-      state.webcam = new tmPose.Webcam(size, size, flip); // width, height, flip
+      const width = 1000;
+      const height = 1000;
+      const flip = false; // whether to flip the webcam
+      state.webcam = new tmPose.Webcam(width, height, flip); // width, height, flip
       await state.webcam.setup(); // request access to the webcam
       await state.webcam.play();
       window.requestAnimationFrame(loop);
 
       // append/get elements to the DOM
       const canvas = document.getElementById('canvas');
-      canvas.width = size; canvas.height = size;
+      canvas.width = 1000; canvas.height = 1000;
       state.ctx = canvas.getContext('2d');
-      state.labelContainer = document.getElementById('label-container');
-      for (let i = 0; i < state.maxPredictions; i++) { // and class labels
-          state.labelContainer.appendChild(document.createElement('div'));
-      }
     }
 
     async function stopVideo() {
@@ -224,7 +256,6 @@ export default {
       state.model = undefined;
       state.webcam = undefined;
       state.ctx = undefined;
-      state.labelContainer = undefined;
       state.maxPredictions = undefined;
     }
 
@@ -245,12 +276,6 @@ export default {
       } else {
         state.isStudying = false
       }
-      for (let i = 0; i < state.maxPredictions; i++) {
-        const classPrediction =
-          prediction[i].className + ': ' + prediction[i].probability.toFixed(2);
-          state.labelContainer.childNodes[i].innerHTML = classPrediction;
-      }
-
 
       // finally draw the poses
       drawPose(pose);
@@ -261,9 +286,9 @@ export default {
         state.ctx.drawImage(state.webcam.canvas, 0, 0);
         // draw the keypoints and skeleton
         if (pose) {
-          const minPartConfidence = 0.5;
-          tmPose.drawKeypoints(pose.keypoints, minPartConfidence, state.ctx);
-          tmPose.drawSkeleton(pose.keypoints, minPartConfidence, state.ctx);
+          // const minPartConfidence = 0.5;
+          // tmPose.drawKeypoints(pose.keypoints, minPartConfidence, state.ctx);
+          // tmPose.drawSkeleton(pose.keypoints, minPartConfidence, state.ctx);
 
         }
       }
@@ -274,7 +299,13 @@ export default {
     }
 
     const video = function () {
+      if (state.videoVar) {
+        init()
+      } else {
+        stopVideo()
+      }
       state.videoVar = !state.videoVar
+
     }
 
     // const onSwiper = (swiper) => {
@@ -291,8 +322,7 @@ export default {
       init,
       mute,
       video,
-      // onSwiper,
-      // onSlideChange
+      onOpen
     }
   },
 

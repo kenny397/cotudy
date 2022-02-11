@@ -163,5 +163,4 @@ export default {
   background-color: rgb(78, 78, 78);
 }
 
-
 </style>
