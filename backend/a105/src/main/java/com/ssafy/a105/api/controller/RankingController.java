@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 랭킹페이지 관련 API 요청 처리를 위한 컨트롤러 정의
  */
-@Api(value = "랭킹페이지 API", tags = {"Ranking"})
+@Api(value = "랭킹페이지 API", tags = {"ranking-controller"})
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/ranking")
@@ -38,6 +38,7 @@ public class RankingController {
         Page<RankingListGetRes> rankingList = rankingService.listRanking(searchData, pageable);
         return ResponseEntity.status(200).body(rankingList);
     }
+
     @GetMapping("/rank")
     @ApiOperation(value = "회원에 대한 랭킹 정보 반환")
     @ApiResponses({
