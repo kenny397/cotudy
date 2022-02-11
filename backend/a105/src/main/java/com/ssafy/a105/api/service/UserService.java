@@ -30,4 +30,6 @@ public interface UserService {
     StudyTimeRes getDayStudyTime(long id);
 
     StudyTimeRes getTotalStudyTime(long id);
+
+    User getUserByUserId(String userId);
 }

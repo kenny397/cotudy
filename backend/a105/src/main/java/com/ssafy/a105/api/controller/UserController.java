@@ -33,12 +33,13 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> registerUser(@RequestBody  UserRegisterPostReq registerInfo){
+
         User user = userService.createUser(registerInfo);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<? extends BaseResponseBody> registerUser(@PathVariable("userId") long userId){
+    public ResponseEntity<? extends BaseResponseBody> deleteUser(@PathVariable("userId") long userId){
 
         userService.deleteUser(userId);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));

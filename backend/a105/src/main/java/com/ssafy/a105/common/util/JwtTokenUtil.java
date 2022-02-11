@@ -4,6 +4,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -23,11 +25,11 @@ public class JwtTokenUtil {
     public static final String HEADER_STRING = "Authorization";
     public static final String ISSUER = "ssafy.com";
 
-//    @Autowired
-//    public JwtTokenUtil(@Value("${jwt.secret}") String secretKey, @Value("${jwt.expiration}") Integer expirationTime) {
-//        this.secretKey = secretKey;
-//        this.expirationTime = expirationTime;
-//    }
+   @Autowired
+    public JwtTokenUtil(@Value("${jwt.secret}") String secretKey, @Value("${jwt.expiration}") Integer expirationTime) {
+        this.secretKey = secretKey;
+        this.expirationTime = expirationTime;
+    }
 
     public void setExpirationTime() {
         //JwtTokenUtil.expirationTime = Integer.parseInt(expirationTime);

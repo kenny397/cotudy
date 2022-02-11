@@ -9,6 +9,8 @@ import com.ssafy.a105.db.repository.RivalRepository;
 import com.ssafy.a105.db.repository.UserCustomRepository;
 import com.ssafy.a105.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,19 +20,23 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
 
-    private final UserRepository userRepository;
-    private final RivalRepository rivalRepository;
-    private final UserCustomRepository userCustomRepository;
+public class UserServiceImpl implements UserService{
+    @Autowired
+    PasswordEncoder passwordEncoder;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    RivalRepository rivalRepository;
+    @Autowired
+    UserCustomRepository userCustomRepository;
     @Override
     @Transactional
     public User createUser(UserRegisterPostReq registerInfo) {
         User user =new User();
         user.setUserId(registerInfo.getEmail());
         user.setNickname(registerInfo.getNickName());
-        user.setPassword(registerInfo.getPassword());
+        user.setPassword(passwordEncoder.encode(registerInfo.getPassword()));
 
         return userRepository.save(user);
     }
@@ -105,5 +111,14 @@ public class UserServiceImpl implements UserService{
     @Override
     public StudyTimeRes getTotalStudyTime(long id) {
         return userCustomRepository.getTotalStudyTimeByUser(id);
+    }
+
+    @Override
+    public User getUserByUserId(String userId) {
+        System.out.println("userId");
+        Optional<User> user = userRepository.findByUserId(userId);
+        System.out.println("aaaa");
+        System.out.println("what"+user.get().getUserId());
+        return user.get();
     }
 }
