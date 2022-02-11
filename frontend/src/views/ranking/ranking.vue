@@ -21,7 +21,7 @@
   </el-select>
   </el-col>
   <el-col :span="1"/>
-    <el-col :span="2">    <el-select v-model="class" class="m-2" placeholder="전체">
+    <el-col :span="2">    <el-select v-model="classs" class="m-2" placeholder="전체">
     <el-option
       v-for="item in classes"
       :key="item.value"
@@ -53,7 +53,7 @@
     </el-col>
   </el-row>
 
-  <el-table :data="rank" stripe border style="width: 100%" :row-class-name="tableRowClassName">
+  <el-table :data="rank" stripe style="width: 100%; margin-top:30px" :row-class-name="tableRowClassName">
     <el-table-column prop="#" label="" width="50" />
     <el-table-column prop="index+1" label="순위" width="100" />
     <el-table-column prop="nickName" label="닉네임" width="500" />
@@ -65,9 +65,11 @@
   </div>
 
 </template>
-  
+
 <script>
-import { Search } from '@element-plus/icons-vue'
+
+//import { Search } from '@element-plus/icons-vue'
+
 import axios from 'axios';
 export default {
   name: 'Ranking',
@@ -92,7 +94,7 @@ export default {
         value : 'month',
         label : '한달'
       },],
-      class : '',
+      classs : '',
       classes : [{
         value : 'all',
         label : '전체'
@@ -120,7 +122,9 @@ export default {
   methods: {
     fetchRank(){
       axios.get('ranking').then((Response)=>{
-    this.rank = Response.data.content
+    this.rank = Response.data.content;
+
+
     }).catch((Error)=>{
     console.log(Error);
 })
@@ -141,4 +145,5 @@ export default {
 .input-with-select .el-input-group__prepend {
   background-color: #fff;
 }
+
 </style>
