@@ -35,4 +35,5 @@ export default {
   activeMenu: 'home',
   menus: menuData,
   studyroomListLength: 0,
+  isLogin: false,
 }

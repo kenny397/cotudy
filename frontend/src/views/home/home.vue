@@ -303,7 +303,7 @@ export default {
 
     const clickConference = function (id) {
       router.push({
-        name: 'studyroom-detail',
+        name: 'studyroom-standby',
         params: {
           studyroomId: id
         }
@@ -353,9 +353,8 @@ export default {
         }
       })
         .then(res => {
-          console.log('방 생성 성공')
           router.push({
-            name: 'studyroom-detail',
+            name: 'studyroom-standby',
             params: {
               studyroomId: res.data.id
             }
