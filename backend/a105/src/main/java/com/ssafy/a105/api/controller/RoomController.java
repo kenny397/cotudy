@@ -9,6 +9,7 @@ import com.ssafy.a105.api.service.RoomService;
 import com.ssafy.a105.api.service.RoomServiceImpl;
 import com.ssafy.a105.common.model.response.BaseResponseBody;
 import com.ssafy.a105.db.entity.Room;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+@Api(value="룸 API" , tags = {"Rooms"})
 @RestController
 @RequestMapping("/api/v1/rooms")
 @RequiredArgsConstructor
@@ -28,9 +29,11 @@ public class RoomController {
     private final RoomService roomService;
 
     @GetMapping()
-    @ApiOperation(value = "방 목록 조회", notes = "방 목록을 전부 조회한다")
+    @ApiOperation(value = "전체 방정보 조회", notes = "<strong>전체 방정보를 </strong>조회를 한다")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "방 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<List<RoomInfoRes>> getRooms(){
@@ -45,9 +48,11 @@ public class RoomController {
     }
 
     @GetMapping("/{room_id}")
-    @ApiOperation(value = "방 정보를 가져온다",notes = "room_id 인 정보를 가져온다")
+    @ApiOperation(value = "해당 방정보 조회", notes = "<strong>방PK 번호를 가지고 방정보를 </strong>조회를 한다")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "방 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<RoomInfoRes> getRoom(@PathVariable("room_id") long roomId){
@@ -57,9 +62,11 @@ public class RoomController {
     }
 
     @DeleteMapping("/{room_id}")
-    @ApiOperation(value = "방을 종료한다.",notes = "room_id인 방을 db에서 삭제한다.")
+    @ApiOperation(value = "방 삭제 ", notes = "<strong> 방을 </strong>삭제를 한다")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "방 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> deleteRoom(@PathVariable("room_id")int roomId){
@@ -68,9 +75,11 @@ public class RoomController {
     }
 
     @PostMapping()
-    @ApiOperation(value = "방을 생성한다",notes = "body에 있는 정보를 가지고 방을 생성한다.")
+    @ApiOperation(value = "방 생성", notes = "<strong> 방정보를 </strong>가지고 방을 생성 한다")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<RoomRegisterRes> createRoom(@RequestBody RoomInfoPostReq roomInfo){
@@ -81,9 +90,11 @@ public class RoomController {
     }
 
     @PostMapping("/exit")
-    @ApiOperation(value = "방을 나가고 공부시간을 저장한다",notes = "body에 있는 정보를 통해서 시간테이블에 저장한다.")
+    @ApiOperation(value = "방을 나가고 공부시간 저장", notes = "<strong>방을 나가고 공부시간 </strong>을 저장한다")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends  BaseResponseBody> exitRoom(@RequestBody RoomExitPostReq studyInfo){
@@ -92,9 +103,11 @@ public class RoomController {
     }
 
     @PostMapping("/enter")
-    @ApiOperation(value = "방에 입장한다.",notes = "유저 정보와 방정보를 가지고 db에 저장한다.")
+    @ApiOperation(value = "방을 입장", notes = "<strong>방을 입장해 현재 인원수를  </strong>증가한다")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends  BaseResponseBody> enterRoom(@RequestBody RoomEnterPostReq roomInfo){
