@@ -39,6 +39,11 @@ function makeRoutesFromMenu () {
       path: '/ranking/ranking',
       name: 'ranking',
       component: Ranking
+    },
+    {
+      path: '',
+      name: 'home',
+      component: Home
     }
   )
   return routes
