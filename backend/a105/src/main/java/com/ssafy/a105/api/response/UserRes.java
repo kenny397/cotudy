@@ -14,12 +14,32 @@ import lombok.Setter;
 @Setter
 @ApiModel("UserResponse")
 public class UserRes {
+	@ApiModelProperty(name="User PK")
+	long id;
 	@ApiModelProperty(name="User ID")
 	String userId;
-	
+	@ApiModelProperty(name="User nickName")
+	String nickName;
+	@ApiModelProperty(name="department PK")
+	long departmentId;
+	@ApiModelProperty(name="User goalTime")
+	String goalTime;
+	@ApiModelProperty(name="User goal")
+	String goal;
+	@ApiModelProperty(name="User thumbnail")
+	String thumbnail;
+	@ApiModelProperty(name="User rivalCount")
+	long rivalCount;
 	public static UserRes of(User user) {
 		UserRes res = new UserRes();
 		res.setUserId(user.getUserId());
+		res.setId(user.getId());
+		res.setNickName(user.getNickname());
+		res.setDepartmentId(user.getDepartment().getId());
+		res.setGoalTime(user.getGoalTime());
+		res.setGoal(user.getGoal());
+		res.setThumbnail(user.getThumbnail());
+		res.setRivalCount(user.getRival().size());
 		return res;
 	}
 }

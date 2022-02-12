@@ -1,6 +1,7 @@
 package com.ssafy.a105.api.service;
 
 import com.ssafy.a105.api.request.RivalPostReq;
+import com.ssafy.a105.api.request.UserPostReq;
 import com.ssafy.a105.api.request.UserRegisterPostReq;
 import com.ssafy.a105.api.response.StudyTimeRes;
 import com.ssafy.a105.db.entity.Rival;
@@ -50,7 +51,12 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public User modifyUser(UserRegisterPostReq registerInfo) {
+    public User modifyUser(UserPostReq userInfo) {
+        User user = new User();
+        user.setUserId(userInfo.getUserId());
+        user.setNickname(userInfo.getNickName());
+
+
         return null;
     }
 
