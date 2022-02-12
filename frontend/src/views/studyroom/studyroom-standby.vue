@@ -37,9 +37,6 @@
           style="height:80px; width:100px; border-bottom-right-radius:20px;"
         >입장</el-button>
       </div>
-
-
-
     </div>
     <el-dialog
       v-model="state.dialogVisible"
@@ -87,7 +84,7 @@
     border-bottom-left-radius:20px;
     background-color: white;
     height: 80px;
-    width: 70.5vw;
+    width: calc( 70vw + 10px );
     margin-top:-5px;
     display:flex;
     justify-content:space-between;
@@ -97,13 +94,20 @@
     margin-bottom:0px;
   }
   .bg-clr .main-container .body-area canvas {
-    width:70vw; height:34vw;
+    width:70vw;
+    height:34vw;
   }
   .bg-clr .main-container .body-area .no-video-area {
-    width:70vw; height:34vw; background:gray; text-align:center; line-height:34vw;
+    width:calc( 70vw + 10px );
+    height:34vw;
+    background:gray;
+    text-align:center;
+    line-height:34vw;
   }
   .bg-clr .main-container .body-area .no-video-area img {
     vertical-align:middle;
+    width:50vw;
+    height:auto;
   }
 
   .bg-clr .main-container .footer-button-area .btn-stl {
