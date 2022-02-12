@@ -8,7 +8,7 @@
         class="image"
       ></el-image>
       <span>{{ title }}</span>
-      <span>({{ headCount / maxPeople }})</span>
+      <span>({{ headCount }} / {{ maxPeople }})</span>
       <br>
       <span>{{ category }}</span>
     </el-card>

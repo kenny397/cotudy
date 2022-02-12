@@ -10,7 +10,7 @@
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="clickLogin">로그인</el-button>
+        <el-button plain type="success" @click="clickLogin">로그인</el-button>
       </span>
     </template>
   </el-dialog>
@@ -80,10 +80,18 @@ export default {
       },
       rules: {
         id: [
-          { required: true, message: 'Please input ID', trigger: 'blur' }
+          {
+            required: true,
+            message: 'Please input ID',
+            trigger: 'blur'
+          }
         ],
         password: [
-          { required: true, message: 'Please input password', trigger: 'blur' }
+          {
+            required: true,
+            message: 'Please input password',
+            trigger: 'blur'
+          }
         ]
       },
       dialogVisible: computed(() => props.open),
@@ -98,10 +106,11 @@ export default {
       // 로그인 클릭 시 validate 체크 후 그 결과 값에 따라, 로그인 API 호출 또는 경고창 표시
       loginForm.value.validate((valid) => {
         if (valid) {
-          console.log('submit')
           store.dispatch('root/requestLogin', { id: state.form.id, password: state.form.password })
           .then(function (result) {
             alert('accessToken: ' + result.data.accessToken)
+            localStorage.setItem('accessToken', result.data.accessToken)
+            localStorage.setItem('userId', result.data.id)
           })
           .catch(function (err) {
             alert(err)
