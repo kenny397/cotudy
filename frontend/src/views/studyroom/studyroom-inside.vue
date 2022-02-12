@@ -95,7 +95,10 @@
         <span v-if="!state.isResting" class="btn-desc">휴식</span>
         <span v-if="state.isResting" class="btn-desc">복귀</span>
       </el-button>
-      <el-button @click="leaveSession" round class="red-btn">
+      <el-button
+        @click="state.closeDialogVisible = true"
+        round
+        class="red-btn">
         <font-awesome-icon icon="phone-slash"/>
       </el-button>
       <el-button
@@ -109,6 +112,29 @@
       </el-button>
     </div>
   </div>
+
+  <el-dialog
+    v-model="state.closeDialogVisible"
+    width="300px"
+    destroy-on-close
+    center
+  >
+
+    <div style="text-align:center;">
+      <strong>정말 퇴장하시겠습니까?</strong>
+    </div>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="leaveSession">예</el-button>
+        <el-button
+          @click="state.closeDialogVisible = false"
+          >아니오</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
+
+
 </template>
 
 <style scoped>
@@ -306,8 +332,9 @@ export default {
           'height': state.headCountForVideoWidth * 0.540 + 'vw',
           'margin-top': state.headCountForVideoWidth * -0.540 + 'vw'
         }
-        //
+
       }),
+      closeDialogVisible : false,
       // openvidu
       OV: undefined,
 			session: undefined,
