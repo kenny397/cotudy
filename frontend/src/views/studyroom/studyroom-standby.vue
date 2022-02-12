@@ -32,7 +32,7 @@
         >모션인식 도움말
         </el-button>
         <el-button
-          @click="enterRoom(state.studyroomId)"
+          @click="checkRoomIsFull()"
           plain type="success"
           style="height:80px; width:100px; border-bottom-right-radius:20px;"
         >입장</el-button>
@@ -141,6 +141,8 @@
 import { reactive, onMounted, onUnmounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
+import axios from 'axios';
+
 
 // 티쳐블머신
 import * as tmPose from '@teachablemachine/pose';
@@ -169,6 +171,7 @@ export default {
       dialogVisible: false,
       showModal: false,
       noVideoImg: require('../../assets/images/novideo.png'),
+      roomIsFull: false,
       tutorials: [
         {
           id: 1,
@@ -212,16 +215,50 @@ export default {
       state.studyroomId = ''
       stopVideo()
     })
+    const checkRoomIsFull = function () {
+      axios.get(`rooms/${state.studyroomId}`)
+        .then(res => {
+          if(res.data.headCount >= res.data.roomMaxPeople) {
+            enterRoom(false)
+          } else{
+            enterRoom(true)
+          }
 
-    const enterRoom = function (id) {
-      router.push({
-        name: 'studyroom-inside',
-        params: {
-          studyroomId: id,
-          isAudio: state.muteVar,
-          isVideo: state.videoVar,
-        }
-      })
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+
+    const enterRoom = function (isfull) {
+      if (isfull) {
+        axios({
+          url: 'rooms/enter',
+          method: 'post',
+          data: {
+            'roomId': state.studyroomId,
+            'userId': localStorage.getItem('userId'),
+          }
+        })
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+
+          router.push({
+          name: 'studyroom-inside',
+          params: {
+            studyroomId: state.studyroomId,
+            isAudio: state.muteVar,
+            isVideo: state.videoVar,
+          }
+        })
+      }
+      else {
+        console.log('방이 꽉참')
+      }
     }
 
     const onOpen = function () {
@@ -312,21 +349,14 @@ export default {
 
     }
 
-    // const onSwiper = (swiper) => {
-    //     console.log(swiper);
-    // }
-
-    // const onSlideChange = () => {
-    //   console.log('slide change');
-    // }
-
     return {
       state,
       enterRoom,
       init,
       mute,
       video,
-      onOpen
+      onOpen,
+      checkRoomIsFull,
     }
   },
 

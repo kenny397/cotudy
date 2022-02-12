@@ -341,8 +341,9 @@ export default {
 			mainStreamManager: undefined,
 			publisher: undefined,
 			subscribers: [],
-			mySessionId: '',
-			myUserName: 'Participant' + Math.floor(Math.random() * 100),
+			mySessionId: undefined,
+			myUserName: undefined,
+      myUserId: localStorage.getItem('userId')*1,
       isAudioMuted: false,
       isVideoMuted: false,
 
@@ -384,6 +385,7 @@ export default {
 
 
     onBeforeMount(() => {
+      getMyNickname(localStorage.getItem('userId'))
       state.mySessionId = route.params.studyroomId
       store.commit('root/setMenuActiveMenuName', 'home')
       if (route.params.isVideo=='true') {
@@ -401,6 +403,15 @@ export default {
     })
 
     // my methods
+    const getMyNickname = function(userId) {
+      axios.get(`users/${userId}`)
+        .then(res => {
+          state.myUserName = res.data.nickName
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
     const timerStart = function() {
       state.timer = setInterval(() => {
         state.myStudyTime += 1000;
@@ -424,6 +435,8 @@ export default {
 
     const videoBtnClick = function () {
       if(state.isVideoMuted) {
+        // 여기 지워
+        state.myStudyTime += 500000
         state.publisher.publishVideo(true)
         state.isVideoMuted = false
       } else {
@@ -547,6 +560,23 @@ export default {
 
     const leaveSession = function() {
 			// --- Leave the session by calling 'disconnect' method over the Session object ---
+      if(state.session) {
+        axios({
+          url: 'rooms/exit',
+          method: 'post',
+          data: {
+            'roomId': state.mySessionId,
+            'studyTime': Studyhour + Studyminute,
+            'userId': state.myUserId,
+          }
+        })
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      }
 			if (state.session) state.session.disconnect();
       if (state.webcam) state.webcam.stop();
 
@@ -560,6 +590,12 @@ export default {
       state.webcam = undefined;
       state.ctx = undefined;
       state.maxPredictions = undefined;
+
+      // 공부시간 저장용
+      let Studyhour = state.newStudyTime.substr(0, 2)
+      let Studyminute = state.newStudyTime.substr(3, 2)
+      Studyhour *= 60;
+      Studyminute *= 1;
 
 			window.removeEventListener('beforeunload', leaveSession);
       router.push({
