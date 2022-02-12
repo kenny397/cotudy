@@ -24,7 +24,6 @@ public class UserPostReq {
     String goal;
     @ApiModelProperty(name="User thumbnail")
     String thumbnail;
-    @ApiModelProperty(name="User rivalCount")
-    long rivalCount;
+
 }
 

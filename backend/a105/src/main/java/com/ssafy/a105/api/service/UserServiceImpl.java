@@ -11,6 +11,7 @@ import com.ssafy.a105.db.repository.DepartmentRepository;
 import com.ssafy.a105.db.repository.RivalRepository;
 import com.ssafy.a105.db.repository.UserCustomRepository;
 import com.ssafy.a105.db.repository.UserRepository;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -57,12 +58,15 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public User modifyUser(UserPostReq userInfo) {
-        User user = new User();
+        User user = userRepository.findById(userInfo.getId());
         user.setUserId(userInfo.getUserId());
         user.setNickname(userInfo.getNickName());
-
-
-        return null;
+        user.setGoalTime(userInfo.getGoalTime());
+        user.setGoal(userInfo.getGoal());
+        user.setThumbnail(userInfo.getThumbnail());
+        Department department = departmentRepository.findById(userInfo.getDepartmentId()).get();
+        user.setDepartment(department);
+        return userRepository.save(user);
     }
 
     @Override
