@@ -1,6 +1,7 @@
 package com.ssafy.a105.api.controller;
 
 import com.ssafy.a105.api.request.RivalPostReq;
+import com.ssafy.a105.api.request.UserPostReq;
 import com.ssafy.a105.api.request.UserRegisterPostReq;
 import com.ssafy.a105.api.response.*;
 import com.ssafy.a105.api.service.UserService;
@@ -65,8 +66,8 @@ public class UserController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> modifyUser(@RequestBody  UserRegisterPostReq registerInfo/*수정할때 받는 DTO로 변경 필요*/){
-       User user = userService.modifyUser(registerInfo);
+    public ResponseEntity<? extends BaseResponseBody> modifyUser(@RequestBody UserPostReq userInfo){
+       User user = userService.modifyUser(userInfo);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 

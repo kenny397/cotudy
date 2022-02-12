@@ -1,6 +1,7 @@
 package com.ssafy.a105.api.service;
 
 import com.ssafy.a105.api.request.RivalPostReq;
+import com.ssafy.a105.api.request.UserPostReq;
 import com.ssafy.a105.api.request.UserRegisterPostReq;
 import com.ssafy.a105.api.response.StudyTimeRes;
 import com.ssafy.a105.db.entity.Rival;
@@ -13,7 +14,7 @@ public interface UserService {
 
     void deleteUser(long userId);
 
-    User modifyUser(UserRegisterPostReq registerInfo);
+    User modifyUser(UserPostReq userInfo);
 
     User getUserInfo(long userId);
 
