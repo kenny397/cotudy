@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService{
         user.setUserId(registerInfo.getEmail());
         user.setNickname(registerInfo.getNickName());
         user.setPassword(passwordEncoder.encode(registerInfo.getPassword()));
-        Department department = departmentRepository.findById(10).get();
+        Department department = departmentRepository.findById(10L).get();
         user.setDepartment(department);
         return userRepository.save(user);
     }
