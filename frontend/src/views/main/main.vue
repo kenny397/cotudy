@@ -60,8 +60,12 @@ export default {
       this.loginDialogOpen = false
     }
   },
-  created() {
-    console.log(this.isFullpage)
+  beforeMount() {
+    if (localStorage.getItem('accessToken') === null) {
+      this.$store.state.root.isLogin = false
+    } else {
+      this.$store.state.root.isLogin = true
+    }
   }
 }
 </script>
