@@ -53,9 +53,9 @@ public class RoomServiceImpl implements RoomService{
     public void exitRoom(RoomExitPostReq studyInfo) {
         //user_room 데이터 까기
 
-        Room room = roomRepository.getById(Long.parseLong(studyInfo.getRoomId()));
-        User user = userRepository.getById(Long.parseLong(studyInfo.getUserId()));
-        UserRoom userRoom = userRoomRepository.findByRoomIdAndUserId(Long.parseLong(studyInfo.getRoomId()),Long.parseLong(studyInfo.getUserId()));
+        Room room = roomRepository.getById(studyInfo.getRoomId());
+        User user = userRepository.getById(studyInfo.getUserId());
+        UserRoom userRoom = userRoomRepository.findByRoomIdAndUserId(studyInfo.getRoomId(),studyInfo.getUserId());
         userRoomRepository.delete(userRoom);
         StudyTime studyTime = new StudyTime();
         studyTime.setTime(studyInfo.getStudyTime());
@@ -67,8 +67,8 @@ public class RoomServiceImpl implements RoomService{
     @Transactional
     public void enterRoom(RoomEnterPostReq roomInfo) {
         UserRoom userRoom = new UserRoom();
-        User user = userRepository.getById(Long.parseLong(roomInfo.getUserId()));
-        Room room = roomRepository.getById(Long.parseLong(roomInfo.getRoomId()));
+        User user = userRepository.getById(roomInfo.getUserId());
+        Room room = roomRepository.getById(roomInfo.getRoomId());
 
         userRoom.setRoom(room);
         userRoom.setUser(user);
