@@ -186,6 +186,7 @@
 .background-wrap {
   background-image: url('../../assets/images/main.png');
   background-size: 85% 300px;
+  border-radius: 20px;
   width: 85%;
   height: 300px;
   display: flex;
