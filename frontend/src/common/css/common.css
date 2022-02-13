@@ -3,9 +3,20 @@
   height: 100vh;
 } */
 
+@font-face {
+  font-family: 'NotoSans';
+  src: url('../../assets/fonts/NotoSansKR-Regular.otf') format('truetype');
+}
+:root {
+  font-family: 'NotoSans';
+}
 
 body {
   margin: 0;
-  font-family: SpoqaHanSansNeo;
+  font-family: 'NotoSans';
   font-weight: 400;
+}
+
+button {
+  font-family: 'NotoSans';
 }

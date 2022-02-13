@@ -30,7 +30,7 @@
   height: 50px;
   background-size: contain;
   background-repeat: no-repeat;
-  background-image: url('../../../assets/images/ssafy-logo.png');
+  background-image: url('../../../assets/images/main-logo.png');
   cursor: pointer;
 }
 .fixed {
