@@ -41,14 +41,17 @@
     <el-dialog
       v-model="state.dialogVisible"
       width: 50%
+      top= '10vh'
+      custom-class= 'dialog-in-standby'
     >
       <el-carousel
         :interval="500000"
         arrow="always"
-        style="height:32vw"
+        height='32vw'
+        indicator-position="outside"
       >
         <el-carousel-item v-for="tutorial in state.tutorials" :key="tutorial.id">
-          <img style="width:35vw; height:auto; " :src="tutorial.imageUrl" alt="tutorial">
+          <img style=" " :src="tutorial.imageUrl" alt="tutorial">
         </el-carousel-item>
       </el-carousel>
     </el-dialog>
@@ -119,24 +122,28 @@
     color: rgba(58, 194, 88, 1);
   }
 
-  .el-carousel__item {
-    text-align: center;
-  }
-  .el-carousel__item {
-    height: auto;
-  }
-  .el-dialog__body {
-    background: black;
-  }
-  .el-dialog {
-    --el-dialog-bg-color: black !important;
-  }
-  .el-carousel__container{
-    height:33vw;
-  }
-
 </style>
-
+<style>
+  .dialog-in-standby {
+    background: mintcream;
+    border-radius: 20px;
+  }
+  .dialog-in-standby .el-dialog__header {
+    padding: 0px;
+  }
+  .dialog-in-standby .el-dialog__body {
+    padding: 0px 10px 5px 10px;
+  }
+  .dialog-in-standby .el-carousel__item {
+    text-align: center;
+    line-height:32vw;
+  }
+  .dialog-in-standby .el-carousel__item img {
+    width:35vw;
+    height:auto;
+    vertical-align:middle;
+  }
+</style>
 <script>
 import { reactive, onMounted, onUnmounted } from 'vue'
 import { useStore } from 'vuex'
