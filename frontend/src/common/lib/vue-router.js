@@ -4,6 +4,7 @@ import StudyroomDetail from '@/views/studyroom/studyroom-detail'
 import StudyroomStandby from '@/views/studyroom/studyroom-standby'
 import StudyroomInside from '@/views/studyroom/studyroom-inside'
 import Ranking from '@/views/ranking/ranking'
+import Mypage from '@/views/myPage/myPage'
 
 // eslint-disable-next-line no-undef
 const fullMenu = require('@/views/main/menu.json')
@@ -39,6 +40,11 @@ function makeRoutesFromMenu () {
       path: '/ranking/ranking',
       name: 'ranking',
       component: Ranking
+    },
+    {
+      path: '/my-page',
+      name: 'my-page',
+      component: Mypage
     },
     {
       path: '',

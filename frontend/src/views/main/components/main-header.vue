@@ -14,7 +14,10 @@
       style="width:500px; --el-input-bg-color:rgba(243, 243, 245, 1);"
     />
     <el-button v-if="!state.isLoginButton" round plain type="success" @click="clickLogin">Signup/Login</el-button>
-    <el-button v-if="state.isLoginButton" round plain type="success" @click="clickLogout">Logout</el-button>
+    <div v-if="state.isLoginButton">
+      <el-button round plain type="success" @click="clickLogout">Logout</el-button>
+      <el-button round plain type="success" @click="clickLMypage">my page</el-button>
+    </div>
   </div>
 </template>
 
@@ -128,6 +131,12 @@ export default {
       router.go(router.currentRoute)
     }
 
+    const clickLMypage = () => {
+      router.push({
+        name: 'my-page'
+      })
+    }
+
     const changeCollapse = () => {
       state.isCollapse = !state.isCollapse
     }
@@ -179,7 +188,8 @@ export default {
       goHome,
       goRank,
       searchData,
-      querySearch
+      querySearch,
+      clickLMypage
     }
   }
 }
