@@ -10,7 +10,7 @@
       <span>{{ title }}</span>
       <span>({{ headCount }} / {{ maxPeople }})</span>
       <br>
-      <span>{{ category }}</span>
+      <span>#{{ state.roomCategory[category-1] }}</span>
     </el-card>
   </div>
 </template>
@@ -93,6 +93,7 @@ export default {
           imgUrl: require('../../../assets/images/thumbnail/8.png')
         }
       ],
+      roomCategory: ['어학', '공무원', '취업', '자격증', '대입', '자율']
     })
 
     return { state }

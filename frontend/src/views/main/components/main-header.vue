@@ -14,7 +14,7 @@
       style="width:500px; --el-input-bg-color:rgba(243, 243, 245, 1);"
     />
     <el-button v-if="!state.isLoginButton" round plain type="success" @click="clickLogin">Signup/Login</el-button>
-    <el-button v-if="state.isLoginButton" round plain type="success" @click="clickLogin">Logout</el-button>
+    <el-button v-if="state.isLoginButton" round plain type="success" @click="clickLogout">Logout</el-button>
   </div>
 </template>
 
@@ -122,6 +122,12 @@ export default {
       emit('openLoginDialog')
     }
 
+    const clickLogout = () => {
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('userId')
+      router.go(router.currentRoute)
+    }
+
     const changeCollapse = () => {
       state.isCollapse = !state.isCollapse
     }
@@ -168,6 +174,7 @@ export default {
       menuSelect,
       clickLogo,
       clickLogin,
+      clickLogout,
       changeCollapse,
       goHome,
       goRank,
