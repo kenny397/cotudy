@@ -50,7 +50,7 @@ public class User extends BaseEntity{
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "rival")
     private List<Rival> rival = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(cascade= CascadeType.ALL, mappedBy = "user")
     private List<StudyTime> studyTime = new ArrayList<>();
 
     @PrePersist
