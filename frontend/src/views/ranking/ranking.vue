@@ -1,4 +1,3 @@
-
 <template>
   <div v-if="true" style="background-color:#d0d0d0; margin:5rem; border:5px solid; padding:7rem;">
       <h2 style="text-align:center">로그인 하시면 나의 공부 정보를 볼 수 있어요!</h2>
@@ -11,29 +10,28 @@
   <div>
     <el-row>
       <el-col :span="2"/>
-    <el-col :span="2"> <el-select v-model="state.term" @change="changeTerm" class="m-2" placeholder="전체">
-    <el-option
-      v-for="item in state.terms"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value"
-    >
-    </el-option>
-  </el-select>
+    <el-col :span="2">
+        <el-cascader
+            v-model="state.term"
+            :options="state.terms"
+            @change="fetchRank"
+            placeholder="기간"
+            style="margin-end:1rem;"
+          ></el-cascader>
   </el-col>
     <el-col :span="1"/>
-    <el-col :span="2">    <el-select v-model="state.category" @change="fetchRank" class="m-2" placeholder="전체">
-    <el-option
-      v-for="item in state.categories"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value"
-    >
-    </el-option>
-  </el-select></el-col>
+    <el-col :span="2">
+      <el-cascader
+            v-model="state.category"
+            :options="state.categories"
+            @change="fetchRank"
+            placeholder="카테고리"
+            style="margin-end:1rem;"
+          ></el-cascader>
+    </el-col>
   <el-col :span="1"/>
     <el-col :span="2">
-    <el-select v-if=false v-model="state.classs" @change="fetchRank" class="m-2" placeholder="전체">
+    <el-select v-if='false' v-model="state.classs" @change="fetchRank" class="m-2" placeholder="전체">
     <el-option
       v-for="item in state.classes"
       :key="item.value"
@@ -67,7 +65,8 @@
 
     </el-col>
   </el-row>
-  <el-table :data="state.rank" stripe style="width: 85%; margin-top:30px; left:7.5%" :row-style="tableStyle"
+  <el-table :data="state.rank" stripe highlight-current-row
+  style="width: 85%; margin-top:30px; left:7.5%" :row-style="tableStyle"
   header-row-style = "background-color:rgba(58, 194, 88, 1); color:#fff" >
     <el-table-column prop="#" label="" width="50" />
     <el-table-column type="index"  label="순위" width="100" />
@@ -76,16 +75,21 @@
     <el-table-column prop="totalStudyTime" label="공부한시간" />
   </el-table>
 
+  <el-pagination class='pagination' style="margin-top: 30px;" background="#3AC258" layout="prev, pager, next" :total="state.pageNum"
+                @current-change="setPage">
+  </el-pagination>
   </div>
 
 </template>
-
 <script>
 //import { Search } from '@element-plus/icons-vue'
 //import { setupElementPlus } from './element-plus.js'
 //setupElementPlus()
 import axios from 'axios';
 import { reactive} from 'vue'
+//import { useStore } from 'vuex'
+//import { useRouter } from 'vue-router'
+
 export default {
   name: 'Ranking',
 
@@ -95,12 +99,25 @@ export default {
 
 
   setup() {
+    //const router = useRouter()
+    //const store = useStore()
     const state = reactive({
       input : null,
       term : null,
       uid : '',
       select : null,
       department : null,
+      pageNum: '0',
+      currentPage : 1
+      ,
+
+      selects :[{
+        value : 'userNickname',
+        label : '아이디'
+      },{
+        value : 'department',
+        label : '소속'
+      }],
 
       terms : [{
         value : null,
@@ -189,12 +206,11 @@ export default {
       }
       axios.get(url).then((Response)=>{
     this.state.rank = Response.data.content;
-    console.log(this.state.rank);
+    this.state.pageNum = parseInt(Response.data.totalElements/20+1)*10;
     }).catch((Error)=>{
     console.log(Error);
     }
     )},
-//https://i6b105.p.ssafy.io/api/v1/ranking/?userNickname=test
     searchUser(){
       axios.get('ranking/?userNickname='+this.state.input).then((Response)=>{
     this.state.rank = Response.data.content;
@@ -208,6 +224,29 @@ export default {
         const url = 'ranking?term='+this.state.term;
         this.fetchRank(url);
     },
+
+    setPage(page){
+      let url = 'ranking/?';
+      if(this.state.input!=null){
+        url += 'userNickname='+this.state.input+'&';
+      }
+      if(this.state.term!=null){
+        url += 'term='+this.state.term+'&';
+      }
+      if(this.state.classs!=null){
+        url += 'userClass='+this.state.classs+'&';
+      }
+      if(this.state.category!=null){
+        url += 'category='+this.state.category+'&';
+      }
+      url+= 'page='+page;
+      axios.get(url).then((Response)=>{
+    this.state.rank = Response.data.content;
+    this.state.pageNum = parseInt(Response.data.totalElements/20+1)*10;
+    }).catch((Error)=>{
+    console.log(Error);
+    }
+    )},
 
 
 
@@ -241,9 +280,8 @@ export default {
   background-color: rgb(78, 78, 78);
 }
 
+.pagination {
+  justify-content: center;
+}
 
-
-/* .el-table  {
-  --el-table-tr-bg-color: var(--el-color-success-lighter);
-} */
 </style>
