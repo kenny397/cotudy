@@ -577,6 +577,23 @@ export default {
           console.log(err)
         })
       }
+
+      axios.get(`rooms/${state.mySessionId}`)
+        .then(res => {
+          if(res.data.headCount == 0 ) {
+            axios.delete(`rooms/${state.mySessionId}`)
+            .then(res => {
+              console.log(res)
+            })
+            .catch(err => {
+              console.log(err)
+            })
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+
 			if (state.session) state.session.disconnect();
       if (state.webcam) state.webcam.stop();
 
