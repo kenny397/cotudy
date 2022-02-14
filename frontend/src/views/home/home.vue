@@ -336,6 +336,7 @@ export default {
 
     onUpdated(() => {
       resetDialog()
+
     })
 
     const load = function () {
