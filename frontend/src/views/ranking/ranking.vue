@@ -1,4 +1,3 @@
-
 <template>
   <div v-if="true" style="background-color:#d0d0d0; margin:5rem; border:5px solid; padding:7rem;">
       <h2 style="text-align:center">로그인 하시면 나의 공부 정보를 볼 수 있어요!</h2>
@@ -88,8 +87,8 @@
 //setupElementPlus()
 import axios from 'axios';
 import { reactive} from 'vue'
-import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+//import { useStore } from 'vuex'
+//import { useRouter } from 'vue-router'
 
 export default {
   name: 'Ranking',
@@ -100,8 +99,8 @@ export default {
 
 
   setup() {
-    const router = useRouter()
-    const store = useStore()
+    //const router = useRouter()
+    //const store = useStore()
     const state = reactive({
       input : null,
       term : null,
