@@ -1,22 +1,31 @@
 <template>
-  <el-dialog custom-class="login-dialog" title="로그인" v-model="state.dialogVisible" @close="handleClose">
-    <el-form :model="state.form" :rules="state.rules" ref="loginForm" :label-position="state.form.align">
-      <el-form-item prop="id" label="아이디" :label-width="state.formLabelWidth" >
-        <el-input v-model="state.form.id" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item prop="password" label="비밀번호" :label-width="state.formLabelWidth">
-        <el-input v-model="state.form.password" autocomplete="off" show-password></el-input>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button plain type="success" @click="clickLogin">로그인</el-button>
-      </span>
-    </template>
-  </el-dialog>
+  <div>
+    <el-dialog custom-class="login-dialog" title="Cotudy" v-model="state.emailDialogVisible" @close="handleClose">
+      <h2>수험생들의 최선의,</h2>
+      <h2 style="margin-bottom:20px;">그리고 최고의 선택!</h2>
+      <p>지금 Cotudy에서 공부를 시작하세요.</p>
+      <p style="margin-bottom:40px;">모든 수험생 여러분의 합격을 기원합니다.</p>
+
+      <el-form :model="state.form" :rules="state.rules" ref="loginForm" :label-position="state.form.align">
+        <el-form-item prop="id" label="e-mail" :label-width="state.formLabelWidth" >
+          <el-input v-model="state.form.id" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item prop="password" label="password" :label-width="state.formLabelWidth">
+          <el-input v-model="state.form.password" autocomplete="off" show-password></el-input>
+        </el-form-item>
+      </el-form>
+
+      <el-button round plain type="success" @click="clickLogin">
+        <font-awesome-icon icon="clipboard-check"/>
+        <span style="margin-left:10px">로그인하기</span>
+      </el-button>
+
+      <span style="margin-top:1.7rem; font-size: 0.7rem; color:grey;">cotudy는 수험생님의 개인정보를 안전하게 보호합니다.</span>
+    </el-dialog>
+  </div>
 </template>
 <style>
-.login-dialog {
+/* .login-dialog {
   width: 400px !important;
   height: 300px;
 }
@@ -46,6 +55,51 @@
 }
 .login-dialog .dialog-footer .el-button {
   width: 120px;
+} */
+.login-dialog {
+  width: 350px !important;
+  height: 500px;
+}
+.login-dialog .el-dialog__header {
+  background-color: rgba(58, 194, 88, 1);
+  text-align: center;
+}
+.login-dialog .el-dialog__header .el-dialog__title {
+  font-size: 1.5rem;
+  color: white;
+  font-weight: bold;
+}
+.login-dialog .el-dialog__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.login-dialog h2 {
+  margin-block-start: 10px;
+  margin-block-end: 0;
+}
+.login-dialog p {
+  margin-block-start: 5px;
+  margin-block-end: 5px;
+}
+.login-dialog .el-form {
+  margin-bottom: 15px;
+}
+.login-dialog .el-button--success.is-plain {
+  --el-button-text-color: rgb(255, 255, 255);
+  --el-button-bg-color: rgba(58, 194, 88, 1);
+  --el-button-border-color: rgba(58, 194, 88, 1);
+  --el-button-hover-text-color: rgba(58, 194, 88, 1);
+  --el-button-hover-bg-color: rgb(255, 255, 255);
+  --el-button-hover-border-color: rgba(58, 194, 88, 1);
+  --el-button-active-text-color: rgb(255, 255, 255);
+  --el-button-active-border-color: rgba(58, 194, 88, 1);
+}
+.login-dialog .el-button {
+  width: 90%;
+  height: 50px;
+  border-radius: 30px !important;
+  font-size: 1.2rem;
 }
 </style>
 <script>
@@ -82,19 +136,19 @@ export default {
         id: [
           {
             required: true,
-            message: 'Please input ID',
+            message: '이메일을 입력해주세요',
             trigger: 'blur'
           }
         ],
         password: [
           {
             required: true,
-            message: 'Please input password',
+            message: '비밀번호를 입력해주세요',
             trigger: 'blur'
           }
         ]
       },
-      dialogVisible: computed(() => props.open),
+      emailDialogVisible: computed(() => props.open),
       formLabelWidth: '120px'
     })
 
@@ -125,6 +179,7 @@ export default {
     const handleClose = function () {
       state.form.id = ''
       state.form.password = ''
+      state.form.passwordDialigVisible = false
       emit('closeLoginDialog')
     }
 

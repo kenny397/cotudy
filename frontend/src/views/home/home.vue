@@ -15,11 +15,12 @@
         <div>
           <span style="margin-end:5px">Category: </span>
           <el-cascader
-            v-model="value"
+            v-model="casValue"
             :options="state.options"
+            @change="handleChangeCategory(casValue)"
             style="margin-end:1rem;"
           ></el-cascader>
-          <el-button plain round type="success" @click="state.createStudyDialogVisible = true">Create Study</el-button>
+          <el-button plain round type="success" @click="createStudy()">Create Study</el-button>
           <el-dialog v-model="state.createStudyDialogVisible" title="방 생성" width="45%" center>
             <hr style="margin-top:-20px;">
             <el-form :model="state.form" :rules="state.rules" label-width="120px">
@@ -75,8 +76,8 @@
                 </div>
               </div>
               <el-alert
-                v-if="state.alertVisible"
-                title="방 제목을 입력해주세요!"
+                v-if="state.createAlert.visible"
+                :title="state.createAlert.title"
                 type="warning"
                 center
                 style="margin-bottom:20px;"
@@ -230,28 +231,39 @@ export default {
       count: store.state.root.studyroomListLength,
       options: [
         {
-        value: 'linguistic',
+        value: 'all',
+        label: '전체',
+        studyroomData: []
+        },
+        {
+        value: 'language',
         label: '어학',
+        studyroomData: []
         },
         {
-        value: 'civil service examination',
+        value: 'official',
         label: '공무원',
+        studyroomData: []
         },
         {
-        value: 'job seeker',
+        value: 'job',
         label: '취업',
+        studyroomData: []
         },
         {
         value: 'certificate',
         label: '자격증',
+        studyroomData: []
         },
         {
-        value: 'national college entrance exam',
+        value: 'college',
         label: '대입',
+        studyroomData: []
         },
         {
-        value: 'self-directed learning',
+        value: 'self',
         label: '자율',
+        studyroomData: []
         },
       ],
       form: {
@@ -327,7 +339,10 @@ export default {
       createStudyDialogVisible: false,
       ThumbnailDialogVisible: false,
       studyList: [],
-      alertVisible: false,
+      createAlert: {
+        visible: false,
+        title: ''
+      }
     })
 
     onMounted(() => {
@@ -345,9 +360,11 @@ export default {
     }
 
     const clickConference = function (id) {
-      if (id.headCount >= id.roomMaxPeople) {
+      if (!store.state['root'].isLogin) {
+        alert('로그인 후 이용하실 수 있습니다!')
+        // TODO 로그인 모달 켜기
+      } else if (id.headCount >= id.roomMaxPeople) {
         alert('허용인원이 초과되어 스터디룸에 입장하실 수 없습니다! \n다른 스터디룸을 이용해 주세요.')
-        return
       } else {
         router.push({
           name: 'studyroom-standby',
@@ -375,8 +392,11 @@ export default {
               roomTitle: res[i].roomTitle
             }
             state.studyList.push(tmp)
+            state.options[0].studyroomData.push(tmp)
+            const num = res[i].roomCategory *= 1
+            state.options[num].studyroomData.push(tmp)
           }
-          console.log(state.studyList)
+            console.log(state.options)
         })
         .catch(err => {
           console.log(err)
@@ -394,6 +414,23 @@ export default {
       }
     }
 
+    const createStudy = function () {
+      if (!store.state['root'].isLogin) {
+        alert('로그인 후 이용하실 수 있습니다!')
+        // TODO 로그인 모달 켜기
+      } else {
+        state.createStudyDialogVisible = true
+      }
+    }
+
+    const handleChangeCategory = function (casValue) {
+      for (let i in state.options) {
+        if (state.options[i].value === casValue[0]) {
+          state.studyList = state.options[i].studyroomData
+        }
+      }
+    }
+
     const pickThumbnail = function (imgNum) {
       state.form.thumbnail = imgNum
       state.ThumbnailDialogVisible = false
@@ -401,31 +438,34 @@ export default {
 
     const onSubmit = function () {
       if (!state.form.name) {
-        state.alertVisible = true
-        return
-      }
-      axios({
-        url: 'rooms',
-        method: 'post',
-        data: {
-          'roomTitle': state.form.name,
-          'roomMaxPeople': state.form.number,
-          'roomDescription': state.form.desc,
-          'roomThumbnail': `${state.form.thumbnail}`,
-          'roomCategory': state.form.category
-        }
-      })
-        .then(res => {
-          router.push({
-            name: 'studyroom-standby',
-            params: {
-              studyroomId: res.data.id
-            }
+        state.createAlert.visible = true
+        state.createAlert.title = '방 제목을 입력해주세요!'
+      } else if (state.form.name.length <= 2) {
+        state.createAlert.visible = false
+      } else {
+        axios({
+          url: 'rooms',
+          method: 'post',
+          data: {
+            'roomTitle': state.form.name,
+            'roomMaxPeople': state.form.number,
+            'roomDescription': state.form.desc,
+            'roomThumbnail': `${state.form.thumbnail}`,
+            'roomCategory': state.form.category
+          }
+        })
+          .then(res => {
+            router.push({
+              name: 'studyroom-standby',
+              params: {
+                studyroomId: res.data.id
+              }
+            })
           })
-        })
-        .catch(err => {
-          console.log(err)
-        })
+          .catch(err => {
+            console.log(err)
+          })
+      }
     }
 
     return {
@@ -434,8 +474,10 @@ export default {
       clickConference,
       studyListData,
       resetDialog,
+      createStudy,
       pickThumbnail,
       onSubmit,
+      handleChangeCategory,
     }
   }
 }
