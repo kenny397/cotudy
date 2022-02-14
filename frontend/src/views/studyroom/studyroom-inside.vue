@@ -560,6 +560,12 @@ export default {
 
     const leaveSession = function() {
 			// --- Leave the session by calling 'disconnect' method over the Session object ---
+      // 공부시간 저장용
+      let Studyhour = state.newStudyTime.substr(0, 2)
+      let Studyminute = state.newStudyTime.substr(3, 2)
+      Studyhour *= 60;
+      Studyminute *= 1;
+
       if(state.session) {
         axios({
           url: 'rooms/exit',
@@ -607,12 +613,6 @@ export default {
       state.webcam = undefined;
       state.ctx = undefined;
       state.maxPredictions = undefined;
-
-      // 공부시간 저장용
-      let Studyhour = state.newStudyTime.substr(0, 2)
-      let Studyminute = state.newStudyTime.substr(3, 2)
-      Studyhour *= 60;
-      Studyminute *= 1;
 
 			window.removeEventListener('beforeunload', leaveSession);
       router.push({

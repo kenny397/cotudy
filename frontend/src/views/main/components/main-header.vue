@@ -107,7 +107,10 @@ export default {
     const clickLMypage = () => {
       state.nowRoute = 'myPage'
       router.push({
-        name: 'my-page'
+        name: 'my-page',
+        params: {
+          userId: localStorage.getItem('userId')*1
+        }
       })
     }
 
@@ -119,15 +122,15 @@ export default {
     }
 
     const goRank = function () {
-      if (!store.state['root'].isLogin) {
-        alert('로그인 후 이용하실 수 있습니다!')
-        clickLogin()
-      } else {
+      // if (!store.state['root'].isLogin) {
+      //   alert('로그인 후 이용하실 수 있습니다!')
+      //   clickLogin()
+      // } else {
         state.nowRoute = 'rank'
         router.push({
           name: 'ranking',
         })
-      }
+      // }
 
     }
 

@@ -42,7 +42,7 @@ function makeRoutesFromMenu () {
       component: Ranking
     },
     {
-      path: '/my-page',
+      path: '/my-page/:userId',
       name: 'my-page',
       component: Mypage
     },
