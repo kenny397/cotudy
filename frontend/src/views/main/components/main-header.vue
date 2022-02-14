@@ -10,15 +10,33 @@
       <div v-if="state.nowRoute === 'rank'" class="routeUnderline"></div>
     </span>
     <!-- <p @click="goCommunity" style="cursor:pointer">Community</p> -->
-    <el-autocomplete
-      v-model="state.search"
-      :fetch-suggestions="querySearch()"
-      maxlength="20"
-      placeholder="Studyroom Search"
-      show-word-limit
-      prefix-icon="el-icon-search"
-      style="width:500px; --el-input-bg-color:rgba(243, 243, 245, 1);"
-    />
+    <div>
+      <input class="inputStyle" type="text" placeholder="Search Studyroom" @input="searchChange($event)">
+      <el-card v-if="state.isSearch" class="searchBox">
+        <div class="searchHeader">
+          <span class="headerFont" @click="clickExit()" style="cursor:pointer;">
+            [<font-awesome-icon icon="x"/>] 닫기
+          </span>
+        </div>
+        <div v-for="i in state.showSearchData" :key="i.roomId">
+          <div @click="clickConference(i)" style="cursor:pointer; margin-bottom:5px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <span style="font-size:1rem; font-weight:bolder; margin-end:5px;">#{{ i.roomId }}</span>
+              <span>{{ i.title }}</span>
+            </div>
+            <span style="font-size:0.8rem; text-align:end;">({{ i.headCount }} / {{ i.maxPeople }})</span>
+          </div>
+          <hr>
+        </div>
+      </el-card>
+      <!-- <div v-if="state.isSearch" class="searchBox">
+        <div class="searchHeader">
+          <span class="headerFont" @click="clickExit()">
+            [<font-awesome-icon icon="x"/>] 닫기
+          </span>
+        </div>
+      </div> -->
+    </div>
     <el-button v-if="!state.isLoginButton" round plain type="success" @click="clickLogin">Signup/Login</el-button>
     <div v-if="state.isLoginButton">
       <el-button round plain type="success" @click="clickLogout">Logout</el-button>
@@ -28,6 +46,12 @@
 </template>
 
 <style scoped>
+input::-webkit-input-placeholder { font-size: 90%; }
+input::-moz-placeholder { font-size: 90%; }
+input:-ms-input-placeholder { font-size: 90%; }
+input:-moz-placeholder { font-size: 90%; }
+input::placeholder { font-size: 90%; }
+
 .main-header {
   display: flex;
   justify-content: space-around;
@@ -59,6 +83,32 @@
 .routeUnderline {
   border-block-end: 5px solid rgba(58, 194, 88, 1);
 }
+.searchBox {
+  position: absolute;
+  width: 522px;
+  margin-top:5px;
+  z-index: 2000;
+}
+.searchBox .searchHeader {
+  padding-bottom: 20px;
+  text-align: end;
+}
+.searchBox .searchHeader .headerFont{
+  font-size:0.8rem;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.inputStyle {
+  background-color: rgba(243, 243, 245, 1);
+  border: none;
+  border-radius: 8px;
+  display: inline-block;
+  font-size: inherit;
+  height: 40px;
+  line-height: 10px;
+  padding: 0 11px;
+  width: 500px;
+}
 </style>
 
 <script>
@@ -82,8 +132,9 @@ export default {
     const router = useRouter()
 
     const state = reactive({
+      isSearch: false,
       searchValue: [],
-      search: '',
+      showSearchData: [],
       isLoginButton: computed(() => {
         return store.state['root'].isLogin
       }),
@@ -138,16 +189,64 @@ export default {
       axios.get('rooms')
         .then(res => {
           for (let i in res.data) {
-            state.searchValue.push(res.data[i].roomTitle)
+            const tmp = {
+              roomId: res.data[i].roomId,
+              roomTitle: res.data[i].roomTitle,
+              headCount: res.data[i].headCount,
+              roomMaxPeople: res.data[i].roomMaxPeople
+            }
+            state.searchValue.push(tmp)
           }
+          console.log(state.searchValue)
         })
         .catch(err => {
           console.log(err)
         })
     }
 
-    const querySearch = function () {
-      state.searchValue.filter
+    const clickConference = function (id) {
+      if (!store.state['root'].isLogin) {
+        alert('로그인 후 이용하실 수 있습니다!')
+        // TODO 로그인 모달 켜기
+      } else if (id.headCount >= id.roomMaxPeople) {
+        alert('허용인원이 초과되어 스터디룸에 입장하실 수 없습니다! \n다른 스터디룸을 이용해 주세요.')
+      } else {
+        router.push({
+          name: 'studyroom-standby',
+          params: {
+            studyroomId: id.roomId
+          }
+        })
+      }
+    }
+
+    const searchChange = function (event) {
+      state.isSearch = true
+      state.showSearchData = []
+      const v = event.target.value
+      console.log(v)
+      const l = v.length
+      for (let i in state.searchValue) {
+        const title = state.searchValue[i].roomTitle
+        const headCount = state.searchValue[i].headCount
+        const maxPeople = state.searchValue[i].roomMaxPeople
+        const roomId = state.searchValue[i].roomId
+        for (let j in title) {
+          if (v === title.slice(j,(j*1)+(l*1))) {
+            state.showSearchData.push({
+              title: title,
+              headCount: headCount,
+              maxPeople: maxPeople,
+              roomId: roomId
+            })
+            break
+          }
+        }
+      }
+    }
+
+    const clickExit = function () {
+      state.isSearch = false
     }
 
     return {
@@ -157,8 +256,10 @@ export default {
       goHome,
       goRank,
       searchData,
-      querySearch,
-      clickLMypage
+      clickLMypage,
+      clickConference,
+      searchChange,
+      clickExit,
     }
   }
 }

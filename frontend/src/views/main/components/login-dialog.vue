@@ -11,7 +11,7 @@
           <el-input v-model="state.form.id" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item prop="password" label="password" :label-width="state.formLabelWidth">
-          <el-input v-model="state.form.password" autocomplete="off" show-password></el-input>
+          <el-input v-model="state.form.password" autocomplete="off" show-password @keyup.enter="clickLogin"></el-input>
         </el-form-item>
       </el-form>
 
@@ -179,7 +179,6 @@ export default {
     const handleClose = function () {
       state.form.id = ''
       state.form.password = ''
-      state.form.passwordDialigVisible = false
       emit('closeLoginDialog')
     }
 

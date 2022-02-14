@@ -411,7 +411,7 @@ export default {
         state.form.number = 0
         state.form.category = 1
         state.form.desc = ''
-        state.alertVisible = false
+        state.createAlert.visible = false
       }
     }
 
