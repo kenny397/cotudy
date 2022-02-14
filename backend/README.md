@@ -93,13 +93,10 @@ Creating openvidu-docker-compose_openvidu-server_1 ... done
    * OpenVidu Dashboard: https://DOMAIN_OR_PUBLIC_IP/dashboard/
 
 ----------------------------------------------------
-
+```
 ## mysql 배포
 ```
 docker pull mysql 
-```
-도커에 mysql 이미지를 설치하고
-```
 docker run -d -p 3306:3306 --name mysql-container -e MYSQL_ROOT_PASSWORD=1234ssafy! -v ~/mysqldata/:/var/lib/mysql mysql --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 ```
 를 실행하면 mysql 배포가 완료되었습니다.
