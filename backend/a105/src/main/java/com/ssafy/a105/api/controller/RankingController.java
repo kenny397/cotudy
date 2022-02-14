@@ -33,7 +33,7 @@ public class RankingController {
             @ApiResponse(code = 401, message = "인증 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Page<RankingListGetRes>> makeRankingList2(RankingListDto searchData,  @ApiParam(value = "페이지 정보.", required = true) @PageableDefault(size = 5) Pageable pageable){
+    public ResponseEntity<Page<RankingListGetRes>> makeRankingList(RankingListDto searchData,  @ApiParam(value = "페이지 정보.", required = true) @PageableDefault(size = 20) Pageable pageable){
         System.out.println("searchData" + searchData);
         Page<RankingListGetRes> rankingList = rankingService.listRanking(searchData, pageable);
         return ResponseEntity.status(200).body(rankingList);
