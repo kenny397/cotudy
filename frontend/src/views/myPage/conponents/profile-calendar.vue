@@ -1,6 +1,6 @@
 <template>
   <div>
-
+    <el-calendar v-model="state.dayNow" />
   </div>
 </template>
 
@@ -18,7 +18,8 @@ export default {
 	},
   setup (props) {
     const state = reactive({
-      user: props.user
+      user: props.user,
+      dayNow: new Date(),
     })
 
     return {

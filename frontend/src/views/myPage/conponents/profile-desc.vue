@@ -7,7 +7,7 @@
       <div style="text-align:left;">
         <p style="margin-left: 5px;">
           <font-awesome-icon icon="clock" />
-          <strong> 16:23:05 </strong>
+          <strong> 16:23 </strong>
           시간 공부
         </p>
         <p>
