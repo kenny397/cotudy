@@ -24,18 +24,14 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
-    @Autowired
-    PasswordEncoder passwordEncoder;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    RivalRepository rivalRepository;
-    @Autowired
-    UserCustomRepository userCustomRepository;
-    @Autowired
-    DepartmentRepository departmentRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final RivalRepository rivalRepository;
+    private final UserCustomRepository userCustomRepository;
+    private final DepartmentRepository departmentRepository;
+
     @Override
     @Transactional
     public User createUser(UserRegisterPostReq registerInfo) {
@@ -130,10 +126,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User getUserByUserId(String userId) {
-        System.out.println("userId");
         Optional<User> user = userRepository.findByUserId(userId);
-        System.out.println("aaaa");
-        System.out.println("what"+user.get().getUserId());
         return user.get();
     }
 }
