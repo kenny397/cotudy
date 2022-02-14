@@ -55,41 +55,72 @@
 - docker-compose
 - nginx
 
+### 👨‍👩‍👧협업 툴
+- GitLab
+- Jira
+- Nortion
+- Mattermost
+- Webex
+- Discord
+
 ## 서비스 아키텍쳐
-~~사진 추가 예정~~
+![아키텍처](/uploads/ca178967e12255795a7f53e9838da17a/아키텍처.PNG)
 
-## Install and Usage
-#### 시스템 환경
 
-#### 시스템 구성
-
-### 요구사항 정의서
-~~사깆 추가 예정~~
+### 기능 정의서
+![기능_정의서](/uploads/05cc2639649be6385bb976a3f826e786/기능_정의서.PNG)
 
 ### 화면 설계서
-~~사진 추가 예정
+![figma](/uploads/0bfc585f4f085161548ddde4db6dc674/figma.PNG)
 
 ### Git 컨벤션
+```
+feat : 새로운 기능 추가
+fix : 버그 수정
+docs : 문서 수정
+chore : 그 외 자잘한 작업
+test : 테스트 코드
+build : 시스템 또는 외부 종속성에 영향을 미치는 변경사항 (npm, gulp, yarn 레벨)
+ci : CI관련 설정
+style : 코드 의미에 영향을 주지 않는 변경사항 (포맷, 세미콜론 누락, 공백 등)
+refactor : 성능 개선
+```
 
 ### Code 컨벤션
+- 클래스 및 인터페이스 이름 : Pascal Case
+- Method 및 변수 이름 camel Case
+- 의존성 주입 : 생성자 주입
+	- @RequiredArgsConstructor를 사용
+- REST API
+	- 응답 요청 모두 String(PK, StudyTime 제외)
+	
 
 ### GitLab Flow 브랜치 전략
 
 ### E-R Diagram
-~~사진 추가 예정~~
+![erd](/uploads/ff52bb195f5434e7c702f89ea7f49f83/erd.PNG)
 
 ### EC2 포트 정리
+
+|**PORT**|**이름**|
+|:---:|:---:|
+|443|HTTPS|
+|80|HTTP - HTTPS로 리다이렉트(프론트 페이지지로 리다이렉트)|
+|6443|Openvidu|
+|3306|MySQL|
+|8081|Jenkins|
+|8080|Spring boot Docker Container|
+|3000|Vue.js, NginX Docker Container|
 
 ### Cotudy's Wiki 
 ~~이거 넣을지 고민중~~
 
 
 ### 팀원 역활
-
-### Cotudy을 개발하고 난 후의 회고
 - 오윤기
 - 서형준
 - 최시열
 - 전영서
 - 현종일
+
 
