@@ -1,6 +1,7 @@
 package com.ssafy.a105.db.repository;
+
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.a105.api.response.QRankingListGetRes;
 import com.ssafy.a105.api.response.RankingListGetRes;
@@ -8,32 +9,23 @@ import com.ssafy.a105.api.response.RankingRankGetRes;
 import com.ssafy.a105.db.dto.RankingListDto;
 import com.ssafy.a105.db.entity.QStudyTime;
 import com.ssafy.a105.db.entity.Rival;
-import com.ssafy.a105.db.entity.StudyTime;
 import com.ssafy.a105.db.entity.User;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
-import org.springframework.stereotype.Repository;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
-public class RankingListRepository extends QuerydslRepositorySupport {
+@RequiredArgsConstructor
+public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom{
     private final JPAQueryFactory jpaQueryFactory;
-    @Autowired
-    public RivalRepository rivalRepository;
-    @Autowired
-    public UserRepository userRepository;
+    private final RivalRepository rivalRepository;
+    private final UserRepository userRepository;
 
-    public RankingListRepository(JPAQueryFactory jpaQueryFactory) {
-        super(StudyTime.class);
-        this.jpaQueryFactory = jpaQueryFactory;
-    }
-
-    public RankingRankGetRes getUserRankInfoByUser(long userPid){
+    @Override
+    public RankingRankGetRes getUserRankInfoByUser(long userPid) {
         QStudyTime qStudyTime = QStudyTime.studyTime;
 
         List<RankingListGetRes> userList = jpaQueryFactory.select(new QRankingListGetRes(qStudyTime.user.nickname, qStudyTime.user.department.name, qStudyTime.time.sum()))
@@ -48,29 +40,19 @@ public class RankingListRepository extends QuerydslRepositorySupport {
         }
         return null;
     }
-    public PageImpl<RankingListGetRes> getTotalStudyTimeByUserPaging(@NotNull RankingListDto rankingInfo, Pageable pageable) {
+
+    @Override
+    public PageImpl<RankingListGetRes> getListByUser(RankingListDto rankingInfo, Pageable pageable) {
         QStudyTime qStudyTime = QStudyTime.studyTime;
 
-        JPQLQuery<RankingListGetRes> query = jpaQueryFactory.select(new QRankingListGetRes(qStudyTime.user.nickname, qStudyTime.user.department.name, qStudyTime.time.sum()))
+        QueryResults<RankingListGetRes> query = jpaQueryFactory.select(new QRankingListGetRes(qStudyTime.user.nickname, qStudyTime.user.department.name, qStudyTime.time.sum()))
                 .from(qStudyTime).where(eqCategory(rankingInfo.getCategory()), eqNickName(rankingInfo.getUserNickname()), eqPeriod(rankingInfo.getTerm()), eqDepartment(rankingInfo.getUserId(), rankingInfo.getUserClass()))
-                .groupBy(qStudyTime.user).orderBy(qStudyTime.time.sum().desc());
+                .groupBy(qStudyTime.user).orderBy(qStudyTime.time.sum().desc()).offset(pageable.getOffset())
+                .limit(pageable.getPageSize()).fetchResults();
 
-        long totalCount = query.fetchCount(); // 2)
-        List<RankingListGetRes> results = getQuerydsl().applyPagination(pageable, query).fetch();  // 3)
-        return new PageImpl<>(results, pageable, totalCount);  // 4)
-    }
-
-    public PageImpl<RankingListGetRes> getTotalStudyTimeByUserPaging(Pageable pageable) {
-        QStudyTime qStudyTime = QStudyTime.studyTime;
-
-        JPQLQuery<RankingListGetRes> query = jpaQueryFactory.select(new QRankingListGetRes(qStudyTime.user.nickname, qStudyTime.user.department.name, qStudyTime.time.sum()))
-                .from(qStudyTime)
-                .groupBy(qStudyTime.user).orderBy(qStudyTime.time.sum().desc());
-
-        long totalCount = query.fetchCount(); // 2)
-        List<RankingListGetRes> results = getQuerydsl().applyPagination(pageable, query).fetch();  // 3)
-        return new PageImpl<>(results, pageable, totalCount);  // 4)
-
+        List<RankingListGetRes> content = query.getResults();
+        long totalCount = query.getTotal(); // 2)
+        return new PageImpl<>(content, pageable, totalCount);
     }
 
     private BooleanExpression eqCategory(String category) {
@@ -92,7 +74,7 @@ public class RankingListRepository extends QuerydslRepositorySupport {
             return null;
         }
         int days = calculateDays(period);
-        return QStudyTime.studyTime.createdDate.between(LocalDateTime.now().minusDays(days), LocalDateTime.now());
+        return QStudyTime.studyTime.createdDate.between(LocalDateTime.now().minusDays(days).withHour(0).withMinute(0).withSecond(0).withNano(0), LocalDateTime.now());
 
     }
 

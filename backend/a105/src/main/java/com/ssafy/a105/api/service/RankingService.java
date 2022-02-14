@@ -8,8 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface RankingService {
-
-    public Page<RankingListGetRes> listRanking(RankingListDto rankingInfo, Pageable pageable);
-    public RankingRankGetRes getUserRankInfo(long userPid);
-
+    Page<RankingListGetRes> listRanking(RankingListDto rankingInfo, Pageable pageable);
+    RankingRankGetRes getUserRankInfo(long userPid);
 }
