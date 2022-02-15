@@ -50,7 +50,7 @@ export default {
     position: absolute;
     width: 140px;
     left: 50%;
-    margin-left: -70px;
+    margin-left: -64px;
 
   }
   .profile-img-area strong {

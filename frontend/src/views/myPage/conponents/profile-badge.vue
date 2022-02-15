@@ -1,11 +1,23 @@
 <template>
-  <div>
+  <div class="my-badge-container">
 
   </div>
 </template>
 
 <style scoped>
+  @media (max-width: 1150px) {
+    .my-badge-container {
+      display: none;
+    }
+  }
 
+  .my-badge-container {
+    width: 35vw;
+    height:300px;
+    background : #362222;
+    padding: 15px 10px;
+    border-radius: 20px;
+  }
 </style>
 
 <script>
