@@ -57,6 +57,7 @@ input::placeholder { font-size: 90%; }
   justify-content: space-around;
   align-items: center;
   padding: 10px 20px;
+  border-bottom: 2px solid #CCC;
 }
 .logo-wrapper {
   width: 70px;
@@ -242,6 +243,9 @@ export default {
             break
           }
         }
+      if (v === '') {
+        state.showSearchData = []
+      }
       }
     }
 

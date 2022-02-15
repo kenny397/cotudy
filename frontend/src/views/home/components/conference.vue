@@ -4,13 +4,15 @@
       <el-image
         style="width: auto; height: 120px"
         :src="state.imgList[thumbnail].imgUrl"
-        :fit="contain"
         class="image"
       ></el-image>
-      <span>{{ title }}</span>
-      <span>({{ headCount }} / {{ maxPeople }})</span>
-      <br>
-      <span>#{{ state.roomCategory[category-1] }}</span>
+      <div style="display:flex; justify-content:space-between;">
+        <span style="margin-start:5px;">{{ title }}</span>
+        <span style="margin-end:5px; font-size:0.8rem; color:grey;">({{ headCount }} / {{ maxPeople }})</span>
+      </div>
+      <div style="text-align:start;">
+        <span style="margin-start:5px; font-size:0.8rem; color:grey;"># {{ state.roomCategory[category-1] }}</span>
+      </div>
     </el-card>
   </div>
 </template>
@@ -36,8 +38,8 @@ export default {
       default: ''
     },
     category: {
-      type: String,
-      default: ''
+      type: Number,
+      default: 1
     },
     thumbnail: {
       type: Number,

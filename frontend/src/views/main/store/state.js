@@ -36,4 +36,5 @@ export default {
   menus: menuData,
   studyroomListLength: 0,
   isLogin: false,
+  isSignupOpen: false,
 }
