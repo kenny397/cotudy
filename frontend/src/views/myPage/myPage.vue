@@ -31,7 +31,7 @@
     margin: 0px 50px;
   }
   .my-page-header {
-    margin: -20px -20px -20px -20px;
+    margin: -20px -20px 10px -20px;
   }
   .my-divider {
     height:5px;
@@ -112,6 +112,7 @@ export default {
     })
 
     const getUser = function () {
+      // 유저 단일정보 조회
       axios.get(`users/${route.params.userId}`)
         .then(res => {
           for (let i in Object.keys(state.user)) {
@@ -122,6 +123,47 @@ export default {
         .catch(err => {
           console.log(err)
         })
+      // 유저 총 공부시간 조회
+      axios.get(`users/time/entire/${route.params.userId}`)
+        .then(res => {
+          // 총 공부시간
+          let tempTime = res.data.studyTime
+          console.log(res.data.studyTime)
+          let hour = (tempTime / 60) >= 1 ? tempTime/60 : 0;
+          let minute = (tempTime % 60) >= 1? tempTime%60 : 0;
+          state.user['entireStudyTime'] = hour+'시간 '+minute+'분'
+          // 티어
+          let tier = 'Iron'
+          if (hour >= 500 ) {
+            tier = 'Diamond'
+          } else if(hour >= 200){
+            tier= 'Gold'
+          } else if(hour >= 50){
+            tier= 'Silver'
+          } else if(hour >= 10){
+            tier= 'Bronze'
+          }
+          state.user['tier'] = tier
+          state.user['entireStudyHour'] = hour
+        })
+        .catch(err => {
+          console.log(err)
+        })
+
+      // 유저 오늘 공부시간 조회
+      axios.get(`users/time/today/${route.params.userId}`)
+        .then(res => {
+          let tempTime = res.data.studyTime >= 1 ? res.data.studyTime : 0
+          let hour = (tempTime / 60) >= 1 ? tempTime/60 : 0;
+          let minute = (tempTime % 60) >= 1? tempTime%60 : 0;
+          state.user['todayStudyTime'] = hour+'시간 '+minute+'분'
+          state.user['todayStudyTimeBefore'] = tempTime
+        })
+        .catch(err => {
+          console.log(err)
+        })
+
+
     }
 
 
