@@ -1,11 +1,12 @@
 package com.ssafy.a105.db.repository;
 
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.a105.api.response.QRankingListGetRes;
-import com.ssafy.a105.api.response.RankingListGetRes;
-import com.ssafy.a105.api.response.RankingRankGetRes;
+import com.ssafy.a105.api.response.*;
 import com.ssafy.a105.db.dto.RankingListDto;
 import com.ssafy.a105.db.entity.QStudyTime;
 import com.ssafy.a105.db.entity.Rival;
@@ -14,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +26,9 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom{
     private final JPAQueryFactory jpaQueryFactory;
     private final RivalRepository rivalRepository;
     private final UserRepository userRepository;
-    private final static QStudyTime qStudyTime = QStudyTime.studyTime;
+    private static QStudyTime qStudyTime = QStudyTime.studyTime;
+    private static LocalDateTime NOW = LocalDateTime.now();
+    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
     public RankingRankGetRes getUserRankInfoByUser(long userPid) {
@@ -54,6 +59,30 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom{
         return new PageImpl<>(content, pageable, totalCount);
     }
 
+    @Override
+    public List<UserRecentWeekStudyTimeRes> getStudyTimeWeekList(long id) {
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                , qStudyTime.createdDate
+                , ConstantImpl.create("%Y-%m-%d"));
+
+        List<UserRecentWeekStudyTimeRes> list =
+                jpaQueryFactory.select(new QUserRecentWeekStudyTimeRes(formattedDate, qStudyTime.time.sum())).
+                        where(qStudyTime.user.id.eq(id).and(formattedDate.between(makeStartDay(),makeEndDay())))
+                        .from(qStudyTime).groupBy(formattedDate).orderBy(formattedDate.asc()).fetch();
+        return list;
+
+
+    }
+
+    private String makeStartDay() {
+        return simpleDateFormat.format(Timestamp.valueOf(NOW.minusDays(7)));
+    }
+
+    private String makeEndDay() {
+        return simpleDateFormat.format(Timestamp.valueOf(NOW));
+    }
+
     private BooleanExpression eqCategory(String category) {
         if (category == null || category.isEmpty()) {
             return null;
@@ -73,8 +102,7 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom{
             return null;
         }
         int days = calculateDays(period);
-        return qStudyTime.createdDate.between(LocalDateTime.now().minusDays(days).withHour(0).withMinute(0).withSecond(0).withNano(0), LocalDateTime.now());
-
+        return qStudyTime.createdDate.between(NOW.minusDays(days).withHour(0).withMinute(0).withSecond(0).withNano(0), NOW);
     }
 
     private BooleanExpression eqDepartment(long userPid, String department) {
@@ -98,14 +126,13 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom{
 
     private int calculateDays(String period) {
         int days = 365;
-        LocalDateTime now = LocalDateTime.now();
         if (period.equals("day"))
             return 1;
         if (period.equals("week"))
             return 7;
         if (period.equals("month")) { // 나중에 월별 일자 구분 로직
-            int year = now.getYear();
-            int month = now.getMonthValue();
+            int year = NOW.getYear();
+            int month = NOW.getMonthValue();
             boolean isLeapYear = false;
             if ((year % 4 == 0) && (year % 100 != 0) && (year % 400 == 0)) {
                 isLeapYear = true;
