@@ -119,6 +119,8 @@ export default {
             let userDataKey = Object.keys(state.user)[i]
             state.user[userDataKey] = res.data[userDataKey]
           }
+          state.user.goalTime*=1
+
         })
         .catch(err => {
           console.log(err)
@@ -131,7 +133,7 @@ export default {
           console.log(res.data.studyTime)
           let hour = (tempTime / 60) >= 1 ? tempTime/60 : 0;
           let minute = (tempTime % 60) >= 1? tempTime%60 : 0;
-          state.user['entireStudyTime'] = hour+'시간 '+minute+'분'
+          state.user['entireStudyTime'] = Math.floor(hour)+'시간 '+minute+'분'
           // 티어
           let tier = 'Iron'
           if (hour >= 500 ) {
@@ -156,7 +158,7 @@ export default {
           let tempTime = res.data.studyTime >= 1 ? res.data.studyTime : 0
           let hour = (tempTime / 60) >= 1 ? tempTime/60 : 0;
           let minute = (tempTime % 60) >= 1? tempTime%60 : 0;
-          state.user['todayStudyTime'] = hour+'시간 '+minute+'분'
+          state.user['todayStudyTime'] = Math.floor(hour)+'시간 '+minute+'분'
           state.user['todayStudyTimeBefore'] = tempTime
         })
         .catch(err => {
