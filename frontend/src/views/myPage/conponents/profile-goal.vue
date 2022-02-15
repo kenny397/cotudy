@@ -5,7 +5,7 @@
     <div class="my-studytime-area">
       <div>오늘 나의 공부한 시간</div>
       <div class="studytime-wrapper">
-        <div>03시간 27분</div>
+        <div>{{state.user.todayStudyTime}}</div>
         <div>05시간 00분</div>
       </div>
       <el-progress
