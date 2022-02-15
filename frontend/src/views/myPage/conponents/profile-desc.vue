@@ -83,7 +83,7 @@ export default {
         3: '삼성전자',
         4: '삼성생명',
         5: '삼성SDS',
-        6: '소속없음',
+        10: '소속없음',
       },
       tier: {
         'Iron': require('../../../assets/images/tier/iron.png'),

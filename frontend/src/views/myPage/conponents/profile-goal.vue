@@ -1,12 +1,10 @@
 <template>
   <div class="my-goal-container">
-    <font-awesome-icon icon="pen-to-square" style="float:right; font-size:30px;"/>
-
     <div class="my-studytime-area">
       <div>오늘 나의 공부한 시간</div>
       <div class="studytime-wrapper">
         <div>{{state.user.todayStudyTime}}</div>
-        <div>05시간 00분</div>
+        <div contenteditable="true">05시간 00분</div>
       </div>
       <el-progress
         :text-inside="true"
