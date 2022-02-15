@@ -35,6 +35,10 @@ export default {
 .main-footer .contents {
   text-align: center;
   margin-bottom: 30px;
+  border-top: 2px solid #CCC;
+}
+.contents {
+  padding-top:10px;
 }
 
 /* @media (max-width: 700px) {

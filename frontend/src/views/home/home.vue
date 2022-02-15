@@ -1,10 +1,16 @@
 <template>
-  <div class="text-on-img">
-    <div class="background-wrap">
-      <div class="content">
-        <span>언제 어디서나 최고의 공부 환경을 느껴보세요!</span>
-      </div>
-    </div>
+  <div>
+    <el-carousel :interval="5000">
+      <el-carousel-item>
+        <div class="text-on-img">
+          <div class="background-wrap">
+            <div class="content">
+              <span>언제 어디서나 최고의 공부 환경을 느껴보세요!</span>
+            </div>
+          </div>
+        </div>
+      </el-carousel-item>
+    </el-carousel>
   </div>
   <div style="display:flex; flex-direction:column; align-items:center">
     <div style="width:70%;">
@@ -186,9 +192,9 @@
 }
 .background-wrap {
   background-image: url('../../assets/images/main.png');
-  background-size: 85% 300px;
-  border-radius: 20px;
-  width: 85%;
+  background-size: 100% 300px;
+  background-repeat: no-repeat;
+  width: 100vw;
   height: 300px;
   display: flex;
   justify-content: center;

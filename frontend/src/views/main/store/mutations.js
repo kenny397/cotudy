@@ -11,3 +11,10 @@ export function setMenuActive (state, index) {
 export function setMenuActiveMenuName (state, menuName) {
 	state.activeMenu = menuName
 }
+
+export function signupOpen (state) {
+  state.isSignupOpen = true
+}
+export function signupClose (state) {
+  state.isSignupOpen = false
+}

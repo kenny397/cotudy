@@ -1,16 +1,49 @@
 <template>
-  <div v-if="true" style="background-color:#d0d0d0; margin:5rem; border:5px solid; padding:7rem;">
-      <h2 style="text-align:center">로그인 하시면 나의 공부 정보를 볼 수 있어요!</h2>
+  <div v-if="!state.isLogin" style="background-color:#d0d0d0; margin:5rem; border:5px solid; padding:7rem;">
+    <div style="text-align:center">
+      <font-awesome-icon style="font-size:2rem; margin-end:10px;" icon="circle-exclamation"/>
+      <span style="font-size:2rem; font-weight:bold;">로그인 하시면 나의 공부 정보를 볼 수 있어요!</span>
+    </div>
   </div>
+
+  <div v-if="state.isLogin" class="rank-top">
+    <el-card class="box-card">
+      <div class="container">
+        <el-image
+          style="width:200px; height:200px;"
+          :src="state.tier.imgurl"
+          :fit="contain"
+        ></el-image>
+        <span class="fontBold">{{ state.tier.name }}</span>
+      </div>
+      <el-progress
+        :text-inside="true"
+        :stroke-width="24"
+        :percentage="state.tier.progress"
+      />
+      <div style="margin-top:40px;">
+        <span class="fontBold">{{state.tier.nextTier}}</span>
+        승격까지 약
+        <span class="fontBold">{{ state.tier.necessaryTime }}</span>
+        시간 남았습니다.
+      </div>
+    </el-card>
+    <el-card class="box-card">
+      <div v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</div>
+    </el-card>
+  </div>
+
   <div style="display:flex; justify-content:space-around; align-items:center;">
     <h3>종합 랭킹</h3>
     <h3/><h3/><h3/>
   </div>
+
   <hr width = "90%"/>
+
   <div>
     <el-row>
       <el-col :span="2"/>
-    <el-col :span="2">
+      <el-col :span="2">
         <el-cascader
             v-model="state.term"
             :options="state.terms"
@@ -18,89 +51,134 @@
             placeholder="기간"
             style="margin-end:1rem;"
           ></el-cascader>
-  </el-col>
-    <el-col :span="1"/>
-    <el-col :span="2">
-      <el-cascader
-            v-model="state.category"
-            :options="state.categories"
-            @change="fetchRank"
-            placeholder="카테고리"
-            style="margin-end:1rem;"
-          ></el-cascader>
-    </el-col>
-  <el-col :span="1"/>
-    <el-col :span="2">
-    <el-select v-if='false' v-model="state.classs" @change="fetchRank" class="m-2" placeholder="전체">
-    <el-option
-      v-for="item in state.classes"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value"
-    >
-    </el-option>
-  </el-select></el-col>
+      </el-col>
 
+      <el-col :span="1"/>
+      <el-col :span="2">
+        <el-cascader
+          v-model="state.category"
+          :options="state.categories"
+          @change="fetchRank"
+          placeholder="카테고리"
+          style="margin-end:1rem;"
+        ></el-cascader>
+      </el-col>
 
-
-<el-col :span="4"/>
-    <el-col :span="8">
-<div class="mt-4">
-    <el-input
-      v-model="state.input"
-      placeholder="검색어를 입력하세요"
-      class="input-with-select"
-    >
-      <template #prepend>
-        <el-select v-model="state.select" placeholder="아이디" style="width: 100px">
-          <el-option label="아이디" value="uid"></el-option>
-          <el-option label="소속" value="department"></el-option>
+      <el-col :span="1"/>
+      <el-col :span="2">
+        <el-select v-if='false' v-model="state.classs" @change="fetchRank" class="m-2" placeholder="전체">
+          <el-option
+            v-for="item in state.classes"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
         </el-select>
-      </template>
-      <template #append>
-        <el-button :icon="Search" @click="searchUser" @keyup:enter="searchUser"></el-button>
-      </template>
-    </el-input>
+      </el-col>
+
+      <el-col :span="4"/>
+      <el-col :span="8">
+        <div class="mt-4">
+          <el-input
+            v-model="state.input"
+            placeholder="검색어를 입력하세요"
+            class="input-with-select"
+            @keyup.enter="searchUser"
+          >
+            <template #prepend>
+              <el-select v-model="state.select" placeholder="아이디" style="width: 100px">
+                <el-option label="아이디" value="uid"></el-option>
+                <el-option label="소속" value="department"></el-option>
+              </el-select>
+            </template>
+            <template #append>
+              <el-button :icon="Search" @click="searchUser"></el-button>
+            </template>
+          </el-input>
+        </div>
+      </el-col>
+    </el-row>
+    <el-table
+      :data="state.rank"
+      stripe highlight-current-row
+      style="width: 85%; margin-top:30px; left:7.5%"
+      :row-style="tableStyle"
+      header-row-style = "background-color:rgba(58, 194, 88, 1); color:#fff"
+    >
+      <el-table-column prop="#" label="" width="50" />
+      <el-table-column type="index"  label="순위" width="100" />
+      <el-table-column prop="nickName" label="닉네임" width="500" />
+      <el-table-column prop="department" label="소속" />
+      <el-table-column prop="totalStudyTime" label="공부한시간" />
+    </el-table>
+
+    <el-pagination
+      class='pagination'
+      style="margin-top: 30px;"
+      background="#3AC258"
+      layout="prev, pager, next"
+      :total="state.pageNum"
+      @current-change="setPage"
+    ></el-pagination>
   </div>
-
-    </el-col>
-  </el-row>
-  <el-table :data="state.rank" stripe highlight-current-row
-  style="width: 85%; margin-top:30px; left:7.5%" :row-style="tableStyle"
-  header-row-style = "background-color:rgba(58, 194, 88, 1); color:#fff" >
-    <el-table-column prop="#" label="" width="50" />
-    <el-table-column type="index"  label="순위" width="100" />
-    <el-table-column prop="nickName" label="닉네임" width="500" />
-    <el-table-column prop="department" label="소속" />
-    <el-table-column prop="totalStudyTime" label="공부한시간" />
-  </el-table>
-
-  <el-pagination class='pagination' style="margin-top: 30px;" background="#3AC258" layout="prev, pager, next" :total="state.pageNum"
-                @current-change="setPage">
-  </el-pagination>
-  </div>
-
 </template>
+
+<style>
+.input-with-select .el-input-group__prepend {
+  background-color: rgb(78, 78, 78);
+}
+.pagination {
+  justify-content: center;
+}
+.rank-top {
+  display: flex;
+  justify-content: space-around;
+  height: 30vh;
+}
+.box-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.box-card .container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+}
+.box-card .container .el-image {
+  width: 130px !important;
+  height: 80px !important;
+}
+.el-progress-bar__inner {
+  background-color: rgba(58, 194, 88, 1);
+}
+.el-progress-bar__outer {
+  background-color: rgba(224, 224, 224, 1);
+}
+.fontBold {
+  font-weight:bold;
+  font-size:1.2rem;
+}
+
+</style>
+
 <script>
 //import { Search } from '@element-plus/icons-vue'
 //import { setupElementPlus } from './element-plus.js'
 //setupElementPlus()
 import axios from 'axios';
-import { reactive} from 'vue'
-//import { useStore } from 'vuex'
+import { reactive, computed, onUpdated } from 'vue'
+import { useStore } from 'vuex'
 //import { useRouter } from 'vue-router'
 
 export default {
   name: 'Ranking',
 
-  components: {
-
-  },
-
-
   setup() {
     //const router = useRouter()
-    //const store = useStore()
+    const store = useStore()
     const state = reactive({
       input : null,
       term : null,
@@ -108,83 +186,178 @@ export default {
       select : null,
       department : null,
       pageNum: '0',
-      currentPage : 1
-      ,
+      currentPage : 1,
+      isLogin: computed(() => {
+        return store.state['root'].isLogin
+      }),
+      userId: null,
+      tier: {
+        name: '',
+        progress: 0,
+        imgurl: '',
+        necessaryTime: 0,
+        nextTier: ''
+      },
+      selects: [
+        {
+        value: 'userNickname',
+        label: '아이디'
+        },
+        {
+        value: 'department',
+        label: '소속'
+        }
+      ],
 
-      selects :[{
-        value : 'userNickname',
-        label : '아이디'
-      },{
-        value : 'department',
-        label : '소속'
-      }],
-
-      terms : [{
-        value : null,
-        label : '전체'
-      },{
-        value : 'day',
-        label : '1일'
-      },{
-        value : 'week',
-        label : '1주일'
-      },{
-        value : 'month',
-        label : '한달'
-      },],
+      terms: [
+        {
+        value: null,
+        label: '전체'
+        },
+        {
+        value: 'day',
+        label: '1일'
+        },
+        {
+        value: 'week',
+        label: '1주일'
+        },
+        {
+        value: 'month',
+        label: '한달'
+        }
+      ],
       classs : '',
-      classes : [{
-        value : 'all',
-        label : '전체'
-      },{
-        value : 'department',
-        label : '내 소속'
-      },{
-        value : 'rival',
-        label : '친구'
-      },],
+      classes: [
+        {
+        value: 'all',
+        label: '전체'
+        },
+        {
+        value: 'department',
+        label: '내 소속'
+        },
+        {
+        value: 'rival',
+        label: '친구'
+        }
+      ],
 
-      conditions : [{
-        value : 'id',
-        label : '아이디'
-      },{
-        value : 'department',
-        label : '소속'
-      },],
+      conditions: [
+        {
+        value: 'id',
+        label: '아이디'
+        },
+        {
+        value: 'department',
+        label: '소속'
+        }
+      ],
 
-      category : '',
-      categories :[{
-        value : null,
-        label : '전체'
-      },{
-        value : 'language',
-        label : '어학'
-      },{
-        value : 'official',
-        label : '공무원'
-      },{
-        value : 'job',
-        label : '취업'
-      },{
-        value : 'certificate',
-        label : '자격증'
-      },{
-        value : 'college',
-        label : '대입'
-      },{
-        value : 'self',
-        label : '자율'
-      },],
-
-
+      category: '',
+      categories: [
+        {
+        value: null,
+        label: '전체'
+        },
+        {
+        value: 'language',
+        label: '어학'
+        },
+        {
+        value: 'official',
+        label: '공무원'
+        },
+        {
+        value: 'job',
+        label: '취업'
+        },
+        {
+        value: 'certificate',
+        label: '자격증'
+        },
+        {
+        value: 'college',
+        label: '대입'
+        },
+        {
+        value: 'self',
+        label: '자율'
+        }
+      ],
       rank : [],
+    })
 
-    });
+    onUpdated(() => {
+      if (state.isLogin) {
+        getEntireStudyTime()
+      }
+    })
 
+    const getUser = function () {
+      state.userId = localStorage.getItem('userId')
+    }
 
+    const getEntireStudyTime = function () {
+      getUser()
+      axios.get(`users/time/entire/${state.userId}`)
+        .then(res => {
+          return res.data
+        })
+        .then(res => {
+          const mtoh = res.studyTime / 60
+          if (mtoh < 10) {
+            state.tier.name = 'Iron'
+            state.tier.progress = (mtoh / 10).toFixed(3) * 100
+            state.tier.imgurl = require('../../assets/images/tier/iron.png')
+            state.tier.necessaryTime = 10 - mtoh.toFixed(1)
+            state.tier.nextTier = 'Bronze'
+            console.log(state.tier.name)
+            console.log(state.tier.progress)
+
+          } else if (mtoh >= 10 & mtoh < 50) {
+            state.tier.name = 'Bronze'
+            state.tier.progress = ((mtoh - 10) / 40).toFixed(3) * 100
+            state.tier.imgurl = require('../../assets/images/tier/bronze.png')
+            state.tier.necessaryTime = 50 - mtoh.toFixed(1)
+            state.tier.nextTier = 'Silver'
+            console.log(state.tier.name)
+            console.log(state.tier.progress)
+
+          } else if (mtoh >= 50 & mtoh < 200) {
+            state.tier.name = 'Silver'
+            state.tier.progress = ((mtoh - 50) / 150).toFixed(3) * 100
+            state.tier.imgurl = require('../../assets/images/tier/silver.png')
+            state.tier.necessaryTime = 200 - mtoh.toFixed(1)
+            state.tier.nextTier = 'Gold'
+            console.log(state.tier.name)
+            console.log(state.tier.progress)
+
+          } else if (mtoh >= 200 & mtoh < 500) {
+            state.tier.name = 'Gold'
+            state.tier.progress = ((mtoh - 200) / 300).toFixed(3) * 100
+            state.tier.imgurl = require('../../assets/images/tier/gold.png')
+            state.tier.necessaryTime = 500 - mtoh.toFixed(1)
+            state.tier.nextTier = 'Diamond'
+            console.log(state.tier.name)
+            console.log(state.tier.progress)
+
+          } else {
+            state.tier.name = 'Diamond'
+            state.tier.progress = 100
+            state.tier.imgurl = require('../../assets/images/tier/diamond.png')
+            state.tier.necessaryTime = 0
+            state.tier.nextTier = ''
+            console.log(state.tier.name)
+            console.log(state.tier.progress)
+
+          }
+        })
+    }
 
     return {
       state,
+      getEntireStudyTime,
     }
   },
 
@@ -272,16 +445,3 @@ export default {
 
 }
 </script>
-
-
-
-<style scoped>
-.input-with-select .el-input-group__prepend {
-  background-color: rgb(78, 78, 78);
-}
-
-.pagination {
-  justify-content: center;
-}
-
-</style>

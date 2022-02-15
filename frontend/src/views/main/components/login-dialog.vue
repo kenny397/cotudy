@@ -19,43 +19,14 @@
         <font-awesome-icon icon="clipboard-check"/>
         <span style="margin-left:10px">로그인하기</span>
       </el-button>
-
-      <span style="margin-top:1.7rem; font-size: 0.7rem; color:grey;">cotudy는 수험생님의 개인정보를 안전하게 보호합니다.</span>
+      <div style="margin-top:2px;">
+        <span class="signup-button" @click="signupButton()">회원이 아니신가요?</span>
+      </div>
+      <span style="margin-top:0.7rem; font-size: 0.7rem; color:grey;">cotudy는 수험생님의 개인정보를 안전하게 보호합니다.</span>
     </el-dialog>
   </div>
 </template>
 <style>
-/* .login-dialog {
-  width: 400px !important;
-  height: 300px;
-}
-.login-dialog .el-dialog__headerbtn {
-  float: right;
-}
-.login-dialog .el-form-item__content {
-  margin-left: 0 !important;
-  float: right;
-  width: 200px;
-  display: inline-block;
-}
-.login-dialog .el-form-item {
-  margin-bottom: 20px;
-}
-.login-dialog .el-form-item__error {
-  font-size: 12px;
-  color: red;
-}
-.login-dialog .el-input__suffix {
-  display: none;
-}
-.login-dialog .el-dialog__footer {
-  margin: 0 calc(50% - 80px);
-  padding-top: 0;
-  display: inline-block;
-}
-.login-dialog .dialog-footer .el-button {
-  width: 120px;
-} */
 .login-dialog {
   width: 350px !important;
   height: 500px;
@@ -83,7 +54,7 @@
   margin-block-end: 5px;
 }
 .login-dialog .el-form {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 .login-dialog .el-button--success.is-plain {
   --el-button-text-color: rgb(255, 255, 255);
@@ -101,9 +72,17 @@
   border-radius: 30px !important;
   font-size: 1.2rem;
 }
+.signup-button {
+  font-size: 0.6rem;
+  color: grey;
+  cursor: pointer;
+}
+.signup-button:hover {
+  border-bottom: 1px solid grey;
+}
 </style>
 <script>
-import { reactive, computed, ref, onMounted } from 'vue'
+import { reactive, computed, ref } from 'vue'
 import { useStore } from 'vuex'
 
 export default {
@@ -138,7 +117,12 @@ export default {
             required: true,
             message: '이메일을 입력해주세요',
             trigger: 'blur'
-          }
+          },
+          {
+          type: 'email',
+          message: '올바른 이메일 형식으로 작성해 주세요',
+          trigger: ['blur', 'change'],
+          },
         ],
         password: [
           {
@@ -149,11 +133,7 @@ export default {
         ]
       },
       emailDialogVisible: computed(() => props.open),
-      formLabelWidth: '120px'
-    })
-
-    onMounted(() => {
-      // console.log(loginForm.value)
+      formLabelWidth: '100px'
     })
 
     const clickLogin = function () {
@@ -162,13 +142,17 @@ export default {
         if (valid) {
           store.dispatch('root/requestLogin', { id: state.form.id, password: state.form.password })
           .then(function (result) {
+            console.log('!!!!!!!!!!!!!!!')
+            console.log(result.data)
+            console.log('!!!!!!!!!!!!!!!')
             store.state['root'].isLogin = true
             emit('closeLoginDialog')
             localStorage.setItem('accessToken', result.data.accessToken)
             localStorage.setItem('userId', result.data.id)
           })
           .catch(function (err) {
-            alert(err)
+            console.log(err)
+            alert('로그인에 실패하였습니다. 이메일 혹은 비밀번호를 확인해 주세요.')
           })
         } else {
           alert('로그인에 실패하였습니다. 이메일 혹은 비밀번호를 확인해 주세요.')
@@ -182,7 +166,12 @@ export default {
       emit('closeLoginDialog')
     }
 
-    return { loginForm, state, clickLogin, handleClose }
+    const signupButton = function () {
+      store.commit('root/signupOpen')
+      emit('closeLoginDialog')
+    }
+
+    return { loginForm, state, clickLogin, handleClose, signupButton }
   }
 }
 </script>
