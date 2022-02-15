@@ -23,10 +23,10 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom{
     private final JPAQueryFactory jpaQueryFactory;
     private final RivalRepository rivalRepository;
     private final UserRepository userRepository;
+    private final static QStudyTime qStudyTime = QStudyTime.studyTime;
 
     @Override
     public RankingRankGetRes getUserRankInfoByUser(long userPid) {
-        QStudyTime qStudyTime = QStudyTime.studyTime;
 
         List<RankingListGetRes> userList = jpaQueryFactory.select(new QRankingListGetRes(qStudyTime.user.nickname, qStudyTime.user.department.name, qStudyTime.time.sum()))
                 .from(qStudyTime).groupBy(qStudyTime.user).orderBy(qStudyTime.time.sum().desc()).fetch();
@@ -43,7 +43,6 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom{
 
     @Override
     public PageImpl<RankingListGetRes> getListByUser(RankingListDto rankingInfo, Pageable pageable) {
-        QStudyTime qStudyTime = QStudyTime.studyTime;
 
         QueryResults<RankingListGetRes> query = jpaQueryFactory.select(new QRankingListGetRes(qStudyTime.user.nickname, qStudyTime.user.department.name, qStudyTime.time.sum()))
                 .from(qStudyTime).where(eqCategory(rankingInfo.getCategory()), eqNickName(rankingInfo.getUserNickname()), eqPeriod(rankingInfo.getTerm()), eqDepartment(rankingInfo.getUserId(), rankingInfo.getUserClass()))
@@ -59,14 +58,14 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom{
         if (category == null || category.isEmpty()) {
             return null;
         }
-        return QStudyTime.studyTime.studyClass.name.eq(category);
+        return qStudyTime.studyClass.name.eq(category);
     }
 
     private BooleanExpression eqNickName(String nickName) {
         if (nickName == null || nickName.isEmpty()) {
             return null;
         }
-        return QStudyTime.studyTime.user.nickname.contains(nickName);
+        return qStudyTime.user.nickname.contains(nickName);
     }
 
     private BooleanExpression eqPeriod(String period) {
@@ -74,7 +73,7 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom{
             return null;
         }
         int days = calculateDays(period);
-        return QStudyTime.studyTime.createdDate.between(LocalDateTime.now().minusDays(days).withHour(0).withMinute(0).withSecond(0).withNano(0), LocalDateTime.now());
+        return qStudyTime.createdDate.between(LocalDateTime.now().minusDays(days).withHour(0).withMinute(0).withSecond(0).withNano(0), LocalDateTime.now());
 
     }
 
@@ -84,7 +83,7 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom{
         }
         if (department.equals("department")) {
             User user = userRepository.findById(userPid);
-            return QStudyTime.studyTime.user.department.name.eq(user.getDepartment().getName());
+            return qStudyTime.user.department.name.eq(user.getDepartment().getName());
         }
         if (department.equals("rival")) {
             List<Rival> rivalList = rivalRepository.findByUserId(userPid);
@@ -92,7 +91,7 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom{
             for (int i = 0; i < rivalList.size(); i++) {
                 rivalIdList.add(rivalList.get(i).getRival().getId());
             }
-            return QStudyTime.studyTime.user.id.in(rivalIdList);
+            return qStudyTime.user.id.in(rivalIdList);
         }
         return null;
     }

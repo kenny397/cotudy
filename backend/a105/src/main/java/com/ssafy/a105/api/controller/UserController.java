@@ -6,6 +6,8 @@ import com.ssafy.a105.api.request.UserRegisterPostReq;
 import com.ssafy.a105.api.response.*;
 import com.ssafy.a105.api.service.UserService;
 import com.ssafy.a105.common.model.response.BaseResponseBody;
+import com.ssafy.a105.db.dto.AttendanceDateDto;
+import com.ssafy.a105.db.dto.UserRivalDto;
 import com.ssafy.a105.db.entity.Rival;
 import com.ssafy.a105.db.entity.Room;
 import com.ssafy.a105.db.entity.User;
@@ -28,6 +30,8 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
+    private static final String YES = "yes";
+    private static final String NO = "no";
 
     @PostMapping()
     @ApiOperation(value = "회원 가입", notes = "<strong>아이디어와 패스워드</strong>를 가지고 회원가입을 한다")
@@ -154,6 +158,23 @@ public class UserController {
         userService.deleteRival(rivalPostReq);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200,"라이벌 삭제 완료."));
     }
+
+    @GetMapping("/rival")
+    @ApiOperation(value = "해당 유저의 라이벌인지 조회", notes = "<strong>유저2의 PK</strong>가 <strong>사용자의 PK</strong>의 라이벌인지 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<String> checkRival(UserRivalDto userRivalDto){
+        if (userService.isRival(userRivalDto) == 0){
+            return ResponseEntity.status(200).body(NO);
+        }
+        return ResponseEntity.status(200).body(YES);
+
+    }
+
     @GetMapping("/time/entire/{userId}")
     @ApiOperation(value = "전체 스터디 시간 조회", notes = "<strong>회원의 유저 PK</strong>를 가지고 전체 스터디 시간을 조회준다.")
     @ApiResponses({
@@ -180,6 +201,18 @@ public class UserController {
         return ResponseEntity.status(200).body(studyTimeRes);
     }
 
+    @GetMapping("/calendar")
+    @ApiOperation(value = "해당 유저의 출석일 반환", notes = "<strong>회원의 유저 PK</strong>와 년/월을 가지고 해당 기간의 출석일을 반환한다")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<List<CalendarRes>> getAttendanceDays(AttendanceDateDto attendanceDateDto){
+        List<CalendarRes> output = userService.getAttendanceDays(attendanceDateDto);
+        return ResponseEntity.status(200).body(output);
+    }
 
 
 }

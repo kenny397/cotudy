@@ -3,7 +3,10 @@ package com.ssafy.a105.api.service;
 import com.ssafy.a105.api.request.RivalPostReq;
 import com.ssafy.a105.api.request.UserPostReq;
 import com.ssafy.a105.api.request.UserRegisterPostReq;
+import com.ssafy.a105.api.response.CalendarRes;
 import com.ssafy.a105.api.response.StudyTimeRes;
+import com.ssafy.a105.db.dto.AttendanceDateDto;
+import com.ssafy.a105.db.dto.UserRivalDto;
 import com.ssafy.a105.db.entity.Department;
 import com.ssafy.a105.db.entity.Rival;
 import com.ssafy.a105.db.entity.User;
@@ -39,6 +42,8 @@ public class UserServiceImpl implements UserService{
         user.setUserId(registerInfo.getEmail());
         user.setNickname(registerInfo.getNickName());
         user.setPassword(passwordEncoder.encode(registerInfo.getPassword()));
+        user.setGoalTime("60");
+        user.setGoal("");
         Department department = departmentRepository.findById(10L).get();
         user.setDepartment(department);
         return userRepository.save(user);
@@ -109,8 +114,8 @@ public class UserServiceImpl implements UserService{
     public void deleteRival(RivalPostReq rivalPostReq) {
         User userMain = userRepository.getById(rivalPostReq.getUserId());
         User userTarget=userRepository.getById(rivalPostReq.getRivalId());
-        Rival rival = rivalRepository.findByUserIdAndRivalId(userMain.getId(),userTarget.getId());
-        rivalRepository.delete(rival);
+        Optional<Rival> rival = rivalRepository.findByUserIdAndRivalId(userMain.getId(),userTarget.getId());
+        rivalRepository.delete(rival.get());
     }
 
     @Override
@@ -128,5 +133,18 @@ public class UserServiceImpl implements UserService{
     public User getUserByUserId(String userId) {
         Optional<User> user = userRepository.findByUserId(userId);
         return user.get();
+    }
+
+    @Override
+    public List<CalendarRes> getAttendanceDays(AttendanceDateDto userDateInfo) {
+        return userCustomRepository.getAttendanceDaysByUser(userDateInfo);
+    }
+
+    @Override
+    public int isRival(UserRivalDto userRivalDto) {
+        Optional<Rival> rival = rivalRepository.findByUserIdAndRivalId(userRivalDto.getUserId(), userRivalDto.getRivalId());
+        if(rival.isEmpty())
+            return 0;
+        return 1;
     }
 }
