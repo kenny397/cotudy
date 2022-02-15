@@ -13,6 +13,7 @@ import com.ssafy.a105.api.response.StudyTimeRes;
 import com.ssafy.a105.db.dto.AttendanceDateDto;
 import com.ssafy.a105.db.entity.QStudyTime;
 import com.ssafy.a105.db.entity.StudyTime;
+import org.apache.tomcat.jni.Local;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 
@@ -34,7 +35,7 @@ public class UserCustomRepository extends QuerydslRepositorySupport {
 
     public List<CalendarRes> getAttendanceDaysByUser(AttendanceDateDto userDateInfo) {
         List<CalendarRes> attendanceDayList = jpaQueryFactory.select(new QCalendarRes(Expressions.stringTemplate("DATE_FORMAT({0}, {1})", qStudyTime.createdDate, "%Y-%m-%d"))).from(qStudyTime)
-                .where(qStudyTime.user.id.eq(userDateInfo.getUserId())).groupBy(qStudyTime.createdDate)
+                .where(qStudyTime.user.id.eq(userDateInfo.getId())).groupBy(qStudyTime.createdDate)
                 .having(qStudyTime.time.sum().goe(HALF_HOUR).and(betweenDate(userDateInfo.getYear(), userDateInfo.getMonth())))
                 .orderBy(qStudyTime.createdDate.asc()).fetch();
 
@@ -47,12 +48,12 @@ public class UserCustomRepository extends QuerydslRepositorySupport {
         int nowMonth = nowLocalDateTime.getMonthValue();
 
         if (year == nowYear && month == nowMonth) {
-            return qStudyTime.createdDate.between(nowLocalDateTime.minusMonths(1), nowLocalDateTime);
+            return qStudyTime.createdDate.between(LocalDateTime.of(year,month - 1, 22 , 0 , 0), nowLocalDateTime);
         }
         if (year > nowYear || year == nowYear && month > nowMonth)
             return null;
 
-        return qStudyTime.createdDate.between(LocalDateTime.of(year, month, 1, 0, 0), LocalDateTime.of(year,month+1,1,0,0));
+        return qStudyTime.createdDate.between(LocalDateTime.of(year, month - 1, 22 , 0, 0), LocalDateTime.of(year,month+1,1,0,0));
     }
 
     public StudyTimeRes getDayStudyTimeByUser(long id) {

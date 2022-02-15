@@ -12,17 +12,17 @@ import lombok.ToString;
 @ApiModel("AttendanceDateDto")
 public class AttendanceDateDto {
     @ApiModelProperty(name="사용자 PK", example="50")
-    long userId;
+    long id;
     @ApiModelProperty(name="년", example="2022")
     int year;
     @ApiModelProperty(name="월", example="2")
     int month;
 
-    public static AttendanceDateDto of(long userId,
+    public static AttendanceDateDto of(long id,
                                        int year,
                                        int month){
         AttendanceDateDto body = new AttendanceDateDto();
-        body.userId = userId;
+        body.id = id;
         body.year = year;
         body.month = month;
         return body;
