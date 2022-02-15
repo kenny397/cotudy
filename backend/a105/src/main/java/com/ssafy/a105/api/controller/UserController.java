@@ -188,6 +188,19 @@ public class UserController {
         return ResponseEntity.status(200).body(studyTimeRes);
     }
 
+    @GetMapping("/time/week")
+    @ApiOperation(value = "최근 일주일 스터디 시간 조회", notes = "<strong>회원의 유저 PK</strong>를 가지고 최근 일주일 스터디 시간을 조회한다")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<List<UserRecentWeekStudyTimeRes>> getRecentWeekStudyTime(@RequestParam(value = "id") int id){
+        List<UserRecentWeekStudyTimeRes> userRecentWeekStudyTimeResList= userService.getListRecentWeekStudyTime(id);
+        return ResponseEntity.status(200).body(userRecentWeekStudyTimeResList);
+    }
+
     @GetMapping("/time/today/{userId}")
     @ApiOperation(value = "오늘 스터디 시간 조회", notes = "<strong>회원의 유저 PK</strong>를 가지고 오늘 스터디 시간을 조회한다")
     @ApiResponses({

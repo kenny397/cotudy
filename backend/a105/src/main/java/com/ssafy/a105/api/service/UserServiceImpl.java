@@ -5,15 +5,13 @@ import com.ssafy.a105.api.request.UserPostReq;
 import com.ssafy.a105.api.request.UserRegisterPostReq;
 import com.ssafy.a105.api.response.CalendarRes;
 import com.ssafy.a105.api.response.StudyTimeRes;
+import com.ssafy.a105.api.response.UserRecentWeekStudyTimeRes;
 import com.ssafy.a105.db.dto.AttendanceDateDto;
 import com.ssafy.a105.db.dto.UserRivalDto;
 import com.ssafy.a105.db.entity.Department;
 import com.ssafy.a105.db.entity.Rival;
 import com.ssafy.a105.db.entity.User;
-import com.ssafy.a105.db.repository.DepartmentRepository;
-import com.ssafy.a105.db.repository.RivalRepository;
-import com.ssafy.a105.db.repository.UserCustomRepository;
-import com.ssafy.a105.db.repository.UserRepository;
+import com.ssafy.a105.db.repository.*;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +32,7 @@ public class UserServiceImpl implements UserService{
     private final RivalRepository rivalRepository;
     private final UserCustomRepository userCustomRepository;
     private final DepartmentRepository departmentRepository;
+    private final StudyTimeRepository studyTimeRepository;
 
     @Override
     @Transactional
@@ -146,5 +145,10 @@ public class UserServiceImpl implements UserService{
         if(rival.isEmpty())
             return 0;
         return 1;
+    }
+
+    @Override
+    public List<UserRecentWeekStudyTimeRes> getListRecentWeekStudyTime(int id) {
+        return studyTimeRepository.getStudyTimeWeekList(id);
     }
 }

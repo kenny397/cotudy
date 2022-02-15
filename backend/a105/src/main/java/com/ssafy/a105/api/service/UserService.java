@@ -5,6 +5,7 @@ import com.ssafy.a105.api.request.UserPostReq;
 import com.ssafy.a105.api.request.UserRegisterPostReq;
 import com.ssafy.a105.api.response.CalendarRes;
 import com.ssafy.a105.api.response.StudyTimeRes;
+import com.ssafy.a105.api.response.UserRecentWeekStudyTimeRes;
 import com.ssafy.a105.db.dto.AttendanceDateDto;
 import com.ssafy.a105.db.dto.UserRivalDto;
 import com.ssafy.a105.db.entity.Rival;
@@ -40,4 +41,6 @@ public interface UserService {
     List<CalendarRes> getAttendanceDays(AttendanceDateDto userDateInfo);
 
     int isRival(UserRivalDto userRivalDto);
+
+    List<UserRecentWeekStudyTimeRes> getListRecentWeekStudyTime(int id);
 }

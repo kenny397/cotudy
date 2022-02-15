@@ -18,8 +18,8 @@ public class StudyTimeRes {
     long studyTime;
 
     public StudyTimeRes(){
-
     }
+    
     @QueryProjection
     public StudyTimeRes(long id , String userId, long studyTime){
         this.id=id;

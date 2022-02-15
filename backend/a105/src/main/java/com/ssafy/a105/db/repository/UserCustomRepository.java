@@ -1,15 +1,14 @@
 package com.ssafy.a105.db.repository;
 
+import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.a105.api.response.CalendarRes;
-import com.ssafy.a105.api.response.QCalendarRes;
-import com.ssafy.a105.api.response.QStudyTimeRes;
-import com.ssafy.a105.api.response.StudyTimeRes;
+import com.ssafy.a105.api.response.*;
 import com.ssafy.a105.db.dto.AttendanceDateDto;
 import com.ssafy.a105.db.entity.QStudyTime;
 import com.ssafy.a105.db.entity.StudyTime;
@@ -23,22 +22,24 @@ import java.util.List;
 
 @Repository
 public class UserCustomRepository extends QuerydslRepositorySupport {
-
     private final JPAQueryFactory jpaQueryFactory;
     private final static QStudyTime qStudyTime = QStudyTime.studyTime;
     private final static int HALF_HOUR = 30;
-
     public UserCustomRepository(JPAQueryFactory jpaQueryFactory) {
         super(StudyTime.class);
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
     public List<CalendarRes> getAttendanceDaysByUser(AttendanceDateDto userDateInfo) {
-        List<CalendarRes> attendanceDayList = jpaQueryFactory.select(new QCalendarRes(Expressions.stringTemplate("DATE_FORMAT({0}, {1})", qStudyTime.createdDate, "%Y-%m-%d"))).from(qStudyTime)
-                .where(qStudyTime.user.id.eq(userDateInfo.getId())).groupBy(qStudyTime.createdDate)
-                .having(qStudyTime.time.sum().goe(HALF_HOUR).and(betweenDate(userDateInfo.getYear(), userDateInfo.getMonth())))
-                .orderBy(qStudyTime.createdDate.asc()).fetch();
+        StringTemplate formattedDate = Expressions.stringTemplate(
+                "DATE_FORMAT({0}, {1})"
+                , qStudyTime.createdDate
+                , ConstantImpl.create("%Y-%m-%d"));
 
+        List<CalendarRes> attendanceDayList = jpaQueryFactory.select(new QCalendarRes(Expressions.stringTemplate("DATE_FORMAT({0}, {1})", qStudyTime.createdDate, "%Y-%m-%d"))).from(qStudyTime)
+                .where(qStudyTime.user.id.eq(userDateInfo.getId()).and(betweenDate(userDateInfo.getYear(), userDateInfo.getMonth()))).groupBy(formattedDate)
+                .having(qStudyTime.time.sum().goe(HALF_HOUR))
+                .orderBy(formattedDate.asc()).fetch();
         return attendanceDayList;
     }
 
@@ -46,7 +47,6 @@ public class UserCustomRepository extends QuerydslRepositorySupport {
         LocalDateTime nowLocalDateTime = LocalDateTime.now();
         int nowYear = nowLocalDateTime.getYear();
         int nowMonth = nowLocalDateTime.getMonthValue();
-
         if (year == nowYear && month == nowMonth) {
             return qStudyTime.createdDate.between(LocalDateTime.of(year,month - 1, 22 , 0 , 0), nowLocalDateTime);
         }
@@ -57,7 +57,6 @@ public class UserCustomRepository extends QuerydslRepositorySupport {
     }
 
     public StudyTimeRes getDayStudyTimeByUser(long id) {
-
         JPQLQuery<StudyTimeRes> query = jpaQueryFactory.select(new QStudyTimeRes(qStudyTime.user.id, qStudyTime.user.userId, qStudyTime.time.sum()))
                 .from(qStudyTime).where(QStudyTime.studyTime.createdDate.between(LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0), LocalDateTime.now()))
                 .groupBy(qStudyTime.user).having(QStudyTime.studyTime.user.id.eq(id));
@@ -66,9 +65,7 @@ public class UserCustomRepository extends QuerydslRepositorySupport {
         return result;
     }
 
-
     public StudyTimeRes getTotalStudyTimeByUser(long id) {
-
         JPQLQuery<StudyTimeRes> query = jpaQueryFactory.select(new QStudyTimeRes(qStudyTime.user.id, qStudyTime.user.userId, qStudyTime.time.sum()))
                 .from(qStudyTime)
                 .groupBy(qStudyTime.user).having(QStudyTime.studyTime.user.id.eq(id));
