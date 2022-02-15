@@ -6,9 +6,9 @@ import com.ssafy.a105.db.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RivalRepository extends JpaRepository<Rival,Long> {
     List<Rival> findByUserId(long id);
-
-    Rival findByUserIdAndRivalId(long userId, long rivalId);
+    Optional<Rival> findByUserIdAndRivalId(long userId, long rivalId);
 }

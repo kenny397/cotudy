@@ -10,10 +10,4 @@ public interface RoomRepository extends JpaRepository<Room,Long> {
     Room save(Room room);
     void delete(Room room);
     List<Room> findAll();
-    //    public static UserRoom of (User user, Room room){
-//        UserRoom userRoom = new UserRoom();
-//        UserRoom.setUser(user);
-//        UserRoom.setRoom(room);
-//        return userRoom;
-//    }
 }
