@@ -8,6 +8,7 @@
     title="프로필 이미지 변경"
     width="40%"
     custom-class="profile-image-dialog"
+    top= '5vh'
   >
     <span>프로필 이미지를 선택해주세요.</span>
     <div class="profile-img-box" >
