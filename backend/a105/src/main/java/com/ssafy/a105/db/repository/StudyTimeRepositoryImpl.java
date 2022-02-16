@@ -119,7 +119,7 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom{
             for (int i = 0; i < rivalList.size(); i++) {
                 rivalIdList.add(rivalList.get(i).getRival().getId());
             }
-            return qStudyTime.user.id.in(rivalIdList);
+            return qStudyTime.user.id.in(rivalIdList).or(qStudyTime.user.id.eq(userPid));
         }
         return null;
     }
