@@ -187,7 +187,7 @@
   margin-bottom: 4rem;
 }
 .background-wrap {
-  background-image: url('../../assets/images/main.png');
+  background-image: url('../../assets/images/main.jpg');
   background-size: 100% 300px;
   background-repeat: no-repeat;
   width: 100vw;

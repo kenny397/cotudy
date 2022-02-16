@@ -3,7 +3,7 @@
     <profile-image v-if="state.user.id" :user="state.user"/>
   </div>
   <profile-desc
-    v-if="state.user"
+    v-if="state.user.id"
     :user="state.user"
     :isMe="state.isMe"
     :isRival="state.isRival"
