@@ -19,14 +19,14 @@ public class RankingListGetRes {
     String department;
     @ApiModelProperty(name="유저 총 공부 시간", example="390(6시간30분)")
     long totalStudyTime;
-
+    long ranking;
     public RankingListGetRes(){
 
     }
 
     @QueryProjection
     public RankingListGetRes(String nickName, String department, long totalStudyTime) {
-        this.nickName = nickName;
+       this.nickName = nickName;
         this.department = department;
         this.totalStudyTime = totalStudyTime;
     }
