@@ -1,8 +1,8 @@
 <template>
   <el-button
       round
-      style="background: #3AC258; float:right; color:white; height:50px; font-size:20px;"
       @click="profileDialogOpen()"
+      class="editDialogBtn"
     >
       <font-awesome-icon icon="pen-to-square" style="float:right; font-size:20px;"/>
       <span style="margin-left : 5px;">회원정보 수정</span>
@@ -11,6 +11,7 @@
     v-model="state.profileEditDialogVisible"
     title="회원정보 수정"
     width="30%"
+    custom-class="editDialog"
   >
     <el-form
       ref="ruleFormRef"
@@ -50,7 +51,35 @@
   </el-dialog>
 </template>
 
-<style scoped>
+<style>
+  .editDialogBtn {
+    background: #3ac257;
+    color: white;
+    float:right;
+    height:50px;
+    font-size:20px;
+    margin-top: 15px;
+  }
+  .editDialogBtn:hover{
+    background: white;
+    border: 1px solid #3ac257;
+    color: #3ac257
+  }
+  .editDialogBtn:focus{
+    background: white;
+    border: 1px solid #3ac257;
+    color: #3ac257
+  }
+  .editDialog {
+    background: white;
+    border-radius: 20px;
+  }
+  .editDialog input{
+    background: white;
+    border-radius: 20px;
+  }
+
+
 
 </style>
 
@@ -114,7 +143,7 @@ export default {
           { required: true, }
         ],
         goal: [
-          { required: true, }
+          { required: true, message: '다짐을 작성해주세요'}
         ],
       },
     })
@@ -136,9 +165,14 @@ export default {
     }
 
     const editSubmit = function() {
+      if (typeof(state.profileForm.myDepartment) == 'object' ) {
+        state.profileForm.myDepartment = state.profileForm.myDepartment[0]
+      }
+
       let tempGoalTime = (state.profileForm.goalTime+'').split(':')
       let hour = tempGoalTime[0] *1
       let minute = tempGoalTime[1] *1
+
 
       let time = ((hour*60) + minute) + ''
       let departmentId = (getKeyByValue(state.department, state.profileForm.myDepartment)) *1

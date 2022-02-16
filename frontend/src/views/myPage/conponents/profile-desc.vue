@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="nickname-area">{{state.user.nickName}}</div>
+    <div class="profile-nickname-area">{{state.user.nickName}}</div>
     <div class="tier-container">
       <img class="tier-image" :src="state.tier[state.user.tier]" alt="">
       <span>{{state.user.tier}}</span>
@@ -44,12 +44,11 @@
   </div>
 </template>
 
-<style>
+<style >
   .desc-container {
     display: flex;
     justify-content : space-between;
     flex-direction: row;
-
   }
   .desc-container div {
     width: 200px;
@@ -70,7 +69,7 @@
   .tier-container *{
     vertical-align: middle;
   }
-  .nickname-area {
+  .profile-nickname-area {
     font-size: 25px;
     font-weight: 900;
     margin-bottom: 10px;

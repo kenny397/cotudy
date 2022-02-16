@@ -1,11 +1,11 @@
 <template>
   <div class="my-badge-container">
-    <img :src="state.badgeImg[1]" alt="">
-    <img :src="state.badgeImg[2]" alt="">
-    <img :src="state.badgeImg[3]" alt="">
-    <img :src="state.badgeImg[4]" alt="">
-    <img :src="state.badgeImg[5]" alt="">
-    <img :src="state.badgeImg[6]" alt="">
+    <img v-if="state.user.entireStudyHour > 10" :src="state.badgeImg[1]" alt="">
+    <img v-if="state.user.entireStudyHour > 30" :src="state.badgeImg[2]" alt="">
+    <img v-if="state.user.entireStudyHour > 50" :src="state.badgeImg[3]" alt="">
+    <img v-if="state.user.entireStudyHour > 100" :src="state.badgeImg[4]" alt="">
+    <img v-if="state.user.entireStudyHour > 200" :src="state.badgeImg[5]" alt="">
+    <img v-if="state.user.entireStudyHour > 500" :src="state.badgeImg[6]" alt="">
   </div>
 </template>
 
