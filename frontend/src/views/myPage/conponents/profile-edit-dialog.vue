@@ -25,24 +25,16 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="소속" prop="myDepartment">
-        <el-select v-model="state.profileForm.myDepartment" class="m-2" placeholder="Select">
-          <el-option
-            v-for="department in state.department"
-            :key="department"
-            :label="department"
-            :value="department"
-          >
-          </el-option>
-        </el-select>
+        <el-cascader
+          v-model="state.profileForm.myDepartment"
+          :options="state.departmentOption"
+        ></el-cascader>
       </el-form-item>
       <el-form-item label="목표 공부시간" prop="goalTime">
-        <el-time-select
+        <el-cascader
           v-model="state.profileForm.goalTime"
-          start="00:30"
-          step="00:30"
-          end="17:00"
-        >
-        </el-time-select>
+          :options="state.goalTimeOptions"
+        ></el-cascader>
       </el-form-item>
       <el-form-item label="나의 다짐" prop="goal">
         <el-input
@@ -84,12 +76,23 @@ export default {
         5: '서울고등학교',
         10: '소속없음',
       },
+      departmentOption : [
+        {value: 'SSAFY', label: 'SSAFY'},
+        {value: '삼성전자', label: '삼성전자'},
+        {value: '삼성멀티캠퍼스', label: '삼성멀티캠퍼스'},
+        {value: '대전고등학교', label: '대전고등학교'},
+        {value: '서울고등학교', label: '서울고등학교'},
+        {value: '소속없음', label: '소속없음'}
+      ],
       profileForm : {
         nickName : undefined,
         myDepartment : undefined,
         goal: undefined,
         goalTime: undefined,
       },
+      goalTimeOptions : [
+        {label: '00:30',value: '00:30'}, {label: '01:00', value: '01:00'}, {label: '01:30', value: '01:30'}, {label: '02:00', value: '02:00'}, {label: '02:30', value: '02:30'}, {label: '03:00', value: '03:00'}, {label: '03:30', value: '03:30'}, {label: '04:00', value: '04:00'}, {label: '04:30', value: '04:30'}, {label: '05:00', value: '05:00'}, {label: '05:30', value: '05:30'}, {label: '06:00', value: '06:00'}, {label: '06:30', value: '06:30'}, {label: '07:00', value: '07:00'}, {label: '07:30', value: '07:30'}, {label: '08:00', value: '08:00'}, {label: '08:30', value: '08:30'}, {label: '09:00', value: '09:00'}, {label: '09:30', value: '09:30'}, {label: '10:00', value: '10:00'}, {label: '10:30', value: '10:30'}, {label: '11:00', value: '11:00'}, {label: '11:30', value: '11:30'}, {label: '12:00', value: '12:00'}, {label: '12:30', value: '12:30'}, {label: '13:00', value: '13:00'}
+      ],
       rules: {
         nickName: [
           {
