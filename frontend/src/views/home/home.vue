@@ -90,11 +90,9 @@
           </el-dialog>
         </div>
       </div>
-      <div style="display:flex; justify-content: center;">
-        <ul class="infinite-list" v-infinite-scroll="load" style="overflow:auto">
+      <div class="study-list-wrapper" style="display:flex; justify-content: center; height:600px;">
+        <ul class="infinite-list" v-infinite-scroll="load" style="overflow:hidden">
           <li v-for="i in state.studyList" @click="clickConference(i)" class="infinite-list-item" :key="i.roomId">
-            <div>
-            </div>
             <conference
               :title="i.roomTitle"
               :category="i.roomCategory"
@@ -105,6 +103,7 @@
           </li>
         </ul>
       </div>
+      <el-button v-if="state.studyListNow <= state.studyList.length" @click="moreStudyShow">더보기</el-button>
     </div>
   </div>
 </template>
@@ -344,7 +343,9 @@ export default {
       createAlert: {
         visible: false,
         title: ''
-      }
+      },
+      moreStudyHeight: 600,
+      studyListNow: 15,
     })
 
     onMounted(() => {
@@ -471,6 +472,12 @@ export default {
       }
     }
 
+    const moreStudyShow = function () {
+      state.moreStudyHeight += 380
+      state.studyListNow += 10
+      document.getElementsByClassName('study-list-wrapper')[0].style.height = `${state.moreStudyHeight}px`
+    }
+
     return {
       state,
       load,
@@ -481,6 +488,7 @@ export default {
       pickThumbnail,
       onSubmit,
       handleChangeCategory,
+      moreStudyShow
     }
   }
 }
