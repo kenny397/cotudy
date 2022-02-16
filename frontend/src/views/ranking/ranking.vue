@@ -108,7 +108,7 @@
       header-row-style = "background-color:rgba(58, 194, 88, 1); color:#fff"
     >
       <el-table-column prop="#" label="" width="50" />
-      <el-table-column type="index"  label="순위" width="100" />
+      <el-table-column type="index" :index="reindex" label="순위" width="100" />
       <el-table-column prop="nickName" label="닉네임" width="500" />
       <el-table-column prop="department" label="소속" />
       <el-table-column prop="totalStudyTime" label="공부한시간" />
@@ -388,6 +388,10 @@ export default {
 
 //userClass&term&category&userNickname&userId(숫자))
   methods: {
+    reindex(index){
+      index = parseInt(this.state.currentPage-1)*20+index+1;
+      return index;
+    },
     fetchRank(url){
       url = 'ranking/?';
       if(this.state.input!=null){
@@ -425,6 +429,7 @@ export default {
     },
 
     setPage(page){
+      this.state.currentPage = page;
       let url = 'ranking/?';
       if(this.state.input!=null){
         url += 'userNickname='+this.state.input+'&';
