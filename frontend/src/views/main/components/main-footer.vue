@@ -10,24 +10,8 @@
 </template>
 
 <script>
-// import { reactive } from 'vue'
-// import { useStore } from 'vuex'
-
 export default {
   name: 'main-footer',
-
-//   props: {
-//     height: {
-//       type: String,
-//       default: '110px'
-//     }
-//   },
-
-//   setup() {
-//     const state = reactive({})
-
-//     return { state }
-//   }
 }
 </script>
 
@@ -40,26 +24,4 @@ export default {
 .contents {
   padding-top:10px;
 }
-
-/* @media (max-width: 700px) {
-  .main-footer {
-    height: 110px;
-  }
-  .main-footer .contents {
-    line-height: 50px;
-    text-align: center;
-    margin: 0 auto;
-  }
-} */
-
-/* @media (min-width: 701px) {
-  .main-footer {
-    height: 110px;
-  }
-  .main-footer .contents {
-    line-height: 110px;
-    text-align: center;
-    margin: 0 auto;
-  }
-} */
 </style>

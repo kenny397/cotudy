@@ -9,7 +9,6 @@
       Rank
       <div v-if="state.nowRoute === 'rank'" class="routeUnderline"></div>
     </span>
-    <!-- <p @click="goCommunity" style="cursor:pointer">Community</p> -->
     <div>
       <input class="inputStyle" type="text" placeholder="Search Studyroom" @input="searchChange($event)">
       <el-card v-if="state.isSearch" class="searchBox">
@@ -29,13 +28,6 @@
           <hr>
         </div>
       </el-card>
-      <!-- <div v-if="state.isSearch" class="searchBox">
-        <div class="searchHeader">
-          <span class="headerFont" @click="clickExit()">
-            [<font-awesome-icon icon="x"/>] 닫기
-          </span>
-        </div>
-      </div> -->
     </div>
     <el-button v-if="!state.isLoginButton" round plain type="success" @click="clickLogin">Signup/Login</el-button>
     <div v-if="state.isLoginButton">
@@ -198,7 +190,6 @@ export default {
             }
             state.searchValue.push(tmp)
           }
-          console.log(state.searchValue)
         })
         .catch(err => {
           console.log(err)
@@ -225,7 +216,6 @@ export default {
       state.isSearch = true
       state.showSearchData = []
       const v = event.target.value
-      console.log(v)
       const l = v.length
       for (let i in state.searchValue) {
         const title = state.searchValue[i].roomTitle
@@ -268,132 +258,3 @@ export default {
   }
 }
 </script>
-
-<style>
-  /* .main-header {
-    padding: 10px 20px;
-  } */
-  /*Mobile, Tablet*/
-  /* .menu-icon-wrapper {
-    display: inline-block;
-    vertical-align: top;
-    position: relative;
-    top: 14px;
-  }
-
-  .main-header .hide-on-big .logo-wrapper {
-    display: inline-block;
-    margin: 0 calc(50% - 51px)
-  }
-  .main-header .hide-on-big .logo-wrapper .ic.ic-logo {
-    width: 70px;
-    height: 50px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-image: url('../../../assets/images/ssafy-logo.png');
-  }
-  .mobile-sidebar-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-  .mobile-sidebar-wrapper .mobile-sidebar {
-    width: 240px; height: calc(100vh - 1px);
-    display: inline-block;
-    background-color: white;
-    padding: 0 10px;
-    vertical-align: top;
-  }
-  .mobile-sidebar-wrapper .mobile-sidebar .mobile-sidebar-tool-wrapper {
-    padding-bottom: 20px;
-  }
-  .mobile-sidebar-wrapper .mobile-sidebar .mobile-sidebar-btn {
-    display: block;
-    margin: 0 auto;
-    margin-top: 25px;
-    height: 30px;
-    width: 100%;
-  }
-  .mobile-sidebar-wrapper .mobile-sidebar .mobile-sidebar-btn.login-btn {
-    color: white;
-  }
-  .mobile-sidebar-wrapper .mobile-sidebar .logo-wrapper {
-    display: block
-  }
-  .mobile-sidebar-wrapper .mobile-sidebar .logo-wrapper .ic.ic-logo {
-    width: 70px;
-    height: 50px;
-    margin: 0 auto;
-    margin-top: 30px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-image: url('../../../assets/images/ssafy-logo.png');
-  }
-  .mobile-sidebar-wrapper .mobile-sidebar-backdrop {
-    width: calc(100% - 260px); height: calc(100vh - 1px);
-    background-color: black;
-    display: inline-block;
-    opacity: 0.3;
-  }
-  .mobile-sidebar-wrapper .el-menu{
-    margin-top: 0;
-    padding-left: 0;
-    height: calc(100% - 235px);
-  }
-  .mobile-sidebar-wrapper .el-menu .el-menu-item {
-    cursor: pointer;
-  }
-  .mobile-sidebar-wrapper .el-menu .el-menu-item .ic {
-    margin-right: 5px;
-  } */
-
-  /*Desktop - Need to add Class if Need*/
-  /* .main-header .hide-on-small .logo-wrapper {
-    cursor: pointer;
-    display: inline-block;
-  }
-  .main-header .hide-on-small .logo-wrapper .ic.ic-logo {
-    width: 70px;
-    height: 50px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-image: url('../../../assets/images/ssafy-logo.png');
-  }
-  .main-header .hide-on-small .tool-wrapper {
-    width: 50%;
-    float: right;
-  }
-  .main-header .hide-on-small .tool-wrapper .button-wrapper {
-    width: 45%;
-    float: right;
-  }
-  .main-header .hide-on-small .tool-wrapper .button-wrapper .el-button {
-    width: 45%;
-    height: 50px;
-    cursor: pointer;
-    margin-right: 1%;
-  }
-  .main-header .hide-on-small .tool-wrapper .search-field {
-    width: 50%;
-    height: 50px;
-    max-width: 400px;
-    margin-right: 2%;
-    display: inline-block;
-    background-color: white;
-  }
-  .main-header .hide-on-small .tool-wrapper .search-field .el-input {
-    width: 100%;
-    height: 100%;
-  }
-  .main-header .hide-on-small .tool-wrapper .search-field .el-input .el-input__inner {
-    width: 88%;
-    height: 50px;
-    margin-right: 1%;
-  }
-  .main-header .hide-on-small .tool-wrapper .search-field .el-input .el-input__prefix {
-    top: 5px;
-  } */
-
-</style>

@@ -142,9 +142,6 @@ export default {
         if (valid) {
           store.dispatch('root/requestLogin', { id: state.form.id, password: state.form.password })
           .then(function (result) {
-            console.log('!!!!!!!!!!!!!!!')
-            console.log(result.data)
-            console.log('!!!!!!!!!!!!!!!')
             store.state['root'].isLogin = true
             emit('closeLoginDialog')
             localStorage.setItem('accessToken', result.data.accessToken)

@@ -1,16 +1,10 @@
 <template>
-  <div>
-    <el-carousel :interval="5000">
-      <el-carousel-item>
-        <div class="text-on-img">
-          <div class="background-wrap">
-            <div class="content">
-              <span>언제 어디서나 최고의 공부 환경을 느껴보세요!</span>
-            </div>
-          </div>
-        </div>
-      </el-carousel-item>
-    </el-carousel>
+  <div class="text-on-img">
+    <div class="background-wrap">
+      <div class="content">
+        <span>언제 어디서나 최고의 공부 환경을 느껴보세요!</span>
+      </div>
+    </div>
   </div>
   <div style="display:flex; flex-direction:column; align-items:center">
     <div style="width:70%;">
@@ -403,7 +397,6 @@ export default {
             const num = res[i].roomCategory *= 1
             state.options[num].studyroomData.push(tmp)
           }
-            console.log(state.options)
         })
         .catch(err => {
           console.log(err)
