@@ -17,6 +17,10 @@ import { far } from '@fortawesome/free-regular-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
+// chartkick
+import Chartkick from 'vue-chartkick'
+import Chart from 'chart.js'
+
 // Element UI Components [시작]
 import {
   ElAlert,
@@ -209,6 +213,8 @@ app.use(VueAxios, axios)
 app.use(store)
 app.use(i18n)
 app.use(router)
+app.use(Chartkick.use(Chart))
+
 
 components.forEach(component => {
   app.component(component.name, component)

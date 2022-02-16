@@ -29,7 +29,8 @@
         시간 남았습니다.
       </div>
     </el-card>
-    <el-card class="box-card">
+    <el-card class="box-card-r">
+      <line-chart style="width:auto; height:auto;" :data="state.weekStudyTime" />
     </el-card>
   </div>
 
@@ -160,7 +161,12 @@
   font-weight:bold;
   font-size:1.2rem;
 }
-
+.box-card-r {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 500px;
+}
 </style>
 
 <script>
@@ -292,7 +298,9 @@ export default {
 
     // 임시
     onMounted(() => {
-      getWeekStudyTime()
+      if (state.isLogin) {
+        getWeekStudyTime()
+      }
     })
 
     const getUser = function () {
@@ -313,8 +321,8 @@ export default {
             state.tier.imgurl = require('../../assets/images/tier/iron.png')
             state.tier.necessaryTime = 10 - mtoh.toFixed(1)
             state.tier.nextTier = 'Bronze'
-
-          } else if (mtoh >= 10 & mtoh < 50) {
+          }
+          else if (mtoh >= 10 & mtoh < 50) {
             state.tier.name = 'Bronze'
             state.tier.progress = ((mtoh - 10) / 40).toFixed(3) * 100
             state.tier.imgurl = require('../../assets/images/tier/bronze.png')
@@ -335,13 +343,19 @@ export default {
             state.tier.necessaryTime = 500 - mtoh.toFixed(1)
             state.tier.nextTier = 'Diamond'
 
-          } else {
+          } else if (mtoh >= 500) {
             state.tier.name = 'Diamond'
             state.tier.progress = 100
             state.tier.imgurl = require('../../assets/images/tier/diamond.png')
             state.tier.necessaryTime = 0
             state.tier.nextTier = ''
 
+          } else {
+            state.tier.name = 'Iron'
+            state.tier.progress = 0
+            state.tier.imgurl = require('../../assets/images/tier/iron.png')
+            state.tier.necessaryTime = 10
+            state.tier.nextTier = 'Bronze'
           }
         })
     }
@@ -354,12 +368,12 @@ export default {
         })
         .then(res => {
           for (let i in res) {
-            const tmp = {
-              date: res[i].date,
-              studyTime: res[i].studyTime
-            }
+            const tmp = [
+              res[i].date, res[i].studyTime
+            ]
             state.weekStudyTime.push(tmp)
           }
+          console.log(state.weekStudyTime)
         })
         .catch(err => {
           alert(err)
@@ -389,24 +403,25 @@ export default {
         url += 'category='+this.state.category+'&';
       }
       axios.get(url).then((Response)=>{
-    this.state.rank = Response.data.content;
-    this.state.pageNum = parseInt(Response.data.totalElements/20+1)*10;
+      this.state.rank = Response.data.content;
+      this.state.pageNum = parseInt(Response.data.totalElements/20+1)*10;
     }).catch((Error)=>{
-    console.log(Error);
-    }
-    )},
-    searchUser(){
-      axios.get('ranking/?userNickname='+this.state.input).then((Response)=>{
-    this.state.rank = Response.data.content;
-    }).catch((Error)=>{
-    console.log(Error);
+      console.log(Error);
     }
     )},
 
+    searchUser(){
+      axios.get('ranking/?userNickname='+this.state.input).then((Response)=>{
+        this.state.rank = Response.data.content;
+        }).catch((Error)=>{
+        console.log(Error);
+        }
+        )},
+
     changeTerm(){
-        console.log(this.state.term);
-        const url = 'ranking?term='+this.state.term;
-        this.fetchRank(url);
+      console.log(this.state.term);
+      const url = 'ranking?term='+this.state.term;
+      this.fetchRank(url);
     },
 
     setPage(page){
