@@ -92,7 +92,9 @@
       </div>
       <div style="display:flex; justify-content: center;">
         <ul class="infinite-list" v-infinite-scroll="load" style="overflow:auto">
-          <li v-for="i in state.studyList" @click="clickConference(i)" class="infinite-list-item" :key="i.roomId" >
+          <li v-for="i in state.studyList" @click="clickConference(i)" class="infinite-list-item" :key="i.roomId">
+            <div>
+            </div>
             <conference
               :title="i.roomTitle"
               :category="i.roomCategory"
@@ -228,7 +230,7 @@ export default {
     const router = useRouter()
     const store = useStore()
     const state = reactive({
-      count: store.state.root.studyroomListLength,
+      count: 5,
       options: [
         {
         value: 'all',
@@ -356,7 +358,7 @@ export default {
 
     const load = function () {
       if (state.count <= store.state.root.studyroomListLength) {
-        state.count += 10
+        state.count += 5
       }
     }
 
@@ -397,6 +399,7 @@ export default {
             const num = res[i].roomCategory *= 1
             state.options[num].studyroomData.push(tmp)
           }
+          store.state.root.studyroomListLength = state.studyList.length
         })
         .catch(err => {
           console.log(err)
