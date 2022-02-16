@@ -3,7 +3,6 @@ export function setPlatform (state, isDesktop) {
 }
 
 export function setMenuActive (state, index) {
-	console.log('setMenuActive', state, index)
 	const keys = Object.keys(state.menus)
 	state.activeMenu = keys[index]
 }

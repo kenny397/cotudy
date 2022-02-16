@@ -26,8 +26,6 @@
 </style>
 <script>
 import { reactive } from 'vue'
-// import { useStore } from 'vuex'
-// import axios from 'axios'
 
 export default {
   name: 'Home',

@@ -20,8 +20,9 @@
         :text-inside="true"
         :stroke-width="24"
         :percentage="state.tier.progress"
+        style="margin-top:10px;"
       />
-      <div style="margin-top:40px;">
+      <div style="margin-top:10px;">
         <span class="fontBold">{{state.tier.nextTier}}</span>
         승격까지 약
         <span class="fontBold">{{ state.tier.necessaryTime }}</span>
@@ -29,7 +30,6 @@
       </div>
     </el-card>
     <el-card class="box-card">
-      <div v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</div>
     </el-card>
   </div>
 
@@ -145,7 +145,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 40px;
 }
 .box-card .container .el-image {
   width: 130px !important;
@@ -165,19 +164,15 @@
 </style>
 
 <script>
-//import { Search } from '@element-plus/icons-vue'
-//import { setupElementPlus } from './element-plus.js'
-//setupElementPlus()
-import axios from 'axios';
-import { reactive, computed, onUpdated } from 'vue'
+import { reactive, computed, onUpdated, onMounted } from 'vue'
 import { useStore } from 'vuex'
-//import { useRouter } from 'vue-router'
+import axios from 'axios'
+
 
 export default {
   name: 'Ranking',
 
   setup() {
-    //const router = useRouter()
     const store = useStore()
     const state = reactive({
       input : null,
@@ -198,6 +193,7 @@ export default {
         necessaryTime: 0,
         nextTier: ''
       },
+      weekStudyTime: [],
       selects: [
         {
         value: 'userNickname',
@@ -294,6 +290,11 @@ export default {
       }
     })
 
+    // 임시
+    onMounted(() => {
+      getWeekStudyTime()
+    })
+
     const getUser = function () {
       state.userId = localStorage.getItem('userId')
     }
@@ -312,8 +313,6 @@ export default {
             state.tier.imgurl = require('../../assets/images/tier/iron.png')
             state.tier.necessaryTime = 10 - mtoh.toFixed(1)
             state.tier.nextTier = 'Bronze'
-            console.log(state.tier.name)
-            console.log(state.tier.progress)
 
           } else if (mtoh >= 10 & mtoh < 50) {
             state.tier.name = 'Bronze'
@@ -321,8 +320,6 @@ export default {
             state.tier.imgurl = require('../../assets/images/tier/bronze.png')
             state.tier.necessaryTime = 50 - mtoh.toFixed(1)
             state.tier.nextTier = 'Silver'
-            console.log(state.tier.name)
-            console.log(state.tier.progress)
 
           } else if (mtoh >= 50 & mtoh < 200) {
             state.tier.name = 'Silver'
@@ -330,8 +327,6 @@ export default {
             state.tier.imgurl = require('../../assets/images/tier/silver.png')
             state.tier.necessaryTime = 200 - mtoh.toFixed(1)
             state.tier.nextTier = 'Gold'
-            console.log(state.tier.name)
-            console.log(state.tier.progress)
 
           } else if (mtoh >= 200 & mtoh < 500) {
             state.tier.name = 'Gold'
@@ -339,8 +334,6 @@ export default {
             state.tier.imgurl = require('../../assets/images/tier/gold.png')
             state.tier.necessaryTime = 500 - mtoh.toFixed(1)
             state.tier.nextTier = 'Diamond'
-            console.log(state.tier.name)
-            console.log(state.tier.progress)
 
           } else {
             state.tier.name = 'Diamond'
@@ -348,16 +341,34 @@ export default {
             state.tier.imgurl = require('../../assets/images/tier/diamond.png')
             state.tier.necessaryTime = 0
             state.tier.nextTier = ''
-            console.log(state.tier.name)
-            console.log(state.tier.progress)
 
           }
         })
     }
 
+    const getWeekStudyTime = function () {
+      getUser()
+      axios.get(`users/time/week/?id=${state.userId}`)
+        .then(res => {
+          return res.data
+        })
+        .then(res => {
+          for (let i in res) {
+            const tmp = {
+              date: res[i].date,
+              studyTime: res[i].studyTime
+            }
+            state.weekStudyTime.push(tmp)
+          }
+        })
+        .catch(err => {
+          alert(err)
+        })
+    }
+
     return {
       state,
-      getEntireStudyTime,
+      getWeekStudyTime,
     }
   },
 
@@ -421,8 +432,6 @@ export default {
     }
     )},
 
-
-
      tableStyle({rowIndex}) {
       if(rowIndex%2===1){
         return{
@@ -437,11 +446,9 @@ export default {
     }
   },
 
-  created(){
+  created () {
     this.fetchRank('ranking');
   },
-
-
 
 }
 </script>

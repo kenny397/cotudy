@@ -4,13 +4,11 @@
     v-if="!isFullpages.includes($route.name)"
   >
     <main-header @openLoginDialog="onOpenLoginDialog" />
-    <hr>
     <el-container class="main-container">
       <el-main>
         <router-view></router-view>
       </el-main>
     </el-container>
-    <hr>
     <main-footer />
   </el-container>
   <el-container
@@ -22,6 +20,7 @@
   <login-dialog
     :open="loginDialogOpen"
     @closeLoginDialog="onCloseLoginDialog"/>
+  <signup-dialog />
 </template>
 
 <style>
@@ -35,13 +34,15 @@
 import LoginDialog from './components/login-dialog'
 import MainHeader from './components/main-header'
 import MainFooter from './components/main-footer'
+import SignupDialog from './components/signup-dialog'
 
 export default {
   name: 'Main',
   components: {
     MainHeader,
     MainFooter,
-    LoginDialog
+    LoginDialog,
+    SignupDialog
   },
   data () {
     return {
