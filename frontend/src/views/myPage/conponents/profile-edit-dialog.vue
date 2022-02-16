@@ -44,7 +44,7 @@
       </el-form-item>
 
       <el-button @click="editSubmit()">수정</el-button>
-      <el-button>취소</el-button>
+      <el-button @click="handleClose()">취소</el-button>
 
     </el-form>
   </el-dialog>
@@ -131,6 +131,10 @@ export default {
       state.profileEditDialogVisible = true
     }
 
+    const handleClose = function () {
+      state.profileEditDialogVisible = false
+    }
+
     const editSubmit = function() {
       let tempGoalTime = (state.profileForm.goalTime+'').split(':')
       let hour = tempGoalTime[0] *1
@@ -172,7 +176,8 @@ export default {
     return {
       state,
       profileDialogOpen,
-      editSubmit
+      editSubmit,
+      handleClose
     }
   }
 

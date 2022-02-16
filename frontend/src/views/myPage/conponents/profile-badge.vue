@@ -1,6 +1,11 @@
 <template>
   <div class="my-badge-container">
-
+    <img :src="state.badgeImg[1]" alt="">
+    <img :src="state.badgeImg[2]" alt="">
+    <img :src="state.badgeImg[3]" alt="">
+    <img :src="state.badgeImg[4]" alt="">
+    <img :src="state.badgeImg[5]" alt="">
+    <img :src="state.badgeImg[6]" alt="">
   </div>
 </template>
 
@@ -30,7 +35,15 @@ export default {
 	},
   setup (props) {
     const state = reactive({
-      user: props.user
+      user: props.user,
+      badgeImg: {
+        '1' : require('../../../assets/images/badge/badge1.png'),
+        '2' : require('../../../assets/images/badge/badge2.png'),
+        '3' : require('../../../assets/images/badge/badge3.png'),
+        '4' : require('../../../assets/images/badge/badge4.png'),
+        '5' : require('../../../assets/images/badge/badge5.png'),
+        '6' : require('../../../assets/images/badge/badge6.png'),
+      }
     })
 
     return {
