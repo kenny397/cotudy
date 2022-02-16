@@ -2,9 +2,12 @@ package com.ssafy.a105.db.repository;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.StringTemplate;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.a105.api.response.*;
 import com.ssafy.a105.db.dto.RankingListDto;
@@ -19,10 +22,11 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom{
+public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
     private final RivalRepository rivalRepository;
     private final UserRepository userRepository;
@@ -37,10 +41,10 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom{
                 .from(qStudyTime).groupBy(qStudyTime.user).orderBy(qStudyTime.time.sum().desc()).fetch();
 
         User user = userRepository.getById(userPid);
-        for(int i = 0; i<userList.size();i++){
+        for (int i = 0; i < userList.size(); i++) {
             RankingListGetRes order = userList.get(i);
-            if(order.getNickName().equals(user.getNickname())){
-                return new RankingRankGetRes(order.getNickName(), order.getDepartment(), order.getTotalStudyTime(), i+1);
+            if (order.getNickName().equals(user.getNickname())) {
+                return new RankingRankGetRes(order.getNickName(), order.getDepartment(), order.getTotalStudyTime(), i + 1);
             }
         }
         return null;
@@ -55,6 +59,22 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom{
                 .limit(pageable.getPageSize()).fetchResults();
 
         List<RankingListGetRes> content = query.getResults();
+        int size = pageable.getPageSize();
+        int pageNum = pageable.getPageNumber();
+        int[] rank = new int[content.size()];
+        Arrays.fill(rank,1);
+        for (int i = 0; i < content.size(); i++) {
+            long iTime = content.get(i).getTotalStudyTime();
+            for (int j = 0; j < content.size(); j++) {
+                if (iTime < content.get(j).getTotalStudyTime()) {
+                    rank[i]++;
+                }
+            }
+        }
+
+        for (int i = 0; i < content.size(); i++) {
+            content.get(i).setRanking(size * (pageNum) + rank[i]);
+        }
         long totalCount = query.getTotal(); // 2)
         return new PageImpl<>(content, pageable, totalCount);
     }
@@ -68,7 +88,7 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom{
 
         List<UserRecentWeekStudyTimeRes> list =
                 jpaQueryFactory.select(new QUserRecentWeekStudyTimeRes(formattedDate, qStudyTime.time.sum())).
-                        where(qStudyTime.user.id.eq(id).and(formattedDate.between(makeStartDay(),makeEndDay())))
+                        where(qStudyTime.user.id.eq(id).and(formattedDate.between(makeStartDay(), makeEndDay())))
                         .from(qStudyTime).groupBy(formattedDate).orderBy(formattedDate.asc()).fetch();
         return list;
 
