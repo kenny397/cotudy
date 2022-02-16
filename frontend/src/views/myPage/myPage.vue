@@ -181,24 +181,24 @@ export default {
         })
 
 
-        axios.get(`users/rival/?rivalId=${route.params.userId}&userId=${localStorage.getItem('userId')}`)
-          .then(res => {
-            if(! state.user.id == localStorage.getItem('userId')*1) {
-              state.user['isMe'] = false
-            } else {
-              state.user['isMe'] = true
-            }
+      axios.get(`users/rival/?rivalId=${route.params.userId}&userId=${localStorage.getItem('userId')}`)
+        .then(res => {
+          if(! route.params.userId == localStorage.getItem('userId')*1) {
+            state.user['isMe'] = false
+          } else {
+            state.user['isMe'] = true
+          }
 
-            if (res.data == 'no') {
-              state.user['isRival'] = false
-            } else {
-              state.user['isRival'] = true
-            }
-          })
-          .catch(err => {
-            console.log(err)
-          })
-          // localStorage.getItem('userId')*1
+          if (res.data == 'no') {
+            state.user['isRival'] = false
+          } else {
+            state.user['isRival'] = true
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+
 
 
 

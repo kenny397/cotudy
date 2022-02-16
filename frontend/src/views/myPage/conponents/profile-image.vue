@@ -64,12 +64,6 @@
     border: 3px solid rgba(0, 0, 0, 0.253);
   }
 
-  /* .profile-img-area strong {
-    position: absolute;
-    top:200px;
-    left: 50%;
-    margin-left: -40px;
-  } */
 </style>
 <style>
   .profile-image-dialog {
