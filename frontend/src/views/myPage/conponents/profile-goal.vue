@@ -4,23 +4,22 @@
       <div>오늘 나의 공부한 시간</div>
       <div class="studytime-wrapper">
         <div>{{state.user.todayStudyTime}}</div>
-        <div contenteditable="true">05시간 00분</div>
+        <div contenteditable="true">{{state.user.goalTimeToString}}</div>
       </div>
       <el-progress
         :text-inside="true"
         :stroke-width="26"
-        :percentage="70"
+        :percentage="state.user.todayStudyTimeBefore>0 ? Math.floor(state.user.todayStudyTimeBefore / state.user.goalTime* 100) : 0"
         status="success"
       />
 
     </div>
     <div class="my-resolution-area">
       <div>나의 다짐</div>
-      <div>오늘의 내가 놀면 내일의 내가 그만큼 일한다.</div>
+      <div>{{state.user.goal}}</div>
     </div>
   </div>
 </template>
-
 <style scoped>
   .my-goal-container {
     background: rgb(255, 255, 255);
@@ -75,7 +74,7 @@
 </style>
 
 <script>
-import { reactive,} from 'vue';
+import { reactive } from 'vue';
 export default {
   name: 'profile-goal',
 
@@ -84,7 +83,8 @@ export default {
 	},
   setup (props) {
     const state = reactive({
-      user: props.user
+      user: props.user,
+
     })
 
     return {

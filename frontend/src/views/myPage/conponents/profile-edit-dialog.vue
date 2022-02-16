@@ -78,10 +78,10 @@ export default {
       profileEditDialogVisible : false,
       department : {
         1: 'SSAFY',
-        2: '멀티캠퍼스',
-        3: '삼성전자',
-        4: '삼성생명',
-        5: '삼성SDS',
+        2: '삼성전자',
+        3: '삼성멀티캠퍼스',
+        4: '대전고등학교',
+        5: '서울고등학교',
         10: '소속없음',
       },
       profileForm : {
@@ -156,7 +156,7 @@ export default {
           console.log(err)
         })
       state.user.nickName = state.profileForm.nickName
-      state.user.goalTime = tempGoalTime[0] +'시간 '+ tempGoalTime[1]+'분'
+      state.user.goalTime = time
       state.user.departmentId = departmentId
       state.user.goal = state.profileForm.goal
 

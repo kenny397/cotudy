@@ -101,15 +101,14 @@ export default {
       },
       profileImageDialogVisible : false,
       profileImg: {
-        '1' : require('../../../assets/images/thumbnail/0.png'),
-        '2' : require('../../../assets/images/thumbnail/1.png'),
-        '3' : require('../../../assets/images/thumbnail/2.png'),
-        '4' : require('../../../assets/images/thumbnail/3.png'),
-        '5' : require('../../../assets/images/thumbnail/4.png'),
-        '6' : require('../../../assets/images/thumbnail/5.png'),
-        '7' : require('../../../assets/images/thumbnail/6.png'),
-        '8' : require('../../../assets/images/thumbnail/7.png'),
-        '9' : require('../../../assets/images/thumbnail/8.png')
+        '1' : require('../../../assets/images/profile/profile1.png'),
+        '2' : require('../../../assets/images/profile/profile2.png'),
+        '3' : require('../../../assets/images/profile/profile3.png'),
+        '4' : require('../../../assets/images/profile/profile4.png'),
+        '5' : require('../../../assets/images/profile/profile5.png'),
+        '6' : require('../../../assets/images/profile/profile6.png'),
+        '7' : require('../../../assets/images/profile/profile7.png'),
+        '8' : require('../../../assets/images/profile/profile8.png'),
       }
     })
 

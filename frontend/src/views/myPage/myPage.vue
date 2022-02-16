@@ -120,7 +120,10 @@ export default {
             state.user[userDataKey] = res.data[userDataKey]
           }
           state.user.goalTime*=1
-
+          let tempTime = res.data.goalTime
+          let hour = (tempTime / 60) >= 1 ? tempTime/60 : 0;
+          let minute = (tempTime % 60) >= 1? tempTime%60 : 0;
+          state.user['goalTimeToString'] = Math.floor(hour)+'시간 '+minute+'분'
         })
         .catch(err => {
           console.log(err)
