@@ -47,6 +47,11 @@ public class UserRepositoryImpl implements UserRepositoryCustom{
         if (year > nowYear || year == nowYear && month > nowMonth)
             return null;
 
+        if(month == 1)
+            return qStudyTime.createdDate.between(LocalDateTime.of(year-1, 12, 22 , 0, 0), LocalDateTime.of(year,month+1,1,0,0));
+        if(month == 12) {
+            return qStudyTime.createdDate.between(LocalDateTime.of(year, 11, 22 , 0, 0), LocalDateTime.of(year+1,1,1,0,0));
+        }
         return qStudyTime.createdDate.between(LocalDateTime.of(year, month - 1, 22 , 0, 0), LocalDateTime.of(year,month+1,1,0,0));
     }
     @Override
