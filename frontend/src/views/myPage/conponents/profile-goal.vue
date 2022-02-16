@@ -4,12 +4,16 @@
       <div>오늘 나의 공부한 시간</div>
       <div class="studytime-wrapper">
         <div>{{state.user.todayStudyTime}}</div>
-        <div contenteditable="true">{{state.user.goalTimeToString}}</div>
+        <div>{{state.user.goalTimeToString}}</div>
       </div>
       <el-progress
         :text-inside="true"
         :stroke-width="26"
-        :percentage="state.user.todayStudyTimeBefore>0 ? Math.floor(state.user.todayStudyTimeBefore / state.user.goalTime* 100) : 0"
+        :percentage="
+          state.user.todayStudyTimeBefore > 0 ?
+          (Math.floor(state.user.todayStudyTimeBefore / state.user.goalTime* 100)) > 100 ? 100 : Math.floor(state.user.todayStudyTimeBefore / state.user.goalTime* 100)
+          : 0
+        "
         status="success"
       />
 
@@ -74,7 +78,7 @@
 </style>
 
 <script>
-import { reactive } from 'vue';
+import { reactive, onUpdated } from 'vue';
 export default {
   name: 'profile-goal',
 
@@ -84,7 +88,14 @@ export default {
   setup (props) {
     const state = reactive({
       user: props.user,
+      percentage: 0,
+    })
 
+    onUpdated(()=> {
+      let tempTime = state.user.goalTime
+      let hour = (tempTime / 60) >= 1 ? tempTime/60 : 0;
+      let minute = (tempTime % 60) >= 1? tempTime%60 : 0;
+      state.user['goalTimeToString'] = Math.floor(hour)+'시간 '+minute+'분'
     })
 
     return {
