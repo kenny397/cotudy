@@ -25,8 +25,19 @@
         </p>
       </div>
       <div style="margin-top: 30px;">
-        <span style="background: #3AC258; padding:10px; border-radius: 15px; color: white; font-size:20px;">
+        <span
+          style="background: #3AC258; padding:10px; border-radius: 15px; color: white; font-size:20px;"
+          v-if="state.user.isRival && !state.user.isMe"
+          @click="editRival(true)"
+        >
           <font-awesome-icon icon="user-plus" />
+        </span>
+        <span
+          style="background: red; padding:10px; border-radius: 15px; color: white; font-size:20px;"
+          v-if="!state.user.isRival && !state.user.isMe"
+          @click="editRival(false)"
+        >
+          <font-awesome-icon icon="user-minus" />
         </span>
       </div>
     </div>
@@ -68,6 +79,8 @@
 
 <script>
 import { reactive} from 'vue';
+import axios from 'axios';
+
 export default {
   name: 'profile-desc',
 
@@ -77,6 +90,8 @@ export default {
   setup (props) {
     const state = reactive({
       user: props.user,
+      isMe : props.isMe,
+      isRival : props.isRival,
       department : {
         1: 'SSAFY',
         2: '삼성전자',
@@ -91,11 +106,48 @@ export default {
         'Silver': require('../../../assets/images/tier/silver.png'),
         'Gold': require('../../../assets/images/tier/gold.png'),
         'Diamond': require('../../../assets/images/tier/diamond.png'),
-      }
+      },
+
+
+
     })
+    const editRival = function(isAdd) {
+      if (isAdd) {
+        // 라이벌 추가
+        axios({
+          url: 'users/rival',
+            method: 'post',
+            data: {
+              'rivalId': state.user.id,
+              'userId': localStorage.getItem('userId')*1
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+
+      } else {
+        // 라이벌 삭제
+        axios({
+          url: 'users/rival',
+            method: 'delete',
+            data: {
+              'rivalId': state.user.id,
+              'userId': localStorage.getItem('userId')*1
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    }
+
+
+
 
     return {
-      state
+      state,
+      editRival
     }
   }
 

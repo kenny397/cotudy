@@ -54,7 +54,7 @@
     width: 140px;
     left: 50%;
 
-    margin-left: -62px;
+    margin-left: -65px;
   }
   .el-dialog img {
     width: 200px;

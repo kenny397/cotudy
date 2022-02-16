@@ -1,23 +1,28 @@
 <template>
   <div class="my-page-header" style="width: 100vw; height:100%">
-    <profile-image :user="state.user"/>
+    <profile-image v-if="state.user.id" :user="state.user"/>
   </div>
-  <profile-desc :user="state.user" style="margin-bottom:40px;"/>
+  <profile-desc
+    v-if="state.user"
+    :user="state.user"
+    :isMe="state.isMe"
+    :isRival="state.isRival"
+    style="margin-bottom:40px;"/>
   <hr>
-  <profile-edit-dialog :user="state.user" style="margin: 15px 20px 0px 0px;"/>
+  <profile-edit-dialog v-if="state.user.id" :user="state.user" style="margin: 15px 20px 0px 0px;"/>
   <div class="my-divider"></div>
   <div class="my-page-body">
     <div class="resolution-badge-wrapper">
       <div>
         <div class="info-container">나의 목표</div>
-        <profile-goal :user="state.user"/>
+        <profile-goal v-if="state.user.id" :user="state.user"/>
       </div>
       <div>
         <div class="info-container badge-header">나의 뱃지</div>
-        <profile-badge :user="state.user"/>
+        <profile-badge v-if="state.user.id" :user="state.user"/>
       </div>
     </div>
-    <profile-calendar :user="state.user"/>
+    <profile-calendar v-if="state.user.id" :user="state.user"/>
   </div>
 </template>
 
@@ -64,7 +69,7 @@
 </style>
 
 <script>
-import { reactive, onMounted } from 'vue'
+import { reactive, onMounted, onUpdated } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios';
@@ -102,10 +107,16 @@ export default {
         rivalCount : undefined,
         thumbnail : undefined,
         userId : undefined,
-      }
+      },
+      isRival : undefined,
+      isMe : undefined,
     })
 
     // life cycle
+    onUpdated(() => {
+      getUser()
+    })
+
     onMounted(() => {
       getUser()
       console.log(state.user)
@@ -168,6 +179,27 @@ export default {
         .catch(err => {
           console.log(err)
         })
+
+
+        axios.get(`users/rival/?rivalId=${route.params.userId}&userId=${localStorage.getItem('userId')}`)
+          .then(res => {
+            if(! state.user.id == localStorage.getItem('userId')*1) {
+              state.user['isMe'] = false
+            } else {
+              state.user['isMe'] = true
+            }
+
+            if (res.data == 'no') {
+              state.user['isRival'] = false
+            } else {
+              state.user['isRival'] = true
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+          // localStorage.getItem('userId')*1
+
 
 
     }

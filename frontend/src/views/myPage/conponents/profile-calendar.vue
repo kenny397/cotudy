@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <button @click="test">123123</button>
+  <div class="calendar-container">
     <el-calendar v-model="state.dayNow" >
       <template #dateCell="{ data }">
         <p
@@ -14,12 +13,25 @@
   </div>
 </template>
 
-<style scoped>
+<style>
 
+  .calendar-container {
+    margin: 50px 0px;
+    border-radius : 20px;
+  }
+  .calendar-container .el-calendar-table td.is-selected{
+    background: rgba(206, 248, 198, 0.479);
+  }
+  .calendar-container .el-calendar {
+    border-radius : 20px;
+    background: white;
+  }
 </style>
 
 <script>
-import { reactive} from 'vue';
+import { reactive, onMounted, onUpdated} from 'vue';
+import axios from 'axios';
+
 export default {
   name: 'profile-calendar',
 
@@ -32,13 +44,34 @@ export default {
       dayNow: new Date(),
     })
 
-    const test = function () {
-      document.getElementById('2022-02-14').innerHTML += '✔️'
+    onUpdated (() => {
+      console.log('updated!!!!!!!!!!!!')
+      getAttendance()
+    })
+
+    onMounted (() => {
+      getAttendance()
+    })
+
+    const getAttendance = function () {
+      axios.get(`users/calendar?id=${props.user.id}&year=${state.dayNow.getFullYear()}&month=${state.dayNow.getMonth()+1}`)
+          .then(res => {
+            for (let i in res.data) {
+              document.getElementById(res.data[i].attendanceDate).innerHTML += ' ✔️'
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      // document.getElementById('2022-02-14').innerHTML += '✔️'
+      // console.log(state.dayNow)
+      // console.log(state.dayNow.getFullYear())
+      // console.log(state.dayNow.getMonth()+1)
     }
 
     return {
       state,
-      test
+      getAttendance
     }
   }
 
