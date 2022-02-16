@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService{
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final RivalRepository rivalRepository;
-    private final UserCustomRepository userCustomRepository;
     private final DepartmentRepository departmentRepository;
     private final StudyTimeRepository studyTimeRepository;
 
@@ -43,6 +42,7 @@ public class UserServiceImpl implements UserService{
         user.setPassword(passwordEncoder.encode(registerInfo.getPassword()));
         user.setGoalTime("60");
         user.setGoal("");
+        user.setThumbnail("1");
         Department department = departmentRepository.findById(10L).get();
         user.setDepartment(department);
         return userRepository.save(user);
@@ -119,13 +119,12 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public StudyTimeRes getDayStudyTime(long id){
-
-        return userCustomRepository.getDayStudyTimeByUser(id);
+        return userRepository.getDayStudyTimeByUser(id);
     }
 
     @Override
     public StudyTimeRes getTotalStudyTime(long id) {
-        return userCustomRepository.getTotalStudyTimeByUser(id);
+        return userRepository.getTotalStudyTimeByUser(id);
     }
 
     @Override
@@ -136,7 +135,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<CalendarRes> getAttendanceDays(AttendanceDateDto userDateInfo) {
-        return userCustomRepository.getAttendanceDaysByUser(userDateInfo);
+        return userRepository.getAttendanceDaysByUser(userDateInfo);
     }
 
     @Override
