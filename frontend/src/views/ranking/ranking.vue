@@ -10,7 +10,6 @@
     <el-card class="box-card">
       <div class="container">
         <el-image
-          style="width:200px; height:200px;"
           :src="state.tier.imgurl"
           :fit="contain"
         ></el-image>
@@ -30,7 +29,7 @@
       </div>
     </el-card>
     <el-card class="box-card-r">
-      <line-chart style="width:auto; height:auto;" :data="state.weekStudyTime" />
+      <ChartWrapper v-if="state.weekStudyTime.length > 0" :weekStudyTime="state.weekStudyTime" />
     </el-card>
   </div>
 
@@ -141,21 +140,27 @@
 .rank-top {
   display: flex;
   justify-content: space-around;
-  height: 30vh;
+  height: 45vh;
 }
 .box-card {
   display: flex;
   justify-content: center;
   align-items: center;
+  width:500px;
 }
 .box-card .container {
   display: flex;
   justify-content: center;
   align-items: center;
+  width:400px;
 }
 .box-card .container .el-image {
-  width: 130px !important;
-  height: 80px !important;
+  width: 50px !important;
+  height: 50px !important;
+}
+.box-card .container .el-image img{
+  width: 50px !important;
+  height: 50px !important;
 }
 .el-progress-bar__inner {
   background-color: rgba(58, 194, 88, 1);
@@ -173,6 +178,9 @@
   align-items: center;
   width: 500px;
 }
+canvas {
+  width:400px;
+}
 </style>
 
 <script>
@@ -180,10 +188,14 @@ import { reactive, computed, onUpdated, onBeforeMount } from 'vue'
 import { useStore } from 'vuex'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
+import ChartWrapper from './components/chartWrapper.vue'
+
 
 export default {
   name: 'Ranking',
-
+  components : {
+    ChartWrapper
+  },
   setup() {
 
 
@@ -443,7 +455,6 @@ export default {
     formatter(value){
       let hour = parseInt(value.totalStudyTime / 60)
       let min = value.totalStudyTime%60
-
       console.log(value)
       if(hour==0){
         return min+'분';
