@@ -40,7 +40,7 @@ export default ({
         {
           label: '나의 공부 시간',
           backgroundColor: '#f87979',
-          data: [`${Math.floor(weekResult[0][1]/60)}`,`${Math.floor(weekResult[1][1]/60)}`,`${Math.floor(weekResult[2][1]/60)}`,`${Math.floor(weekResult[3][1]/60)}`,`${Math.floor(weekResult[4][1]/60)}`,`${Math.floor(weekResult[5][1]/60)}`,`${Math.floor(weekResult[6][1]/60)}`]
+          data: [`${(weekResult[0][1]/60).toFixed(1)}`,`${(weekResult[1][1]/60).toFixed(1)}`,`${(weekResult[2][1]/60).toFixed(1)}`,`${(weekResult[3][1]/60).toFixed(1)}`,`${(weekResult[4][1]/60).toFixed(1)}`,`${(weekResult[5][1]/60).toFixed(1)}`,`${(weekResult[6][1]/60).toFixed(1)}`]
         }
       ]
     })
