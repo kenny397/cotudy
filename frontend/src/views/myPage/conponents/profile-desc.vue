@@ -26,15 +26,17 @@
       </div>
       <div style="margin-top: 30px;">
         <span
+          class="rival-btn"
           style="background: #3AC258; padding:10px; border-radius: 15px; color: white; font-size:20px;"
-          v-if="state.user.isRival && !state.user.isMe"
+          v-if="!state.user.isRival && !state.user.isMe"
           @click="editRival(true)"
         >
           <font-awesome-icon icon="user-plus" />
         </span>
         <span
+          class="rival-btn"
           style="background: red; padding:10px; border-radius: 15px; color: white; font-size:20px;"
-          v-if="!state.user.isRival && !state.user.isMe"
+          v-if="state.user.isRival && !state.user.isMe"
           @click="editRival(false)"
         >
           <font-awesome-icon icon="user-minus" />
@@ -74,6 +76,9 @@
     font-weight: 900;
     margin-bottom: 10px;
   }
+  .rival-btn {
+    cursor: pointer;
+  }
 </style>
 
 <script>
@@ -89,8 +94,6 @@ export default {
   setup (props) {
     const state = reactive({
       user: props.user,
-      isMe : props.isMe,
-      isRival : props.isRival,
       department : {
         1: 'SSAFY',
         2: '삼성전자',
@@ -111,6 +114,8 @@ export default {
 
     })
     const editRival = function(isAdd) {
+      console.log(state.user.isRival)
+      console.log(state.user.isMe)
       if (isAdd) {
         // 라이벌 추가
         axios({
@@ -120,6 +125,9 @@ export default {
               'rivalId': state.user.id,
               'userId': localStorage.getItem('userId')*1
             }
+          })
+          .then(() => {
+            state.user.isRival = true
           })
           .catch(err => {
             console.log(err)
@@ -135,18 +143,18 @@ export default {
               'userId': localStorage.getItem('userId')*1
             }
           })
+          .then(() => {
+            state.user.isRival = false
+          })
           .catch(err => {
             console.log(err)
           })
       }
     }
 
-
-
-
     return {
       state,
-      editRival
+      editRival,
     }
   }
 
