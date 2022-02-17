@@ -435,8 +435,6 @@ export default {
 
     const videoBtnClick = function () {
       if(state.isVideoMuted) {
-        // 여기 지워
-        state.myStudyTime += 500000
         state.publisher.publishVideo(true)
         state.isVideoMuted = false
       } else {
