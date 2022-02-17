@@ -4,7 +4,6 @@ COPY package* ./
 RUN npm install 
 COPY public ./public 
 COPY src ./src
-COPY .env* ./
 RUN npm run build
 
 # 2. 빌드 된 파일을 배포용 이미지에 복사
