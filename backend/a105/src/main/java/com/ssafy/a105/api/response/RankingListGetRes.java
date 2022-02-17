@@ -19,23 +19,29 @@ public class RankingListGetRes {
     String department;
     @ApiModelProperty(name="유저 총 공부 시간", example="390(6시간30분)")
     long totalStudyTime;
+    @ApiModelProperty(name="유저의 랭킹", example = "5")
     long ranking;
+    @ApiModelProperty(name="유저의 PK", example = "1")
+    long userPid;
     public RankingListGetRes(){
 
     }
 
     @QueryProjection
-    public RankingListGetRes(String nickName, String department, long totalStudyTime) {
-       this.nickName = nickName;
+    public RankingListGetRes(long userPid, String nickName, String department, long totalStudyTime) {
+        this.userPid = userPid;
+        this.nickName = nickName;
         this.department = department;
         this.totalStudyTime = totalStudyTime;
     }
 
-    public static RankingListGetRes of(String nickName, String department, long totalStudyTime) {
+    public static RankingListGetRes of(long userPid, String nickName, String department, long totalStudyTime, long ranking) {
         RankingListGetRes res = new RankingListGetRes();
+        res.setUserPid(userPid);
         res.setNickName(nickName);
         res.setDepartment(department);
         res.setTotalStudyTime(totalStudyTime);
+        res.setRanking(ranking);
         return res;
     }
 
