@@ -102,7 +102,7 @@
       style="width: 85%; margin-top:30px; left:7.5%"
       :row-style="tableStyle"
       header-row-style = "background-color:rgba(58, 194, 88, 1); color:#fff"
-      @row-click="clickLMypage"
+      @row-click="clickMypage"
     >
       <el-table-column prop="#" label="" width="50" />
       <el-table-column type="index" :index="reindex" label="순위" width="100" />
@@ -176,7 +176,7 @@
 </style>
 
 <script>
-import { reactive, computed, onUpdated, onMounted } from 'vue'
+import { reactive, computed, onUpdated, onBeforeMount } from 'vue'
 import { useStore } from 'vuex'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
@@ -306,7 +306,7 @@ export default {
     })
 
     // 임시
-    onMounted(() => {
+    onBeforeMount(() => {
       if (state.isLogin) {
         getWeekStudyTime()
       }
@@ -316,9 +316,8 @@ export default {
       state.userId = localStorage.getItem('userId')
     }
 
-    const clickLMypage = () => {
+    const clickMypage = () => {
 
-      state.nowRoute = 'myPage'
       router.push({
         name: 'my-page',
         params: {
@@ -337,30 +336,30 @@ export default {
           const mtoh = res.studyTime / 60
           if (mtoh < 10) {
             state.tier.name = 'Iron'
-            state.tier.progress = (mtoh / 10).toFixed(3) * 100
+            state.tier.progress = parseInt((mtoh / 10) * 100)
             state.tier.imgurl = require('../../assets/images/tier/iron.png')
-            state.tier.necessaryTime = 10 - mtoh.toFixed(1)
+            state.tier.necessaryTime = 10 - parseInt(mtoh)
             state.tier.nextTier = 'Bronze'
           }
           else if (mtoh >= 10 & mtoh < 50) {
             state.tier.name = 'Bronze'
-            state.tier.progress = ((mtoh - 10) / 40).toFixed(3) * 100
+            state.tier.progress = parseInt(((mtoh - 10) / 40) * 100)
             state.tier.imgurl = require('../../assets/images/tier/bronze.png')
-            state.tier.necessaryTime = 50 - mtoh.toFixed(1)
+            state.tier.necessaryTime = 50 - parseInt(mtoh)
             state.tier.nextTier = 'Silver'
 
           } else if (mtoh >= 50 & mtoh < 200) {
             state.tier.name = 'Silver'
-            state.tier.progress = ((mtoh - 50) / 150).toFixed(3) * 100
+            state.tier.progress = parseInt(((mtoh - 50) / 150) * 100)
             state.tier.imgurl = require('../../assets/images/tier/silver.png')
-            state.tier.necessaryTime = 200 - mtoh.toFixed(1)
+            state.tier.necessaryTime = 200 - parseInt(mtoh)
             state.tier.nextTier = 'Gold'
 
           } else if (mtoh >= 200 & mtoh < 500) {
             state.tier.name = 'Gold'
-            state.tier.progress = ((mtoh - 200) / 300).toFixed(3) * 100
+            state.tier.progress = parseInt(((mtoh - 200) / 300) * 100)
             state.tier.imgurl = require('../../assets/images/tier/gold.png')
-            state.tier.necessaryTime = 500 - mtoh.toFixed(1)
+            state.tier.necessaryTime = 500 - parseInt(mtoh)
             state.tier.nextTier = 'Diamond'
 
           } else if (mtoh >= 500) {
@@ -403,7 +402,7 @@ export default {
     return {
       state,
       getWeekStudyTime,
-      clickLMypage
+      clickMypage
     }
   },
 
