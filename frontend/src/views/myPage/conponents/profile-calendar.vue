@@ -29,7 +29,7 @@
 </style>
 
 <script>
-import { reactive, onMounted, onUpdated} from 'vue';
+import { reactive, onBeforeMount, onUpdated} from 'vue';
 import axios from 'axios';
 
 export default {
@@ -48,22 +48,22 @@ export default {
       getAttendance()
     })
 
-    onMounted (() => {
+    onBeforeMount (() => {
       getAttendance()
     })
 
     const getAttendance = function () {
       axios.get(`users/calendar?id=${props.user.id}&year=${state.dayNow.getFullYear()}&month=${state.dayNow.getMonth()+1}`)
-          .then(res => {
-            for (let i in res.data) {
-              if(document.getElementById(res.data[i].attendanceDate)){
-                document.getElementById(res.data[i].attendanceDate).innerHTML += ' ✅'
-              }
+        .then(res => {
+          for (let i in res.data) {
+            if(document.getElementById(res.data[i].attendanceDate)){
+              document.getElementById(res.data[i].attendanceDate).innerHTML += ' ✅'
             }
-          })
-          .catch(err => {
-            console.log(err)
-          })
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
       // document.getElementById('2022-02-14').innerHTML += '✔️'
       // console.log(state.dayNow)
       // console.log(state.dayNow.getFullYear())

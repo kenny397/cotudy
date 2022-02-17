@@ -1,6 +1,6 @@
 <template>
   <div class="profile-img-area">
-    <img class="profile-img" :src="state.profileImg[state.user.thumbnail]" @click="state.profileImageDialogVisible = true">
+    <img class="profile-img" :src="state.profileImg[state.user.thumbnail]" @click="profileImgDialogOpen">
     <img class="tier-img" :src="state.tier[state.user.tier]">
   </div>
   <el-dialog
@@ -55,7 +55,7 @@
     width: 140px;
     left: 50%;
 
-    margin-left: -65px;
+    margin-left: -62px;
   }
   .el-dialog img {
     width: 200px;
@@ -106,6 +106,11 @@ export default {
         '8' : require('../../../assets/images/profile/profile8.png'),
       }
     })
+    const profileImgDialogOpen = function() {
+      if (state.user.isMe) {
+        state.profileImageDialogVisible = true
+      }
+    }
 
     const profileImageEdit= function(imgKey){
       state.profileImageDialogVisible = false
@@ -133,7 +138,8 @@ export default {
 
     return {
       state,
-      profileImageEdit
+      profileImageEdit,
+      profileImgDialogOpen
     }
   }
 }
