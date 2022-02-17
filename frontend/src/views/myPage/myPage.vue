@@ -4,12 +4,17 @@
   </div>
   <profile-desc
     v-if="state.user.id"
-    :user="state.user"
     :isMe="state.isMe"
     :isRival="state.isRival"
+    :user="state.user"
     style="margin-bottom:40px;"/>
   <hr>
-  <profile-edit-dialog v-if="state.user.id" :user="state.user" style="margin: 15px 20px 0px 0px;"/>
+  <profile-edit-dialog
+    v-if="state.user.id"
+    :isMe="state.isMe"
+    :isRival="state.isRival"
+    :user="state.user"
+    style="margin: 15px 20px 0px 0px;"/>
   <div class="my-divider"></div>
   <div class="my-page-body">
     <div class="resolution-badge-wrapper">
