@@ -6,6 +6,7 @@ import com.ssafy.a105.api.request.RoomInfoPostReq;
 import com.ssafy.a105.db.entity.*;
 import com.ssafy.a105.db.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +23,7 @@ public class RoomServiceImpl implements RoomService{
     private final UserRoomRepository userRoomRepository;
     private final StudyClassRepository studyClassRepository;
     public List<Room> getRooms() {
-        return roomRepository.findAll();
+        return roomRepository.findAll(Sort.by(Sort.Direction.DESC,"id"));
     }
 
     public Room getRoom(long roomId) {
