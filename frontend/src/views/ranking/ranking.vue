@@ -67,15 +67,14 @@
 
       <el-col :span="1"/>
       <el-col :span="2">
-        <el-select v-if='false' v-model="state.classs" @change="fetchRank" class="m-2" placeholder="전체">
-          <el-option
-            v-for="item in state.classes"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
+        <el-cascader
+          v-model="state.classs"
+          :options="state.classes"
+          @change="fetchRankClass"
+          placeholder="소속"
+          style="margin-end:1rem;"
+        >
+        </el-cascader>
       </el-col>
 
       <el-col :span="4"/>
@@ -88,9 +87,7 @@
             @keyup.enter="searchUser"
           >
             <template #prepend>
-              <el-select v-model="state.select" placeholder="아이디" style="width: 100px">
-                <el-option label="아이디" value="uid"></el-option>
-                <el-option label="소속" value="department"></el-option>
+              <el-select v-model="state.select" placeholder="닉네임" style="width: 100px">
               </el-select>
             </template>
             <template #append>
@@ -102,16 +99,25 @@
     </el-row>
     <el-table
       :data="state.rank"
-      stripe highlight-current-row
       style="width: 85%; margin-top:30px; left:7.5%"
       :row-style="tableStyle"
       header-row-style = "background-color:rgba(58, 194, 88, 1); color:#fff"
+      @row-click="clickLMypage"
     >
       <el-table-column prop="#" label="" width="50" />
       <el-table-column type="index" :index="reindex" label="순위" width="100" />
-      <el-table-column prop="nickName" label="닉네임" width="500" />
+      <el-table-column  prop="nickName" label="닉네임" width="500" />
+      <el-table-column  prop="totalStudyTime" label="티어" width="100" >
+        <template v-slot="scope">
+          <el-image
+          style="width:50px; height:50px;"
+          :src="tiersrc(scope.row.totalStudyTime)"
+          :fit="contain"
+        ></el-image>
+        </template>
+      </el-table-column>
       <el-table-column prop="department" label="소속" />
-      <el-table-column prop="totalStudyTime" label="공부한시간" />
+      <el-table-column prop="totalStudyTime" :formatter="formatter" label="공부한시간" />
     </el-table>
 
     <el-pagination
@@ -173,12 +179,15 @@
 import { reactive, computed, onUpdated, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import axios from 'axios'
-
+import { useRouter } from 'vue-router'
 
 export default {
   name: 'Ranking',
 
   setup() {
+
+
+    const router = useRouter()
     const store = useStore()
     const state = reactive({
       input : null,
@@ -241,7 +250,7 @@ export default {
         },
         {
         value: 'rival',
-        label: '친구'
+        label: '라이벌'
         }
       ],
 
@@ -305,6 +314,17 @@ export default {
 
     const getUser = function () {
       state.userId = localStorage.getItem('userId')
+    }
+
+    const clickLMypage = () => {
+
+      state.nowRoute = 'myPage'
+      router.push({
+        name: 'my-page',
+        params: {
+          userId: localStorage.getItem('userId')*1
+        }
+      })
     }
 
     const getEntireStudyTime = function () {
@@ -383,11 +403,58 @@ export default {
     return {
       state,
       getWeekStudyTime,
+      clickLMypage
     }
   },
 
 //userClass&term&category&userNickname&userId(숫자))
   methods: {
+    fetchRankClass(){
+      //getUser()
+      let url = 'ranking?userClass='+this.state.classs+'&userId='+this.state.userId
+      axios.get(url)
+      .then(res => {
+        this.state.rank= res.data.content;
+        this.state.pageNum = parseInt(res.data.totalElements/20+1)*10;
+      })
+      .catch((Error)=>{
+      console.log(Error);
+    })
+
+    }
+    ,
+    tiersrc(value){
+      let hour = value / 60;
+
+      if(hour<10){
+        return require('../../assets/images/tier/iron.png')
+      }else if(hour<50){
+        return require('../../assets/images/tier/bronze.png')
+      }else if(hour<200){
+        return require('../../assets/images/tier/silver.png')
+      }else if(hour<500){
+        return require('../../assets/images/tier/gold.png')
+      }else {
+        return require('../../assets/images/tier/diamond.png')
+      }
+
+    }
+
+
+    ,
+    formatter(value){
+      let hour = parseInt(value.totalStudyTime / 60)
+      let min = value.totalStudyTime%60
+
+      console.log(value)
+      if(hour==0){
+        return min+'분';
+      }else{
+        return hour+'시간 '+min+'분'
+      }
+    }
+    ,
+
     reindex(index){
       index = parseInt(this.state.currentPage-1)*20+index+1;
       return index;
@@ -455,11 +522,13 @@ export default {
      tableStyle({rowIndex}) {
       if(rowIndex%2===1){
         return{
+          cursor:'pointer',
           background : '#FAEEE7',
           height : '30px'
         }
       }else{
         return{
+          cursor : 'pointer',
           height : '30px'
         }
       }
