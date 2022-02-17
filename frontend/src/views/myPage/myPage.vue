@@ -1,18 +1,14 @@
 <template>
   <div class="my-page-header" style="width: 100vw; height:100%">
-    <profile-image v-if="state.user.id" :user="state.user"/>
+    <profile-image v-if="state.user.isRival != undefined" :user="state.user"/>
   </div>
   <profile-desc
-    v-if="state.user.id"
-    :isMe="state.isMe"
-    :isRival="state.isRival"
+    v-if="state.user.isRival != undefined"
     :user="state.user"
     style="margin-bottom:40px;"/>
   <hr>
   <profile-edit-dialog
-    v-if="state.user.id"
-    :isMe="state.isMe"
-    :isRival="state.isRival"
+    v-if="state.user.isRival != undefined"
     :user="state.user"
     style="margin: 15px 20px 0px 0px;"/>
   <div class="my-divider"></div>
@@ -20,14 +16,14 @@
     <div class="resolution-badge-wrapper">
       <div>
         <div class="info-container">나의 목표</div>
-        <profile-goal v-if="state.user.id" :user="state.user"/>
+        <profile-goal v-if="state.user.isRival != undefined" :user="state.user"/>
       </div>
       <div>
         <div class="info-container badge-header">나의 뱃지</div>
-        <profile-badge v-if="state.user.id" :user="state.user"/>
+        <profile-badge v-if="state.user.isRival != undefined" :user="state.user"/>
       </div>
     </div>
-    <profile-calendar v-if="state.user.id" :user="state.user"/>
+    <profile-calendar v-if="state.user.isRival != undefined" :user="state.user"/>
   </div>
 </template>
 
@@ -74,7 +70,7 @@
 </style>
 
 <script>
-import { reactive, onMounted, onUpdated } from 'vue'
+import { reactive, onMounted, onUpdated, onBeforeMount } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios';
@@ -112,34 +108,51 @@ export default {
         rivalCount : undefined,
         thumbnail : undefined,
         userId : undefined,
+        // 이외사항
+        goalTimeToString : undefined,
+        entireStudyTime : undefined,
+        entireStudyHour : undefined,
+        tier : undefined,
+        todayStudyTime : undefined,
+        todayStudyTimeBefore : undefined,
+        isMe : undefined,
+        isRival : undefined,
+
       },
-      isRival : undefined,
-      isMe : undefined,
     })
 
     // life cycle
     onUpdated(() => {
-      getUser()
     })
 
     onMounted(() => {
-      getUser()
       console.log(state.user)
+    })
+    onBeforeMount(() => {
+      getUser()
     })
 
     const getUser = function () {
       // 유저 단일정보 조회
       axios.get(`users/${route.params.userId}`)
         .then(res => {
-          for (let i in Object.keys(state.user)) {
-            let userDataKey = Object.keys(state.user)[i]
-            state.user[userDataKey] = res.data[userDataKey]
-          }
+          // for (let i in Object.keys(state.user)) {
+          //   let userDataKey = Object.keys(state.user)[i]
+          //   state.user[userDataKey] = res.data[userDataKey]
+          // }
+          state.user.departmentId = res.data.departmentId,
+          state.user.id = res.data.id,
+          state.user.goal = res.data.goal,
+          state.user.goalTime = res.data.goalTime,
+          state.user.nickName = res.data.nickName,
+          state.user.rivalCount = res.data.rivalCount,
+          state.user.thumbnail = res.data.thumbnail,
+          state.user.userId = res.data.userId,
           state.user.goalTime*=1
           let tempTime = res.data.goalTime
           let hour = (tempTime / 60) >= 1 ? tempTime/60 : 0;
           let minute = (tempTime % 60) >= 1? tempTime%60 : 0;
-          state.user['goalTimeToString'] = Math.floor(hour)+'시간 '+minute+'분'
+          state.user.goalTimeToString = Math.floor(hour)+'시간 '+minute+'분'
 
         })
         .catch(err => {
@@ -153,7 +166,7 @@ export default {
           console.log(res.data.studyTime)
           let hour = (tempTime / 60) >= 1 ? tempTime/60 : 0;
           let minute = (tempTime % 60) >= 1? tempTime%60 : 0;
-          state.user['entireStudyTime'] = Math.floor(hour)+'시간 '+minute+'분'
+          state.user.entireStudyTime = Math.floor(hour)+'시간 '+minute+'분'
           // 티어
           let tier = 'Iron'
           if (hour >= 500 ) {
@@ -165,8 +178,8 @@ export default {
           } else if(hour >= 10){
             tier= 'Bronze'
           }
-          state.user['tier'] = tier
-          state.user['entireStudyHour'] = hour
+          state.user.tier = tier
+          state.user.entireStudyHour = hour
         })
         .catch(err => {
           console.log(err)
@@ -178,8 +191,8 @@ export default {
           let tempTime = res.data.studyTime >= 1 ? res.data.studyTime : 0
           let hour = (tempTime / 60) >= 1 ? tempTime/60 : 0;
           let minute = (tempTime % 60) >= 1? tempTime%60 : 0;
-          state.user['todayStudyTime'] = Math.floor(hour)+'시간 '+minute+'분'
-          state.user['todayStudyTimeBefore'] = tempTime
+          state.user.todayStudyTime = Math.floor(hour)+'시간 '+minute+'분'
+          state.user.todayStudyTimeBefore = tempTime
         })
         .catch(err => {
           console.log(err)
@@ -188,17 +201,21 @@ export default {
 
       axios.get(`users/rival/?rivalId=${route.params.userId}&userId=${localStorage.getItem('userId')}`)
         .then(res => {
-          if(! route.params.userId == localStorage.getItem('userId')*1) {
-            state.user['isMe'] = false
+          if(route.params.userId === localStorage.getItem('userId')) {
+            state.user.isMe = true
           } else {
-            state.user['isMe'] = true
+            state.user.isMe = false
           }
+          console.log('isME!!!!!!!!!!!!!!!!!!')
+          console.log(state.user.isMe)
 
           if (res.data == 'no') {
-            state.user['isRival'] = false
+            state.user.isRival = false
           } else {
-            state.user['isRival'] = true
+            state.user.isRival = true
           }
+          console.log('isRival')
+          console.log(state.user.isRival)
         })
         .catch(err => {
           console.log(err)

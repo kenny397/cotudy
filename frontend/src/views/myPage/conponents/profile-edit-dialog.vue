@@ -1,6 +1,6 @@
 <template>
   <el-button
-      v-if="!state.isMe"
+      v-if="state.user.isMe"
       round
       @click="profileDialogOpen()"
       class="editDialogBtn"
@@ -97,7 +97,6 @@ export default {
   setup (props) {
     const state = reactive({
       user: props.user,
-      isMe: props.isMe,
       profileEditDialogVisible : false,
       department : {
         1: 'SSAFY',
@@ -150,8 +149,8 @@ export default {
       },
     })
     const profileDialogOpen = function () {
-      console.log(props.isMe)
-      console.log(state.isMe)
+      console.log(state.user.isRival)
+      console.log(state.user.isMe)
       state.profileForm.myDepartment = state.department[props.user.departmentId]
       state.profileForm.nickName = props.user.nickName
       state.profileForm.goal = props.user.goal
