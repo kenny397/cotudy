@@ -85,9 +85,9 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<UserRes> getUserInfo(@PathVariable("userId") long userId){
-        User user = userService.getUserInfo(userId);
+        UserRes user = userService.getUserInfo(userId);
 
-        return ResponseEntity.status(200).body(UserRes.of(user));
+        return ResponseEntity.status(200).body(user);
     }
 
     @GetMapping("/check/id/{userId}")

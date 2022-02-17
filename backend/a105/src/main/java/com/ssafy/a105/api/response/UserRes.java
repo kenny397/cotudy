@@ -30,7 +30,7 @@ public class UserRes {
 	String thumbnail;
 	@ApiModelProperty(name="User rivalCount")
 	long rivalCount;
-	public static UserRes of(User user) {
+	public static UserRes of(User user,long rivalCount) {
 		UserRes res = new UserRes();
 		res.setUserId(user.getUserId());
 		res.setId(user.getId());
@@ -39,7 +39,7 @@ public class UserRes {
 		res.setGoalTime(user.getGoalTime());
 		res.setGoal(user.getGoal());
 		res.setThumbnail(user.getThumbnail());
-		res.setRivalCount(user.getRival().size());
+		res.setRivalCount(rivalCount);
 		return res;
 	}
 }
