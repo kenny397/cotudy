@@ -61,7 +61,7 @@
   </el-container>
   <div class="studyroom-footer">
     <div class="time-area">
-      <span>학습 시간 {{state.newStudyTime}}</span>
+      <span @click="something">학습 시간 {{state.newStudyTime}}</span>
     </div>
     <div class="button-area">
 
@@ -401,6 +401,9 @@ export default {
       }
       joinSession()
     })
+    const something = function () {
+      state.myStudyTime += 500000
+    }
 
     // my methods
     const getMyNickname = function(userId) {
@@ -742,7 +745,7 @@ export default {
       }
     }
 
-    return {state, updateMainVideoStreamManager, leaveSession, joinSession, timerStart, timerStop, audioBtnClick, videoBtnClick, restBtnClick}
+    return {state, updateMainVideoStreamManager, leaveSession, joinSession, timerStart, timerStop, audioBtnClick, videoBtnClick, restBtnClick, something}
   }
 
 }
