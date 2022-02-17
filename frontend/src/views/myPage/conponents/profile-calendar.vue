@@ -45,7 +45,6 @@ export default {
     })
 
     onUpdated (() => {
-      console.log('updated!!!!!!!!!!!!')
       getAttendance()
     })
 
@@ -57,7 +56,9 @@ export default {
       axios.get(`users/calendar?id=${props.user.id}&year=${state.dayNow.getFullYear()}&month=${state.dayNow.getMonth()+1}`)
           .then(res => {
             for (let i in res.data) {
-              document.getElementById(res.data[i].attendanceDate).innerHTML += ' ✔️'
+              if(document.getElementById(res.data[i].attendanceDate)){
+                document.getElementById(res.data[i].attendanceDate).innerHTML += ' ✅'
+              }
             }
           })
           .catch(err => {
