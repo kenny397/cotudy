@@ -17,14 +17,20 @@ export default ({
       weekDatas[temp.getFullYear()+'-'+(temp.getMonth()+1+'').padStart(2,'0')+'-'+ day] = 0
     }
 
+    console.log('여길봐!!!!!')
+    console.log(weekDatas)
+
     for (let i in this.weekStudyTime) {
       weekDatas[this.weekStudyTime[i][0]] = this.weekStudyTime[i][1]
     }
     let weekResult = [[],[],[],[],[],[],[]]
     let tmp = 0
+
     for (let j in weekDatas) {
-      weekResult[tmp].push(j.slice(5,10))
-      weekResult[tmp].push(weekDatas[j])
+      if(weekResult[tmp]) {
+        weekResult[tmp].push(j.slice(5,10))
+        weekResult[tmp].push(weekDatas[j])
+      }
       tmp= tmp+1
     }
 
