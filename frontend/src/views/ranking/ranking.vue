@@ -316,13 +316,12 @@ export default {
       state.userId = localStorage.getItem('userId')
     }
 
-    const clickLMypage = () => {
-
+    const clickLMypage = (row) => {
       state.nowRoute = 'myPage'
       router.push({
         name: 'my-page',
         params: {
-          userId: localStorage.getItem('userId')*1
+          userId: row.userPid
         }
       })
     }
