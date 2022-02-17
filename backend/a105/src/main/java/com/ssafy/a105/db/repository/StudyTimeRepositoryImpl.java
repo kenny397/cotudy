@@ -37,7 +37,7 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom {
     @Override
     public RankingRankGetRes getUserRankInfoByUser(long userPid) {
 
-        List<RankingListGetRes> userList = jpaQueryFactory.select(new QRankingListGetRes(qStudyTime.user.nickname, qStudyTime.user.department.name, qStudyTime.time.sum()))
+        List<RankingListGetRes> userList = jpaQueryFactory.select(new QRankingListGetRes(qStudyTime.user.id, qStudyTime.user.nickname, qStudyTime.user.department.name, qStudyTime.time.sum()))
                 .from(qStudyTime).groupBy(qStudyTime.user).orderBy(qStudyTime.time.sum().desc()).fetch();
 
         User user = userRepository.getById(userPid);
@@ -53,7 +53,7 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom {
     @Override
     public PageImpl<RankingListGetRes> getListByUser(RankingListDto rankingInfo, Pageable pageable) {
 
-        QueryResults<RankingListGetRes> query = jpaQueryFactory.select(new QRankingListGetRes(qStudyTime.user.nickname, qStudyTime.user.department.name, qStudyTime.time.sum()))
+        QueryResults<RankingListGetRes> query = jpaQueryFactory.select(new QRankingListGetRes(qStudyTime.user.id, qStudyTime.user.nickname, qStudyTime.user.department.name, qStudyTime.time.sum()))
                 .from(qStudyTime).where(eqCategory(rankingInfo.getCategory()), eqNickName(rankingInfo.getUserNickname()), eqPeriod(rankingInfo.getTerm()), eqDepartment(rankingInfo.getUserId(), rankingInfo.getUserClass()))
                 .groupBy(qStudyTime.user).orderBy(qStudyTime.time.sum().desc()).offset(pageable.getOffset())
                 .limit(pageable.getPageSize()).fetchResults();
