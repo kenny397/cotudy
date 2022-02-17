@@ -53,11 +53,12 @@ export default {
     })
 
     const getAttendance = function () {
-      axios.get(`users/calendar?id=${props.user.id}&year=${state.dayNow.getFullYear()}&month=${state.dayNow.getMonth()+1}`)
+      axios.get(`users/calendar?id=${state.user.id}&year=${state.dayNow.getFullYear()}&month=${state.dayNow.getMonth()+1}`)
         .then(res => {
           for (let i in res.data) {
             if(document.getElementById(res.data[i].attendanceDate)){
-              document.getElementById(res.data[i].attendanceDate).innerHTML += ' ✅'
+              let tmp = res.data[i].attendanceDate.slice(5,10)
+              document.getElementById(res.data[i].attendanceDate).innerHTML = `${tmp} ✅`
             }
           }
         })
