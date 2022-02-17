@@ -7,102 +7,102 @@
     </div>
   </div>
   <div style="display:flex; flex-direction:column; align-items:center">
-    <div style="width:70%;">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div class="underline">
-          <h3 style="margin-bottom:1px">Study List</h3>
-        </div>
-        <div>
-          <span style="margin-end:5px">Category: </span>
-          <el-cascader
-            v-model="casValue"
-            :options="state.options"
-            @change="handleChangeCategory(casValue)"
-            style="margin-end:1rem;"
-          ></el-cascader>
-          <el-button plain round type="success" @click="createStudy()">Create Study</el-button>
-          <el-dialog v-model="state.createStudyDialogVisible" title="방 생성" width="45%" center>
-            <hr style="margin-top:-20px;">
-            <el-form :model="state.form" :rules="state.rules" label-width="120px">
-              <div style="display:flex;">
-                <div style="margin-end:50px;">
-                  <el-form-item label="방 이름" prop="name">
-                    <el-input v-model="state.form.name" placeholder="방 제목을 작성해주세요"></el-input>
-                  </el-form-item>
-                  <el-form-item label="방 최대 인원" prop="number">
-                    <el-input-number v-model="state.form.number" :min="1" :max="6" />
-                  </el-form-item>
-                  <div>
-                    <el-form-item label="카테고리" prop="category">
-                      <el-radio-group v-model="state.form.category">
-                        <el-radio :label="1">어학</el-radio>
-                        <el-radio :label="2">공무원</el-radio>
-                        <el-radio :label="3">취업</el-radio>
-                        <el-radio :label="4">대입</el-radio>
-                        <el-radio :label="5">자격증</el-radio>
-                        <el-radio :label="6">자율</el-radio>
-                      </el-radio-group>
+    <div>
+        <div class="study-list-header">
+          <div class="underline">
+            <h3 style="margin-bottom:1px">Study List</h3>
+          </div>
+          <div>
+            <span style="margin-end:5px">Category: </span>
+            <el-cascader
+              v-model="casValue"
+              :options="state.options"
+              @change="handleChangeCategory(casValue)"
+              style="margin-end:1rem;"
+            ></el-cascader>
+            <el-button plain round type="success" @click="createStudy()">Create Study</el-button>
+            <el-dialog v-model="state.createStudyDialogVisible" title="방 생성" width="45%" center>
+              <hr style="margin-top:-20px;">
+              <el-form :model="state.form" :rules="state.rules" label-width="120px">
+                <div style="display:flex;">
+                  <div style="margin-end:50px;">
+                    <el-form-item label="방 이름" prop="name">
+                      <el-input v-model="state.form.name" placeholder="방 제목을 작성해주세요"></el-input>
                     </el-form-item>
-                    <el-form-item label="방 설명">
-                      <el-input v-model="state.form.desc" type="textarea"></el-input>
+                    <el-form-item label="방 최대 인원" prop="number">
+                      <el-input-number v-model="state.form.number" :min="1" :max="6" />
                     </el-form-item>
+                    <div>
+                      <el-form-item label="카테고리" prop="category">
+                        <el-radio-group v-model="state.form.category">
+                          <el-radio :label="1">어학</el-radio>
+                          <el-radio :label="2">공무원</el-radio>
+                          <el-radio :label="3">취업</el-radio>
+                          <el-radio :label="4">대입</el-radio>
+                          <el-radio :label="5">자격증</el-radio>
+                          <el-radio :label="6">자율</el-radio>
+                        </el-radio-group>
+                      </el-form-item>
+                      <el-form-item label="방 설명">
+                        <el-input v-model="state.form.desc" type="textarea"></el-input>
+                      </el-form-item>
+                    </div>
+                  </div>
+                  <el-image
+                    style="width: 120px; height: 120px; cursor:pointer;"
+                    :src="state.imgList[state.form.thumbnail].imgUrl"
+                    :fit="contain"
+                    @click="state.ThumbnailDialogVisible = true"
+                  ></el-image>
+                  <div style="text-align:center">
+                    <el-dialog
+                      v-model="state.ThumbnailDialogVisible"
+                      title="썸네일 선택"
+                      width="30%"
+                    >
+                      <div style="text-align:center;">
+                        <div v-for="i in state.imgList" :key="i.imgNum" class="inblk">
+                          <el-card class="box-card">
+                            <el-image
+                              style="width: 120px; height: 120px"
+                              :src="i.imgUrl"
+                              :fit="contain"
+                              @click="pickThumbnail(i.imgNum)"
+                            ></el-image>
+                          </el-card>
+                        </div>
+                      </div>
+                    </el-dialog>
                   </div>
                 </div>
-                <el-image
-                  style="width: 120px; height: 120px; cursor:pointer;"
-                  :src="state.imgList[state.form.thumbnail].imgUrl"
-                  :fit="contain"
-                  @click="state.ThumbnailDialogVisible = true"
-                ></el-image>
-                <div style="text-align:center">
-                  <el-dialog
-                    v-model="state.ThumbnailDialogVisible"
-                    title="썸네일 선택"
-                    width="30%"
-                  >
-                    <div style="text-align:center;">
-                      <div v-for="i in state.imgList" :key="i.imgNum" class="inblk">
-                        <el-card class="box-card">
-                          <el-image
-                            style="width: 120px; height: 120px"
-                            :src="i.imgUrl"
-                            :fit="contain"
-                            @click="pickThumbnail(i.imgNum)"
-                          ></el-image>
-                        </el-card>
-                      </div>
-                    </div>
-                  </el-dialog>
+                <el-alert
+                  v-if="state.createAlert.visible"
+                  :title="state.createAlert.title"
+                  type="warning"
+                  center
+                  style="margin-bottom:20px;"
+                />
+                <div style="display:flex; justify-content:end;">
+                  <el-button round plain @click="state.createStudyDialogVisible = false">취소</el-button>
+                  <el-button round plain type="success" @click="onSubmit()">방 생성</el-button>
                 </div>
-              </div>
-              <el-alert
-                v-if="state.createAlert.visible"
-                :title="state.createAlert.title"
-                type="warning"
-                center
-                style="margin-bottom:20px;"
-              />
-              <div style="display:flex; justify-content:end;">
-                <el-button round plain @click="state.createStudyDialogVisible = false">취소</el-button>
-                <el-button round plain type="success" @click="onSubmit()">방 생성</el-button>
-              </div>
-            </el-form>
-          </el-dialog>
+              </el-form>
+            </el-dialog>
+          </div>
         </div>
-      </div>
-      <div class="study-list-wrapper" style="display:flex; justify-content: center; height:600px;">
-        <ul class="infinite-list" v-infinite-scroll="load" style="overflow:hidden">
-          <li v-for="i in state.studyList" @click="clickConference(i)" class="infinite-list-item" :key="i.roomId">
-            <conference
-              :title="i.roomTitle"
-              :category="i.roomCategory"
-              :thumbnail="i.roomThumbnail"
-              :headCount="i.headCount"
-              :maxPeople="i.roomMaxPeople"
-            />
-          </li>
-        </ul>
-      </div>
+        <div class="study-list-wrapper">
+          <ul class="infinite-list" v-infinite-scroll="load" style="overflow:hidden">
+            <li v-for="i in state.studyList" @click="clickConference(i)" class="infinite-list-item" :key="i.roomId">
+              <conference
+                :title="i.roomTitle"
+                :category="i.roomCategory"
+                :thumbnail="i.roomThumbnail"
+                :headCount="i.headCount"
+                :maxPeople="i.roomMaxPeople"
+              />
+            </li>
+          </ul>
+        </div>
       <el-button v-if="state.studyListNow <= state.studyList.length" @click="moreStudyShow">더보기</el-button>
     </div>
   </div>
@@ -208,6 +208,16 @@
 }
 .content span:nth-child(2) {
   font-size: 20px;
+}
+.study-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.study-list-wrapper {
+  display: flex;
+  justify-content: center;
+  height: 600px;
 }
 </style>
 
