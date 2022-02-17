@@ -6,6 +6,7 @@ import com.ssafy.a105.api.request.UserRegisterPostReq;
 import com.ssafy.a105.api.response.CalendarRes;
 import com.ssafy.a105.api.response.StudyTimeRes;
 import com.ssafy.a105.api.response.UserRecentWeekStudyTimeRes;
+import com.ssafy.a105.api.response.UserRes;
 import com.ssafy.a105.db.dto.AttendanceDateDto;
 import com.ssafy.a105.db.dto.UserRivalDto;
 import com.ssafy.a105.db.entity.Department;
@@ -70,8 +71,10 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User getUserInfo(long userId) {
-        return userRepository.findById(userId);
+    public UserRes getUserInfo(long userId) {
+        User user=userRepository.findById(userId);
+        long count= rivalRepository.findByUserId(userId).size();
+        return UserRes.of(user,count);
     }
 
     @Override
