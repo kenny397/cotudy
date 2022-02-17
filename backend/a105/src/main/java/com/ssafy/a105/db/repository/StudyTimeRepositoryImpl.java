@@ -15,6 +15,7 @@ import com.ssafy.a105.db.entity.QStudyTime;
 import com.ssafy.a105.db.entity.Rival;
 import com.ssafy.a105.db.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.jni.Local;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
@@ -31,7 +32,6 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom {
     private final RivalRepository rivalRepository;
     private final UserRepository userRepository;
     private static QStudyTime qStudyTime = QStudyTime.studyTime;
-    private static LocalDateTime NOW = LocalDateTime.now();
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
@@ -81,6 +81,8 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom {
 
     @Override
     public List<UserRecentWeekStudyTimeRes> getStudyTimeWeekList(long id) {
+
+        LocalDateTime now = LocalDateTime.now();
         StringTemplate formattedDate = Expressions.stringTemplate(
                 "DATE_FORMAT({0}, {1})"
                 , qStudyTime.createdDate
@@ -88,19 +90,19 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom {
 
         List<UserRecentWeekStudyTimeRes> list =
                 jpaQueryFactory.select(new QUserRecentWeekStudyTimeRes(formattedDate, qStudyTime.time.sum())).
-                        where(qStudyTime.user.id.eq(id).and(formattedDate.between(makeStartDay(), makeEndDay())))
+                        where(qStudyTime.user.id.eq(id).and(formattedDate.between(makeStartDay(now), makeEndDay(now))))
                         .from(qStudyTime).groupBy(formattedDate).orderBy(formattedDate.asc()).fetch();
         return list;
 
 
     }
 
-    private String makeStartDay() {
-        return simpleDateFormat.format(Timestamp.valueOf(NOW.minusDays(7)));
+    private String makeStartDay(LocalDateTime now) {
+        return simpleDateFormat.format(Timestamp.valueOf(now.minusDays(7)));
     }
 
-    private String makeEndDay() {
-        return simpleDateFormat.format(Timestamp.valueOf(NOW));
+    private String makeEndDay(LocalDateTime now) {
+        return simpleDateFormat.format(Timestamp.valueOf(now));
     }
 
     private BooleanExpression eqCategory(String category) {
@@ -118,11 +120,12 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom {
     }
 
     private BooleanExpression eqPeriod(String period) {
+        LocalDateTime now = LocalDateTime.now();
         if (period == null || period.isEmpty()) {
             return null;
         }
         int days = calculateDays(period);
-        return qStudyTime.createdDate.between(NOW.minusDays(days).withHour(0).withMinute(0).withSecond(0).withNano(0), NOW);
+        return qStudyTime.createdDate.between(now.minusDays(days).withHour(0).withMinute(0).withSecond(0).withNano(0), now);
     }
 
     private BooleanExpression eqDepartment(long userPid, String department) {
@@ -151,8 +154,9 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom {
         if (period.equals("week"))
             return 7;
         if (period.equals("month")) { // 나중에 월별 일자 구분 로직
-            int year = NOW.getYear();
-            int month = NOW.getMonthValue();
+            LocalDateTime now = LocalDateTime.now();
+            int year = now.getYear();
+            int month = now.getMonthValue();
             boolean isLeapYear = false;
             if ((year % 4 == 0) && (year % 100 != 0) && (year % 400 == 0)) {
                 isLeapYear = true;
