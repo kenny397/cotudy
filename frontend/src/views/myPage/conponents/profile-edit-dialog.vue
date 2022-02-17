@@ -24,7 +24,12 @@
         <el-input
           v-model="state.profileForm.nickName"
           autocomplete="off"
+          :disabled="state.isNicknameChecked"
         ></el-input>
+        <el-button
+          style="float:right"
+          @click="nicknameCheck"
+        >중복체크</el-button>
       </el-form-item>
       <el-form-item label="소속" prop="myDepartment">
         <el-cascader
@@ -53,6 +58,9 @@
 </template>
 
 <style>
+  .el-form-item__content .el-input:first-child {
+    width:15vw;
+  }
   .editDialogBtn {
     background: #3ac257;
     color: white;
@@ -98,6 +106,7 @@ export default {
     const state = reactive({
       user: props.user,
       profileEditDialogVisible : false,
+      isNicknameChecked: false,
       department : {
         1: 'SSAFY',
         2: '삼성전자',
@@ -149,6 +158,7 @@ export default {
       },
     })
     const profileDialogOpen = function () {
+      state.isNicknameChecked = false
       console.log(state.user.isRival)
       console.log(state.user.isMe)
       state.profileForm.myDepartment = state.department[props.user.departmentId]
@@ -168,6 +178,15 @@ export default {
     }
 
     const editSubmit = function() {
+      if (state.profileForm.nickName.length< 3 && state.profileForm.nickName.length>10){
+        alert('닉네임은 3글자 이상 10글자 이하로 설정해주세요.')
+        return
+      }
+      if (!state.isNicknameChecked){
+        alert('닉네임 중복확인을 완료해주세요')
+        return
+      }
+
       if (typeof(state.profileForm.myDepartment) == 'object' ) {
         state.profileForm.myDepartment = state.profileForm.myDepartment[0]
       }
@@ -210,11 +229,33 @@ export default {
     const getKeyByValue = function(object, value){
       return Object.keys(object).find(key => object[key] === value);
     }
+
+    const nicknameCheck = function () {
+      axios.get(`users/check/nickName/${state.profileForm.nickName}`)
+        .then(res => {
+          if (res.data.count == 0) {
+            if (state.profileForm.nickName.length>=3 && state.profileForm.nickName.length<=10){
+              alert('사용가능한 닉네임입니다.')
+              state.isNicknameChecked = true
+            } else{
+              alert('닉네임은 3글자 이상 10글자 미만으로 설정해주세요.')
+            }
+          } else {
+            state.isNicknameChecked = false
+            alert('중복된 닉네임입니다.')
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+
+    }
     return {
       state,
       profileDialogOpen,
       editSubmit,
-      handleClose
+      handleClose,
+      nicknameCheck
     }
   }
 
