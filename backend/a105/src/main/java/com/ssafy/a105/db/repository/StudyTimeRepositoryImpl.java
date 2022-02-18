@@ -44,7 +44,7 @@ public class StudyTimeRepositoryImpl implements StudyTimeRepositoryCustom {
         for (int i = 0; i < userList.size(); i++) {
             RankingListGetRes order = userList.get(i);
             if (order.getNickName().equals(user.getNickname())) {
-                return new RankingRankGetRes(order.getNickName(), order.getDepartment(), order.getTotalStudyTime(), i + 1);
+                return new RankingRankGetRes(order.getNickName(), order.getDepartment(), order.getTotalStudyTime(), i + 1, userList.size());
             }
         }
         return null;
