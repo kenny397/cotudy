@@ -30,6 +30,9 @@
     </el-card>
     <el-card class="box-card-r">
       <ChartWrapper v-if="state.weekStudyTime.length > 0" :weekStudyTime="state.weekStudyTime" />
+      <div style="margin-top:10px;">
+        <span>수험생님은 {{ state.totalUserCount }}명 중<span class="fontBold">{{ state.myRank }}</span>등 입니다.</span>
+      </div>
     </el-card>
   </div>
 
@@ -140,7 +143,7 @@
 .rank-top {
   display: flex;
   justify-content: space-around;
-  height: 45vh;
+  height: 50vh;
 }
 .box-card {
   display: flex;
@@ -213,6 +216,8 @@ export default {
         return store.state['root'].isLogin
       }),
       userId: null,
+      myRank: 0,
+      totalUserCount: 0,
       tier: {
         name: '',
         progress: 0,
@@ -321,6 +326,7 @@ export default {
     onBeforeMount(() => {
       if (state.isLogin) {
         getWeekStudyTime()
+        getRank()
       }
     })
 
@@ -407,6 +413,18 @@ export default {
         })
         .catch(err => {
           alert(err)
+        })
+    }
+
+    const getRank = function () {
+      getUser()
+      axios.get(`ranking/rank?userId=${state.userId}`)
+        .then(res => {
+          return res.data
+        })
+        .then(res => {
+          state.myRank = res.ranking
+          state.totalUserCount = res.totalUserCount
         })
     }
 
