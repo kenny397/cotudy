@@ -439,7 +439,7 @@ export default {
   methods: {
     fetchRankClass(){
       //getUser()
-      let url = 'ranking?userClass='+this.state.classs+'&userId='+this.state.userId
+      let url = 'ranking?userClass='+this.state.classs+'&userId='+this.state.userId+'&page='+this.state.currentPage
       axios.get(url)
       .then(res => {
         this.state.rank= res.data.content;
@@ -524,27 +524,33 @@ export default {
 
     setPage(page){
       this.state.currentPage = page;
-      let url = 'ranking/?';
-      if(this.state.input!=null){
-        url += 'userNickname='+this.state.input+'&';
+
+      if(this.state.classs=="department" || this.state.classs=="rival"){
+        this.fetchRankClass();
+      }else{
+          let url = 'ranking/?';
+          if(this.state.input!=null){
+            url += 'userNickname='+this.state.input+'&';
+          }
+          if(this.state.term!=null){
+            url += 'term='+this.state.term+'&';
+          }
+          if(this.state.classs!=null){
+            url += 'userClass='+this.state.classs+'&';
+          }
+          if(this.state.category!=null){
+            url += 'category='+this.state.category+'&';
+          }
+          url+= 'page='+page;
+          axios.get(url).then((Response)=>{
+        this.state.rank = Response.data.content;
+        this.state.pageNum = parseInt(Response.data.totalElements/20+1)*10;
+        }).catch((Error)=>{
+        console.log(Error);
+        }
+        )
       }
-      if(this.state.term!=null){
-        url += 'term='+this.state.term+'&';
-      }
-      if(this.state.classs!=null){
-        url += 'userClass='+this.state.classs+'&';
-      }
-      if(this.state.category!=null){
-        url += 'category='+this.state.category+'&';
-      }
-      url+= 'page='+page;
-      axios.get(url).then((Response)=>{
-    this.state.rank = Response.data.content;
-    this.state.pageNum = parseInt(Response.data.totalElements/20+1)*10;
-    }).catch((Error)=>{
-    console.log(Error);
-    }
-    )},
+    },
 
      tableStyle({rowIndex}) {
       if(rowIndex%2===1){
