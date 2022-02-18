@@ -4,6 +4,7 @@
       round
       @click="profileDialogOpen()"
       class="editDialogBtn"
+
     >
       <font-awesome-icon icon="pen-to-square" style="float:right; font-size:20px;"/>
       <span style="margin-left : 5px;">회원정보 수정</span>
