@@ -17,9 +17,6 @@ export default ({
       weekDatas[temp.getFullYear()+'-'+(temp.getMonth()+1+'').padStart(2,'0')+'-'+ day] = 0
     }
 
-    console.log('여길봐!!!!!')
-    console.log(weekDatas)
-
     for (let i in this.weekStudyTime) {
       weekDatas[this.weekStudyTime[i][0]] = this.weekStudyTime[i][1]
     }

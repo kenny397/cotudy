@@ -15,6 +15,7 @@
             :style="state.headCountForVideoWidth"
           >
             <user-video
+              v-if="state.headCountForVideoWidth"
               :head-count="state.headCountForVideoWidth"
               :stream-manager="state.publisher"
               :session="state.session"
@@ -463,9 +464,6 @@ export default {
           to: [],
           type: 'my-chat'
         })
-        .then(() => {
-            console.log('Message successfully sent');
-        })
         .catch(error => {
             console.error(error);
         })
@@ -577,9 +575,6 @@ export default {
             'userId': state.myUserId,
           }
         })
-        .then(res => {
-          console.log(res)
-        })
         .catch(err => {
           console.log(err)
         })
@@ -589,9 +584,6 @@ export default {
         .then(res => {
           if(res.data.headCount == 0 ) {
             axios.delete(`rooms/${state.mySessionId}`)
-            .then(res => {
-              console.log(res)
-            })
             .catch(err => {
               console.log(err)
             })
