@@ -58,7 +58,7 @@
 </template>
 
 <style>
-  .el-form-item__content .el-input:first-child {
+  .editDialog .el-form-item__content .el-input:first-child {
     width:15vw;
   }
   .editDialogBtn {
@@ -152,15 +152,10 @@ export default {
         goalTime: [
           { required: true, }
         ],
-        goal: [
-          { required: true, message: '다짐을 작성해주세요'}
-        ],
       },
     })
     const profileDialogOpen = function () {
       state.isNicknameChecked = false
-      console.log(state.user.isRival)
-      console.log(state.user.isMe)
       state.profileForm.myDepartment = state.department[props.user.departmentId]
       state.profileForm.nickName = props.user.nickName
       state.profileForm.goal = props.user.goal
@@ -182,10 +177,14 @@ export default {
         alert('닉네임은 3글자 이상 10글자 이하로 설정해주세요.')
         return
       }
-      if (!state.isNicknameChecked){
-        alert('닉네임 중복확인을 완료해주세요')
-        return
+
+      if (state.profileForm.nickName !== state.user.nickName) {
+        if (!state.isNicknameChecked){
+          alert('닉네임 중복확인을 완료해주세요')
+          return
+        }
       }
+
 
       if (typeof(state.profileForm.myDepartment) == 'object' ) {
         state.profileForm.myDepartment = state.profileForm.myDepartment[0]
@@ -211,9 +210,6 @@ export default {
             'thumbnail': state.user.thumbnail,
             'userId': state.user.userId
           }
-        })
-        .then(res => {
-          console.log(res)
         })
         .catch(err => {
           console.log(err)

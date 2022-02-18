@@ -1,6 +1,7 @@
 <template>
 <div v-if="streamManager">
 	<ov-video
+    v-if="headCount"
     :stream-manager="streamManager"
     :head-count="headCount"
     v-bind:class="{isStudying : state.isStudying}"
