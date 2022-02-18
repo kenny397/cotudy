@@ -31,7 +31,7 @@
     <el-card class="box-card-r">
       <ChartWrapper v-if="state.weekStudyTime.length > 0" :weekStudyTime="state.weekStudyTime" />
       <div style="margin-top:10px;">
-        <span>수험생님은 {{ state.totalUserCount }}명 중<span class="fontBold">{{ state.myRank }}</span>등 입니다.</span>
+        <span>수험생님은 {{ state.totalUserCount }}명 중<span class="fontBold" style="margin-left:5px;">{{ state.myRank }}</span> 등 입니다.</span>
       </div>
     </el-card>
   </div>
