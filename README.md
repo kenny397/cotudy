@@ -1,12 +1,12 @@
 ## 📑 SSAFY 6기 공통 프로젝트 - Cotudy
 #### Web RTC 기반 화상 스터디 플랫폼
-![main-logo](/uploads/6f0cb796dfad2dc36fdf1a4bed2b4ed4/main-logo.png)
+![main-logo](https://user-images.githubusercontent.com/66551646/156126055-9cce6628-6b54-4957-aeb8-bd5d66658d6e.png)
 <br>
 
 ### Cotudy 프로젝트팀을 소개합니다.
 - [6시가 지나도 끝나지 않는다.] 서형준 😤
 	- 부족하면 더 열심히 하겠습니다.
-- ~~이런식??~~
+
 
 
 ### OverView
@@ -18,6 +18,20 @@
 
 ## 코터디 서비스 화면
 
+### Main화면
+![image](https://user-images.githubusercontent.com/66551646/156129137-e7b23148-a2e3-47ae-b19f-2e2db71bcea1.png)
+
+### 상대방 상세 프로필
+![image](https://user-images.githubusercontent.com/66551646/156129191-685f4f57-2d5f-4eaa-aa6c-a007801c9101.png)
+
+### 스터디룸 내부
+![Cotudy - Chrome 2022-02-17 오후 1_32_25_LI](https://user-images.githubusercontent.com/66551646/156129593-e162ab01-6020-4749-9c35-31b6a68e56ea.jpg)
+
+### 랭킹페이지
+![image](https://user-images.githubusercontent.com/66551646/156129202-62ac6d57-d227-4637-bff1-717b9dad7d7c.png)
+
+### 마이페이지
+![image](https://user-images.githubusercontent.com/66551646/156129257-5c0fd2d6-dc99-466b-951d-57b92e2f9d44.png)
 
 ## 주요기능
 <br>
@@ -33,7 +47,7 @@
 #### 💻BackEnd
 - Intellij
 - Spring-Boot : 2.5.7
-- Spring-Boot-BPA
+- Spring-Boot-JPA
 - Spring Security
 - Java 11
 - mysql : 8.0.22
@@ -42,7 +56,7 @@
 #### ✨Front-End
 - Visual Studio Code
 - Vue.js 3.0
-- ~~~[적어주세요]~~~
+- element plus
 
 #### 🖱Web RTC
 - ovenvidu 2.19.0
@@ -64,14 +78,17 @@
 - Discord
 
 ## 서비스 아키텍쳐
-![아키텍처](/uploads/ca178967e12255795a7f53e9838da17a/아키텍처.PNG)
+![아키텍처](https://user-images.githubusercontent.com/66551646/156126355-92283c63-67a6-405b-8190-9ab6190aa2b0.PNG)
 
 
 ### 기능 정의서
-![기능_정의서](/uploads/05cc2639649be6385bb976a3f826e786/기능_정의서.PNG)
+![기능 정의서](https://user-images.githubusercontent.com/66551646/156126403-4fa2d91d-f899-476f-87be-f46ef35ce05c.PNG)
 
 ### 화면 설계서
-![figma](/uploads/0bfc585f4f085161548ddde4db6dc674/figma.PNG)
+![figma](https://user-images.githubusercontent.com/66551646/156126315-8dbaed7f-84f9-42f2-9d24-122ce00bde35.PNG)
+
+### REST API 문서화
+![swagger](https://user-images.githubusercontent.com/66551646/156126386-19f1a6fe-eabd-4aa5-95b8-b03a5bd327f7.PNG)
 
 ### Git 컨벤션
 ```
@@ -98,7 +115,7 @@ refactor : 성능 개선
 ### GitLab Flow 브랜치 전략
 
 ### E-R Diagram
-![erd](/uploads/ff52bb195f5434e7c702f89ea7f49f83/erd.PNG)
+![erd](https://user-images.githubusercontent.com/66551646/156126424-673752e8-36e1-4c19-9aca-e7f4f2f05200.PNG)
 
 ### EC2 포트 정리
 
@@ -112,15 +129,19 @@ refactor : 성능 개선
 |8080|Spring boot Docker Container|
 |3000|Vue.js, NginX Docker Container|
 
-### Cotudy's Wiki 
-~~이거 넣을지 고민중~~
+
 
 
 ### 팀원 역활
-- 오윤기
-- 서형준
-- 최시열
-- 전영서
-- 현종일
+- 서형준 
+	- 서비스 기획
+	- 백엔드 방 관리 API 구현
+	- 오픈비두 서버 배포
+	- spring security, JWT JPA를 이용한 회원가입 로그인 기능 구현
+	- 유저 관리 API 구현
+	- jenkins, Docker, nginx를 이용한 CI/CD 구현 - Docker로 vue, spring boot를 생성하여 배포
+	- nginx 리다이렌트 설정 및 백엔드 및 프론트엔드 url 분기 처리
+	- HTTPS 설정 (SSl 인증서 적용)
+    
 
 
